@@ -1,0 +1,501 @@
+[data_lake]
+db  = "datalake"
+app = "datasus"
+
+# ---------------------------------------------------------------------------
+# datasus_estabelecimento — cadastro dos estabelecimentos de saúde (CNES)
+# ---------------------------------------------------------------------------
+[tables.estabelecimento]
+name   = "datasus_estabelecimento"
+levels = ["raw", "bronze"]
+key    = "co_cnes"
+
+[[tables.estabelecimento.raw.schema]]
+name = "co_cnes"
+type = "string"
+description = "código CNES do estabelecimento (chave)"
+
+[[tables.estabelecimento.raw.schema]]
+name = "nome"
+type = "string"
+description = "nome do estabelecimento"
+
+[[tables.estabelecimento.raw.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município"
+
+[[tables.estabelecimento.raw.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.estabelecimento.raw.schema]]
+name = "tipo"
+type = "string"
+description = "tipo de estabelecimento"
+
+[[tables.estabelecimento.raw.schema]]
+name = "latitude"
+type = "string"
+description = "latitude (texto, como aterrissa)"
+
+[[tables.estabelecimento.raw.schema]]
+name = "longitude"
+type = "string"
+description = "longitude (texto, como aterrissa)"
+
+[[tables.estabelecimento.raw.schema]]
+name = "leitos_sus"
+type = "string"
+description = "leitos disponíveis ao SUS (texto)"
+
+[[tables.estabelecimento.bronze.schema]]
+name = "co_cnes"
+type = "string"
+description = "código CNES do estabelecimento (chave)"
+
+[[tables.estabelecimento.bronze.schema]]
+name = "nome"
+type = "string"
+description = "nome do estabelecimento (espaçamento padronizado)"
+
+[[tables.estabelecimento.bronze.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município"
+
+[[tables.estabelecimento.bronze.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.estabelecimento.bronze.schema]]
+name = "tipo"
+type = "string"
+description = "tipo de estabelecimento"
+
+[[tables.estabelecimento.bronze.schema]]
+name = "latitude"
+type = "double"
+description = "latitude em graus decimais"
+
+[[tables.estabelecimento.bronze.schema]]
+name = "longitude"
+type = "double"
+description = "longitude em graus decimais"
+
+[[tables.estabelecimento.bronze.schema]]
+name = "leitos_sus"
+type = "int"
+description = "leitos disponíveis ao SUS"
+
+# ---------------------------------------------------------------------------
+# datasus_obito — óbitos registrados
+# ---------------------------------------------------------------------------
+[tables.obito]
+name   = "datasus_obito"
+levels = ["raw", "bronze"]
+key    = "id"
+
+[[tables.obito.raw.schema]]
+name = "id"
+type = "string"
+description = "identificador do registro de óbito (chave)"
+
+[[tables.obito.raw.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município de residência"
+
+[[tables.obito.raw.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.obito.raw.schema]]
+name = "data_obito"
+type = "string"
+description = "data do óbito (dd/MM/yyyy, texto)"
+
+[[tables.obito.raw.schema]]
+name = "sexo"
+type = "string"
+description = "sexo"
+
+[[tables.obito.raw.schema]]
+name = "idade"
+type = "string"
+description = "idade em anos (texto)"
+
+[[tables.obito.raw.schema]]
+name = "causa_cid"
+type = "string"
+description = "causa básica (código CID-10)"
+
+[[tables.obito.bronze.schema]]
+name = "id"
+type = "string"
+description = "identificador do registro de óbito (chave)"
+
+[[tables.obito.bronze.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município de residência"
+
+[[tables.obito.bronze.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.obito.bronze.schema]]
+name = "data_obito"
+type = "date"
+description = "data do óbito"
+
+[[tables.obito.bronze.schema]]
+name = "sexo"
+type = "string"
+description = "sexo"
+
+[[tables.obito.bronze.schema]]
+name = "idade"
+type = "int"
+description = "idade em anos"
+
+[[tables.obito.bronze.schema]]
+name = "causa_cid"
+type = "string"
+description = "causa básica (código CID-10)"
+
+# ---------------------------------------------------------------------------
+# datasus_leito — leitos por estabelecimento
+# ---------------------------------------------------------------------------
+[tables.leito]
+name   = "datasus_leito"
+levels = ["raw", "bronze"]
+key    = "co_cnes"
+
+[[tables.leito.raw.schema]]
+name = "co_cnes"
+type = "string"
+description = "código CNES do estabelecimento"
+
+[[tables.leito.raw.schema]]
+name = "tipo_leito"
+type = "string"
+description = "tipo de leito"
+
+[[tables.leito.raw.schema]]
+name = "quantidade"
+type = "string"
+description = "quantidade de leitos (texto)"
+
+[[tables.leito.raw.schema]]
+name = "sus"
+type = "string"
+description = "disponível ao SUS (S/N)"
+
+[[tables.leito.bronze.schema]]
+name = "co_cnes"
+type = "string"
+description = "código CNES do estabelecimento"
+
+[[tables.leito.bronze.schema]]
+name = "tipo_leito"
+type = "string"
+description = "tipo de leito"
+
+[[tables.leito.bronze.schema]]
+name = "quantidade"
+type = "int"
+description = "quantidade de leitos"
+
+[[tables.leito.bronze.schema]]
+name = "sus"
+type = "int"
+description = "disponível ao SUS (1/0)"
+
+# ---------------------------------------------------------------------------
+# datasus_municipio_cobertura — cobertura de atenção primária por município
+# ---------------------------------------------------------------------------
+[tables.municipio_cobertura]
+name   = "datasus_municipio_cobertura"
+levels = ["raw", "bronze"]
+key    = "municipio_ibge"
+
+[[tables.municipio_cobertura.raw.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município (chave)"
+
+[[tables.municipio_cobertura.raw.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.municipio_cobertura.raw.schema]]
+name = "populacao"
+type = "string"
+description = "população estimada (texto)"
+
+[[tables.municipio_cobertura.raw.schema]]
+name = "cobertura_aps_pct"
+type = "string"
+description = "cobertura de atenção primária (percentual, texto)"
+
+[[tables.municipio_cobertura.bronze.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município (chave)"
+
+[[tables.municipio_cobertura.bronze.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.municipio_cobertura.bronze.schema]]
+name = "populacao"
+type = "long"
+description = "população estimada"
+
+[[tables.municipio_cobertura.bronze.schema]]
+name = "cobertura_aps"
+type = "double"
+description = "cobertura de atenção primária (fração de 0 a 1)"
+
+# ---------------------------------------------------------------------------
+# datasus_regiao_saude — regiões de saúde (polígonos)
+# ---------------------------------------------------------------------------
+[tables.regiao_saude]
+name   = "datasus_regiao_saude"
+levels = ["raw", "bronze"]
+key    = "co_regiao"
+
+[[tables.regiao_saude.raw.schema]]
+name = "co_regiao"
+type = "string"
+description = "código da região de saúde (chave)"
+
+[[tables.regiao_saude.raw.schema]]
+name = "nome"
+type = "string"
+description = "nome da região de saúde"
+
+[[tables.regiao_saude.raw.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.regiao_saude.raw.schema]]
+name = "geom_wkt"
+type = "string"
+description = "polígono da região em WKT"
+
+[[tables.regiao_saude.bronze.schema]]
+name = "co_regiao"
+type = "string"
+description = "código da região de saúde (chave)"
+
+[[tables.regiao_saude.bronze.schema]]
+name = "nome"
+type = "string"
+description = "nome da região de saúde (espaçamento padronizado)"
+
+[[tables.regiao_saude.bronze.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.regiao_saude.bronze.schema]]
+name = "geom_wkt"
+type = "string"
+description = "polígono da região em WKT"
+
+# ---------------------------------------------------------------------------
+# datasus_estabelecimento_geo — estabelecimentos georreferenciados (silver)
+# ---------------------------------------------------------------------------
+[tables.estabelecimento_geo]
+name   = "datasus_estabelecimento_geo"
+levels = ["silver"]
+key    = "co_cnes"
+
+[[tables.estabelecimento_geo.silver.schema]]
+name = "co_cnes"
+type = "string"
+description = "código CNES do estabelecimento (chave)"
+
+[[tables.estabelecimento_geo.silver.schema]]
+name = "nome"
+type = "string"
+description = "nome do estabelecimento"
+
+[[tables.estabelecimento_geo.silver.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.estabelecimento_geo.silver.schema]]
+name = "tipo"
+type = "string"
+description = "tipo de estabelecimento"
+
+[[tables.estabelecimento_geo.silver.schema]]
+name = "leitos_sus"
+type = "int"
+description = "leitos disponíveis ao SUS"
+
+[[tables.estabelecimento_geo.silver.schema]]
+name = "distance_brasilia_m"
+type = "double"
+description = "distância geodésica até Brasília, em metros"
+
+[[tables.estabelecimento_geo.silver.schema]]
+name = "geometry"
+type = "geometry(point)"
+description = "ponto do estabelecimento (EPSG:3857)"
+
+# ---------------------------------------------------------------------------
+# datasus_regiao_saude_geo — regiões de saúde georreferenciadas (silver)
+# ---------------------------------------------------------------------------
+[tables.regiao_saude_geo]
+name   = "datasus_regiao_saude_geo"
+levels = ["silver"]
+key    = "co_regiao"
+
+[[tables.regiao_saude_geo.silver.schema]]
+name = "co_regiao"
+type = "string"
+description = "código da região de saúde (chave)"
+
+[[tables.regiao_saude_geo.silver.schema]]
+name = "nome"
+type = "string"
+description = "nome da região de saúde"
+
+[[tables.regiao_saude_geo.silver.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.regiao_saude_geo.silver.schema]]
+name = "area_km2"
+type = "double"
+description = "área da região em km²"
+
+[[tables.regiao_saude_geo.silver.schema]]
+name = "geometry"
+type = "geometry(polygon)"
+description = "polígono da região (EPSG:3857)"
+
+# ---------------------------------------------------------------------------
+# datasus_obito_consolidado — óbitos por município com taxa (silver)
+# ---------------------------------------------------------------------------
+[tables.obito_consolidado]
+name   = "datasus_obito_consolidado"
+levels = ["silver"]
+key    = "municipio_ibge"
+
+[[tables.obito_consolidado.silver.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município (chave)"
+
+[[tables.obito_consolidado.silver.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.obito_consolidado.silver.schema]]
+name = "obitos"
+type = "long"
+description = "número de óbitos no município"
+
+[[tables.obito_consolidado.silver.schema]]
+name = "populacao"
+type = "long"
+description = "população estimada do município"
+
+[[tables.obito_consolidado.silver.schema]]
+name = "taxa_100k"
+type = "double"
+description = "óbitos por 100 mil habitantes"
+
+# ---------------------------------------------------------------------------
+# datasus_mortalidade_por_uf — mortalidade agregada por UF (gold)
+# ---------------------------------------------------------------------------
+[tables.mortalidade_por_uf]
+name   = "datasus_mortalidade_por_uf"
+levels = ["gold"]
+key    = "uf"
+
+[[tables.mortalidade_por_uf.gold.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF (chave)"
+
+[[tables.mortalidade_por_uf.gold.schema]]
+name = "obitos_total"
+type = "long"
+description = "óbitos totais na UF"
+
+[[tables.mortalidade_por_uf.gold.schema]]
+name = "taxa_media"
+type = "double"
+description = "taxa média por 100 mil habitantes (2 casas)"
+
+# ---------------------------------------------------------------------------
+# datasus_densidade_leitos — densidade de leitos por UF (gold)
+# ---------------------------------------------------------------------------
+[tables.densidade_leitos]
+name   = "datasus_densidade_leitos"
+levels = ["gold"]
+key    = "uf"
+
+[[tables.densidade_leitos.gold.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF (chave)"
+
+[[tables.densidade_leitos.gold.schema]]
+name = "estabelecimentos"
+type = "long"
+description = "estabelecimentos com leitos na UF"
+
+[[tables.densidade_leitos.gold.schema]]
+name = "leitos_total"
+type = "long"
+description = "total de leitos na UF"
+
+[[tables.densidade_leitos.gold.schema]]
+name = "densidade_leitos"
+type = "double"
+description = "leitos por estabelecimento (2 casas)"
+
+# ---------------------------------------------------------------------------
+# datasus_estabelecimento_hexbin — densidade de estabelecimentos por H3 (gold)
+# ---------------------------------------------------------------------------
+[tables.estabelecimento_hexbin]
+name   = "datasus_estabelecimento_hexbin"
+levels = ["gold"]
+key    = "h3_cell"
+
+[[tables.estabelecimento_hexbin.gold.schema]]
+name = "h3_cell"
+type = "long"
+description = "id da célula H3 nível 6 (chave)"
+
+[[tables.estabelecimento_hexbin.gold.schema]]
+name = "estabelecimentos"
+type = "long"
+description = "estabelecimentos na célula"
+
+[[tables.estabelecimento_hexbin.gold.schema]]
+name = "leitos_sus_total"
+type = "long"
+description = "soma dos leitos SUS na célula"
+
+[[tables.estabelecimento_hexbin.gold.schema]]
+name = "geometry"
+type = "geometry(polygon)"
+description = "polígono da célula H3 (EPSG:3857)"

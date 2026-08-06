@@ -1,0 +1,168 @@
+[data_lake]
+db  = "datalake"
+app = "educacao"
+
+# ---------------------------------------------------------------------------
+# educacao_escola — cadastro das escolas da educação básica (Censo Escolar)
+# ---------------------------------------------------------------------------
+[tables.escola]
+name   = "educacao_escola"
+levels = ["raw"]
+key    = "id_unidade"
+
+[[tables.escola.raw.schema]]
+name = "ID_UNIDADE"
+type = "string"
+description = "código da unidade escolar (chave)"
+
+[[tables.escola.raw.schema]]
+name = "NOME_UNIDADE"
+type = "string"
+description = "nome da escola"
+
+[[tables.escola.raw.schema]]
+name = "UF"
+type = "string"
+description = "sigla da UF"
+
+[[tables.escola.raw.schema]]
+name = "COD_UF"
+type = "string"
+description = "código IBGE da UF"
+
+[[tables.escola.raw.schema]]
+name = "NOME_MUNICIPIO"
+type = "string"
+description = "nome do município"
+
+[[tables.escola.raw.schema]]
+name = "COD_MUNICIPIO"
+type = "string"
+description = "código IBGE do município"
+
+[[tables.escola.raw.schema]]
+name = "SETOR"
+type = "string"
+description = "dependência administrativa (1=Federal, 2=Estadual, 3=Municipal, 4=Privada)"
+
+[[tables.escola.raw.schema]]
+name = "AREA"
+type = "string"
+description = "localização (1=Urbana, 2=Rural)"
+
+[[tables.escola.raw.schema]]
+name = "SITUACAO"
+type = "string"
+description = "situação de funcionamento (1=Em Atividade, 2=Paralisada, 3=Extinta)"
+
+[[tables.escola.raw.schema]]
+name = "LATITUDE"
+type = "string"
+description = "latitude (texto, como aterrissa)"
+
+[[tables.escola.raw.schema]]
+name = "LONGITUDE"
+type = "string"
+description = "longitude (texto, como aterrissa)"
+
+[[tables.escola.raw.schema]]
+name = "QT_SALAS"
+type = "string"
+description = "quantidade de salas de aula (texto)"
+
+# ---------------------------------------------------------------------------
+# educacao_matricula — matrículas por escola (Censo Escolar)
+# ---------------------------------------------------------------------------
+[tables.matricula]
+name   = "educacao_matricula"
+levels = ["raw"]
+key    = "id_unidade"
+
+[[tables.matricula.raw.schema]]
+name = "ID_UNIDADE"
+type = "string"
+description = "código da unidade escolar (chave)"
+
+[[tables.matricula.raw.schema]]
+name = "MAT_BASICA"
+type = "string"
+description = "matrículas na educação básica (total, texto)"
+
+[[tables.matricula.raw.schema]]
+name = "MAT_INFANTIL"
+type = "string"
+description = "matrículas na educação infantil (texto)"
+
+[[tables.matricula.raw.schema]]
+name = "MAT_FUNDAMENTAL"
+type = "string"
+description = "matrículas no ensino fundamental (texto)"
+
+[[tables.matricula.raw.schema]]
+name = "MAT_MEDIO"
+type = "string"
+description = "matrículas no ensino médio (texto)"
+
+[[tables.matricula.raw.schema]]
+name = "MAT_PROFISSIONAL"
+type = "string"
+description = "matrículas na educação profissional (texto)"
+
+[[tables.matricula.raw.schema]]
+name = "MAT_EJA"
+type = "string"
+description = "matrículas na EJA (texto)"
+
+[[tables.matricula.raw.schema]]
+name = "MAT_ESPECIAL"
+type = "string"
+description = "matrículas na educação especial (texto)"
+
+# ---------------------------------------------------------------------------
+# educacao_escola_matricula_h3_grid — agregação por célula H3 nível 5 das
+# escolas federais em atividade, com matrículas e vizinhança (gold)
+# ---------------------------------------------------------------------------
+[tables.escola_matricula_h3_grid]
+name   = "educacao_escola_matricula_h3_grid"
+levels = ["gold"]
+key    = "h3_cell"
+
+[[tables.escola_matricula_h3_grid.gold.schema]]
+name = "h3_cell"
+type = "long"
+description = "id da célula H3 nível 5 (chave)"
+
+[[tables.escola_matricula_h3_grid.gold.schema]]
+name = "n_schools"
+type = "long"
+description = "escolas federais em atividade na célula"
+
+[[tables.escola_matricula_h3_grid.gold.schema]]
+name = "total_enrollment"
+type = "long"
+description = "soma das matrículas da educação básica na célula"
+
+[[tables.escola_matricula_h3_grid.gold.schema]]
+name = "avg_enrollment"
+type = "double"
+description = "média de matrículas por escola na célula (2 casas)"
+
+[[tables.escola_matricula_h3_grid.gold.schema]]
+name = "n_federal_neighbors"
+type = "long"
+description = "escolas federais em atividade vizinhas (própria célula + adjacentes, exceto a própria escola); igual para toda a célula"
+
+[[tables.escola_matricula_h3_grid.gold.schema]]
+name = "avg_dist_neighbors_km"
+type = "double"
+description = "distância média (km) de cada escola às suas vizinhas, agregada por célula (2 casas)"
+
+[[tables.escola_matricula_h3_grid.gold.schema]]
+name = "avg_dist_nearest_km"
+type = "double"
+description = "distância média (km) de cada escola à federal em atividade mais próxima (qualquer célula), agregada por célula (2 casas)"
+
+[[tables.escola_matricula_h3_grid.gold.schema]]
+name = "geometry"
+type = "geometry(polygon)"
+description = "polígono da célula H3 nível 5 (EPSG:3857)"

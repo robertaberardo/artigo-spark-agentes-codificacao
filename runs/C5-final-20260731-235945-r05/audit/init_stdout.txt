@@ -1,0 +1,19 @@
+I analyzed the codebase and created `CLAUDE.md` at the project root. Here's what I found and captured:
+
+**What the repo is:** A monorepo of PySpark + Apache Sedona geospatial batch pipelines that transform ~11 Brazilian open-data sources into a medallion-architecture data lake on S3A (a validation environment against MinIO, not prod). 94 job files.
+
+**The big-picture architecture worth documenting** (things that require reading multiple files to grasp):
+
+- **Medallion flow** `raw → bronze → silver → gold`, one job file per output table, with layer-specific responsibilities (bronze = schema'd CSV read + snake_case rename; silver = joins + geospatial + geoparquet; gold = aggregations/rankings/H3 hexbins).
+- **`metadata.toml` as the schema contract** — `table_location()` derives every S3A path and validates table/level declarations, so jobs shouldn't hand-build paths.
+- **Shared `utils/` reuse discipline** — the `Column→Column` vs `DataFrame→DataFrame` split, and the "check utils first" rule.
+- **Docker/env model** — jars pre-baked into the image, config in `conf/spark-defaults.conf` + `.env`, and the `docker compose exec spark spark-submit ...` run pattern.
+
+**Load-bearing non-obvious rules** distilled from `CODING_STANDARDS.md`: the geodesic-distance-before-projection rule, "absence is never zero," no UDFs/`F.expr`, join fan-out discipline, explicit window frames, and the Sedona-context requirement for geo jobs.
+
+A few honest caveats I included rather than smoothing over:
+- I did **not** invent a "how to run tests" section — there's no test suite or linter configured; I documented the actual verification path (run the job, check the printed count/schema).
+- The container entrypoint references `validate_setup.py` and `exploration/`, but **neither exists** in the repo, so I left them out.
+- I noted real **drift**: the canonical pattern uses `table_location()` + an `if __name__ == "__main__":` guard, but a number of existing jobs hardcode `s3a://` paths or call `main()` bare. I pointed new code at the canonical form instead of pretending the codebase is uniform.
+
+I also honored the repo's explicit language convention (English code, Portuguese docstrings) by calling it out prominently, since it's strict and easy to violate.

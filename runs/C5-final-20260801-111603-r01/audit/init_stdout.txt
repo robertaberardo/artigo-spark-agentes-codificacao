@@ -1,0 +1,15 @@
+I've created `CLAUDE.md`. Here's what it captures and why:
+
+**Architecture that requires reading multiple files:**
+- **Medallion lake** (`raw → bronze → silver → gold`) with each layer's distinct shape — bronze reads raw CSV with explicit schema and standardizes to `snake_case`, silver consolidates/geo-enriches (geoparquet), gold aggregates (rankings, H3 hexbins).
+- **`metadata.toml` as the schema/path contract** — the non-obvious bit that `table_location()` builds every `s3a://` path and raises if a table/level isn't declared, so schema changes start there. I noted the minority of jobs that hardcode paths and flagged `table_location` as canonical.
+- **The three-tier utils reuse rule** — shared `utils/` (column vs dataframe) vs per-app domain utils, chained via `DataFrame.transform(...)`.
+- **Sedona geospatial conventions** — SedonaContext session, 3857 for persisted geometry, geodesic distance on original WGS84 before reprojecting, `ST_Point(lon, lat)` ordering.
+
+**Commands:** the Docker-based workflow (external network requirement, the ~10-min cached GDAL build, `docker compose exec spark spark-submit <job>`) and the raw→bronze→silver→gold run ordering.
+
+**Honest gaps I verified rather than invented:** there is no test suite and no `validate_setup.py`/`exploration/` in the tree despite the container banner referencing them — so "verifying changes" points to running the job and checking row count/schema.
+
+I pointed to `CODING_STANDARDS.md` as authoritative rather than duplicating its rules, and called out the English-code / Portuguese-comments language convention since that's easy to miss.
+
+There was no existing `CLAUDE.md`, README, or Cursor/Copilot rules to merge in. One thing worth your awareness: about 15 of the 94 jobs hardcode `s3a://` paths instead of using `table_location`, which diverges from the coding standard — I documented the canonical form but didn't change any job code.

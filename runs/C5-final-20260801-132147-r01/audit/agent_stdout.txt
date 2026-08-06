@@ -1,0 +1,30 @@
+Pronto. A tabela `educacao_escola_matricula_h3_grid` foi produzida e o job rodou com sucesso.
+
+## O que foi feito
+
+A app `educacao` só tinha os dados brutos (em MinIO, particionados por `ano=2025`) e diretórios de jobs vazios. Construí a cadeia medallion completa:
+
+| Camada | Job | Resultado |
+|---|---|---|
+| bronze | `educacao_escola.py` | 214.192 escolas (tipadas, snake_case) |
+| bronze | `educacao_matricula.py` | 178.766 registros de matrícula |
+| silver | `educacao_escola_matricula_geo.py` | 156.814 escolas georreferenciadas + matrículas (join sem fan-out) |
+| gold | `educacao_escola_matricula_h3_grid.py` | **555 células** H3 nível 5 |
+
+Também declarei no `metadata.toml` as novas camadas/tabelas (bronze de escola e matrícula, silver `escola_matricula_geo`, gold `escola_matricula_h3_grid`), com schema por camada — os jobs resolvem caminhos via `table_location`.
+
+## Decisões que valem registrar
+
+- **Federal em atividade:** `setor == "1"` e `situacao == "1"` → 660 escolas (soma de `n_schools` confere).
+- **H3 e distâncias em WGS84, não no 3857 do silver.** O silver guarda `latitude`/`longitude` originais; o gold reconstrói o ponto WGS84 para indexar H3 e medir distância geodésica (`ST_DistanceSpheroid`) **antes** de projetar — sem round-trip de CRS. Só o polígono final da célula é reprojetado 4326→3857. (Os jobs hexbin das outras apps passam a geometria 3857 direto pro H3, o que é incorreto; não repliquei isso.)
+- **Vizinhança = k-ring 1** (`ST_H3KRing(cell, 1, False)`): própria célula + 6 adjacentes. Como toda escola de uma célula compartilha a mesma vizinhança, `n_federal_neighbors` é constante na célula (= total de federais na vizinhança − 1) e a média-das-médias por escola coincide com a média de todos os pares — por isso `avg_dist_neighbors_km` é um simples `avg` por célula.
+- **`avg_dist_nearest_km`:** menor distância de cada escola a qualquer federal (cross join de 660 — trivial), depois média por célula.
+
+## Validações
+- 8 colunas exatas: `h3_cell, n_schools, total_enrollment, avg_enrollment, n_federal_neighbors, avg_dist_neighbors_km, avg_dist_nearest_km, geometry`.
+- `geometry` em SRID 3857; `h3_cell` é chave única (555/555).
+- Invariantes checadas com 0 violações: `n_federal_neighbors==0 ⟺ avg_dist_neighbors_km NULL`; `n_federal_neighbors ≥ n_schools−1`; ausência sempre como `NULL` (381 células isoladas têm distância de vizinhas nula, corretamente).
+
+Uma observação: o writer de GeoParquet do Sedona adiciona automaticamente uma coluna `geometry_bbox` (covering column do GeoParquet 1.1) — é padrão da especificação, aparece também nos outros jobs geo, e não interfere nas 8 colunas pedidas.
+
+Correções feitas durante a execução: o container spark estava com exec dessincronizado no Docker Desktop ("cannot exec in a stopped state" apesar de `running`); recriei-o com `docker compose up -d` a partir do workdir. Os jobs em si rodaram sem erros na primeira execução.

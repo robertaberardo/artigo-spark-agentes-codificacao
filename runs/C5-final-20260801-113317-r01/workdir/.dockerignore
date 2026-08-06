@@ -1,0 +1,11 @@
+# Enxuga o contexto de build (contexto = spark-project/). O Dockerfile só faz COPY
+# de ./pyproject.toml e ./docker/resources/*.sh — o resto não precisa ir ao contexto.
+__pycache__/
+*.pyc
+.env
+.env.example
+docker-compose*.yml
+*.md
+spark-resources/
+.claude/
+.audit_logs/

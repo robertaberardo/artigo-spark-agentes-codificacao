@@ -1,0 +1,28 @@
+A tabela foi produzida com sucesso. Todos os quatro jobs da cadeia rodaram sem erros e a saída validada bate com o esperado.
+
+## O que foi feito
+
+O app `educacao` só tinha dados na camada **raw** e nenhum job. Como a arquitetura é uma cadeia estrita (um job lê exatamente uma camada e escreve a próxima, sem pular), construí toda a cadeia até a gold:
+
+| Job | Camada | Resultado |
+|---|---|---|
+| `bronze/educacao_escola.py` | raw→bronze | 214.192 escolas (snake_case, tipos reais, coords `double`) |
+| `bronze/educacao_matricula.py` | raw→bronze | 178.766 matrículas (contagens `int`, ausência = NULL) |
+| `silver/educacao_escola_matricula.py` | bronze→silver | 156.814 escolas georreferenciadas + matrículas (geoparquet 3857) |
+| `gold/educacao_escola_matricula_h3_grid.py` | silver→gold | **555 células** |
+
+Também declarei no `metadata.toml` os níveis `bronze` de escola/matrícula e as tabelas novas `escola_matricula` (silver) e `escola_matricula_h3_grid` (gold) — todos os caminhos resolvem via `table_location`.
+
+## Decisões de modelagem
+
+- **Recorte:** só escolas federais (`setor=1`) em atividade (`situacao=1`) — 660 com coordenadas válidas, que somam exatamente as 660 escolas nas 555 células.
+- **H3 e distâncias sobre WGS84 original:** a silver preserva `latitude`/`longitude`; a gold reconstrói o ponto WGS84 para indexar H3 (nível 5) e medir distância **geodésica** (`ST_DistanceSpheroid`) antes de qualquer projeção, conforme o `CODING_STANDARDS.md`. A geometria de saída é o polígono da célula em EPSG:3857.
+- **Vizinhança:** via `ST_H3KRing(cell, 1, false)` (própria célula + 6 adjacentes). `n_federal_neighbors` conta todas as federais em atividade nesse anel (por isso é constante na célula e sempre ≥ `n_schools` — validei que 0 células violam isso).
+- **`avg_dist_nearest_km`:** para cada escola, mínimo até qualquer outra federal (self cross-join, conjunto pequeno), sem restrição de célula; depois a média na célula.
+- **Ausência = NULL:** 381 células têm uma única federal isolada (sem outra federal na vizinhança) → `avg_dist_neighbors_km` fica NULL, não zero.
+
+## Validação da saída
+
+Colunas exatamente como pedido — `h3_cell, n_schools, total_enrollment, avg_enrollment, n_federal_neighbors, avg_dist_neighbors_km, avg_dist_nearest_km, geometry` (polígono, SRID 3857). Soma de `n_schools` = 660, `total_enrollment` = 365.835, nenhum `nearest` nulo. Métricas por célula coerentes (ex.: célula mais densa com 13 escolas, 31 vizinhas, ~0,41 km à federal mais próxima).
+
+Observação: o geoparquet grava também uma coluna auxiliar `geometry_bbox` — é comportamento padrão do writer do Sedona (bbox do GeoParquet 1.1), igual às demais tabelas geo do lake, não faz parte do contrato lógico.

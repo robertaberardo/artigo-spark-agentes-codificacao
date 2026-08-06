@@ -1,0 +1,19 @@
+I've created `CLAUDE.md` at the project root. Here's what it captures — focused on things that require reading multiple files to grasp:
+
+**Big-picture architecture**
+- **Medallion pipeline** (raw → bronze → silver → gold) into an S3/MinIO data lake, one app per Brazilian open-data source under `apps/<app>/`.
+- **`metadata.toml` as the schema/location contract** — jobs resolve paths via `utils.metadata.table_location()` rather than building `s3a://` strings by hand. I flagged the real inconsistency I found: bronze jobs follow this, but many silver/gold jobs still hardcode paths.
+- **Job anatomy** — standalone `spark-submit` scripts with `main()`; bronze reads CSV with explicit schema and standardizes to snake_case, silver enriches/geo, gold aggregates.
+- **Two-tier shared transforms** (`utils/column_transforms.py`, `utils/dataframe_transforms.py`) reused via `df.transform(...)`, plus app-specific `apps/<app>/utils/`.
+- **Sedona geospatial conventions** (SedonaContext, geodesic-before-project, EPSG:3857 output).
+
+**Non-obvious conventions**
+- The English-code / Portuguese-docstrings split, and that `CODING_STANDARDS.md` is authoritative.
+
+**Commands**
+- Docker build/run flow and the `docker compose exec spark spark-submit apps/<app>/jobs/<layer>/<job>.py` invocation, plus the external `external-net` + `s3:9000` prerequisites that aren't defined in this repo.
+
+**Tests/lint**
+- Stated plainly that there is no committed test suite, linter, or CI — verification is by running the job (I confirmed the `start.sh`-referenced `validate_setup.py`/`exploration/` don't exist, so I didn't cite them as commands).
+
+One thing worth your attention: `CODING_STANDARDS.md` references running local tests, but no test framework or test files exist in the repo. If a testing setup is expected, that's a gap worth filling.

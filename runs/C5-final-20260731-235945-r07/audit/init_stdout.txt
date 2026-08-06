@@ -1,0 +1,19 @@
+I've created `CLAUDE.md` at the project root. Here's what it captures about this codebase:
+
+**What the project is** — PySpark 3.5.4 + Apache Sedona geospatial pipelines over Brazilian public datasets, structured as a medallion data lake (`raw → bronze → silver → gold`) on S3/MinIO, run inside Docker.
+
+**The big-picture architecture** that requires reading several files to grasp:
+- The **per-app structure** (`apps/<app>/` with `jobs/{bronze,silver,gold}/`, `metadata.toml`, app-local `utils/`) repeated across 12 data-source apps, and the strict layer dependency flow.
+- **`metadata.toml` as the schema contract** — table locations, keys, and per-layer schemas live there; jobs resolve paths through `utils/metadata.py:table_location()` rather than hand-building S3A paths.
+- The **shared `utils/` split** (`column_transforms` = `Column→Column`, `dataframe_transforms` = `DataFrame→DataFrame`) and the "check utils before writing a new transform" rule.
+- The **Spark vs. Sedona context** distinction that isn't obvious until you compare a geo job to a plain one.
+
+**Commands** — the Docker workflow, the `external-net` network prerequisite, and how to `spark-submit` a single job.
+
+**Two things I flagged rather than invented:**
+- `CODING_STANDARDS.md` is authoritative — I pointed to it and pulled only the rules that shape architecture (pure transforms, no UDFs, absence-as-null, geodesic-before-projecting), rather than duplicating the whole style guide.
+- The **code/English, docs/Portuguese** language convention, which is consistent and easy to violate accidentally.
+
+One inconsistency I noticed but didn't over-document: a few jobs (e.g. `ana_ranking_estacoes.py`) hardcode S3A paths instead of using `table_location()`, which the standards discourage. I documented the *intended* metadata-driven pattern so future work follows the norm rather than the exceptions.
+
+There was no existing `CLAUDE.md`, and I skipped `validate_setup.py`/`exploration/` in the run instructions since those paths are referenced in `start.sh` but not present in this repo.

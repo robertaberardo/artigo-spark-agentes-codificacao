@@ -1,0 +1,13 @@
+Created `CLAUDE.md`. There was no existing one, so this is a fresh file. Summary of what I captured after reading the code, config, and `CODING_STANDARDS.md`:
+
+**Architecture**
+- Monorepo of PySpark medallion pipelines (`raw → bronze → silver → gold`) for Brazilian public-data sources, one **app** per source under `apps/<app>/` (12 apps: anac, datasus, ibge, tse, bcb, inmet, dnit, caged, cvm, snis, ana, educação).
+- Per-app layout: `metadata.toml` (table registry with per-layer schemas/keys), `jobs/{bronze,silver,gold}/` (one `spark-submit` script per output table), `utils/column_transforms.py` (domain-specific transforms).
+- Shared transforms in top-level `utils/`: `column_transforms.py` (`Column→Column`), `dataframe_transforms.py` (`DataFrame→DataFrame`), `metadata.py` (path resolution). The reuse-before-writing rule.
+- Table paths resolved via `table_location(app, table, level)` from `metadata.toml` — I flagged the real inconsistency that several jobs still hardcode `s3a://` paths, and noted the metadata-driven form as the intended pattern.
+
+**Standards** — pointed to `CODING_STANDARDS.md` as authoritative and distilled the load-bearing rules (English code / Portuguese docstrings, `snake_case` columns, pure transforms + `.transform`, no UDFs, native functions over `F.expr`, absence≠zero, explicit joins/window frames, Sedona geodesic-distance-before-projection).
+
+**Running** — Docker-based (`docker compose exec spark spark-submit apps/<app>/jobs/<layer>/<job>.py`), config via `spark-defaults.conf`/env vars, and the fact that there's **no test suite or linter** — verification is running the job and checking the printed count. Also captured why the version pins (Java 11 / Python 3.11 / pyspark 3.5.4 / sedona 1.9.0) matter.
+
+A couple of things I deliberately did **not** invent: `start.sh` references `validate_setup.py` and an `exploration/` dir that don't exist in the repo, so I left those out rather than document phantom commands.

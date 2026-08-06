@@ -1,0 +1,6 @@
+# Área transiente de download/extração (Censo etc.) — não versionar.
+_staging/
+
+# Credenciais do MinIO local. O `.env.example` documenta as chaves; os valores são
+# de cada máquina e não entram no repositório.
+.env

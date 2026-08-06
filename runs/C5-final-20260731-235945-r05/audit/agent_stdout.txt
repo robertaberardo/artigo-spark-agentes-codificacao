@@ -1,0 +1,34 @@
+The pipeline is complete and verified. Here's a summary of what I built and ran.
+
+## O que foi feito
+
+A app `educacao` era só um scaffold vazio, então construí o pipeline medallion completo (`bronze → silver → gold`) que alimenta a tabela pedida, seguindo os padrões do `CODING_STANDARDS.md`/`CLAUDE.md` e reusando as `utils/` existentes.
+
+**Jobs criados** (todos rodaram com sucesso):
+
+| Camada | Job | Saída |
+|---|---|---|
+| bronze | `educacao_escola.py` | 214.192 registros — nomes em snake_case, lat/long viram `double`, indicadores viram `int` |
+| bronze | `educacao_matricula.py` | 178.766 registros — contagens em `int`, ausência = `NULL` |
+| silver | `educacao_escola_matricula_geo.py` | 660 escolas — federais em atividade, ponto WGS84, célula H3-5, total de matrículas; geometria persistida em 3857 |
+| gold | `educacao_escola_matricula_h3_grid.py` | **555 células** — a tabela final |
+
+Também declarei as novas camadas/tabelas e seus schemas no `metadata.toml` (a regra manda que jobs derivem caminhos via `table_location`, nunca hardcode).
+
+## Decisões que valem registrar
+
+- **Distâncias geodésicas** (`ST_DistanceSpheroid`) calculadas sobre o ponto WGS84 **original** reconstruído do lat/long preservado — sem round-trip 3857→4326, como exige o CLAUDE.md.
+- **Vizinhança** = anel H3 k=1 (própria célula + 6 adjacentes) via `ST_H3KRing`. Como todas as escolas da célula veem o mesmo *pool*, cada uma tem `pool − 1` vizinhas — daí `n_federal_neighbors` ser "a mesma para toda a célula" (excluindo a si própria).
+- **Mais próxima (qualquer)**: cross join das 660 federais (~435k pares, trivial), mínimo por escola, média por célula.
+- **Ausência ≠ zero**: células isoladas ficam com `avg_dist_neighbors_km = NULL` (não há vizinha), e `avg_enrollment` usa `F.avg` (ignora nulos).
+
+## Verificação (checks que passaram)
+
+- Colunas exatamente as pedidas: `h3_cell, n_schools, total_enrollment, avg_enrollment, n_federal_neighbors, avg_dist_neighbors_km, avg_dist_nearest_km, geometry`.
+- Soma de `n_schools` = 660 (todas as federais ativas georreferenciadas).
+- `n_federal_neighbors ≥ n_schools − 1` em 100% das células; `avg_dist_nearest_km` sem nulos; geometria toda em SRID 3857.
+- Sanidade: célula com 13 escolas → 30 vizinhas, `avg_enrollment` = 11474/13 = 882,62 ✓; nearest (0,412 km) ≤ neighbor (8,95 km) ✓.
+
+Observação: o writer geoparquet adiciona automaticamente uma coluna física `geometry_bbox` (cobertura espacial do GeoParquet 1.1) — é detalhe de armazenamento, igual às outras tabelas geo do repo, e não faz parte do schema lógico.
+
+Uma ressalva que notei de passagem: os jobs hexbin existentes (ana/datasus/anac) chamam `attach_h3_index` sobre a geometria **já em 3857**, o que alimenta o H3 com coordenadas em metros — provável bug pré-existente. Evitei isso calculando o H3 no silver sobre o ponto WGS84, antes de projetar. Não mexi nos jobs alheios, mas vale sinalizar.

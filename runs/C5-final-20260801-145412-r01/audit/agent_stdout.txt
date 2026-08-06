@@ -1,0 +1,31 @@
+Pronto. A tabela `educacao_escola_matricula_h3_grid` foi produzida e o pipeline rodou de ponta a ponta com sucesso.
+
+## O que foi construído
+
+Como o app `educacao` só tinha a camada `raw` declarada, montei a medalhão inteira seguindo `CLAUDE.md` e `CODING_STANDARDS.md`:
+
+| Camada | Arquivo | Resultado |
+|---|---|---|
+| **bronze** | `jobs/bronze/educacao_escola.py` | 214.192 escolas (snake_case, lat/long → `double`, setor/situação → `int`) |
+| **bronze** | `jobs/bronze/educacao_matricula.py` | 178.766 matrículas (contagens → `int`) |
+| **silver** | `jobs/silver/educacao_escola_geo.py` | 156.814 escolas georreferenciadas + matrícula (`join_no_fanout`, geometria em EPSG:3857, lat/long WGS84 preservadas) |
+| **gold** | `jobs/gold/educacao_escola_matricula_h3_grid.py` | **555 células H3 res. 5** |
+
+Também declarei as quatro tabelas/camadas novas em `metadata.toml` (os jobs usam `table_location`, sem caminhos hardcoded).
+
+## Como as regras da tarefa viraram código
+- **Escopo**: filtro `setor==1 & situacao==1` (federais em atividade) — 716 no país, 660 com coordenadas válidas.
+- **Vizinhas**: disco H3 k=1 (`ST_H3KRing`, própria célula + adjacentes). `n_federal_neighbors` é contagem por célula (igual para toda a célula), incluindo a própria.
+- **Distâncias geodésicas**: `ST_DistanceSpheroid` sobre o ponto WGS84 **original**, não sobre a projeção 3857 (evita o round-trip que a norma proíbe).
+- **Mais próxima (qualquer)**: cross-join entre as 660 escolas (trivial nesse tamanho), `min` por escola, média por célula.
+- **Ausência = null**: onde `avg`/`sum` já ignoram nulos; células isoladas ficam com `avg_dist_neighbors_km` nulo em vez de zero.
+
+## Validações
+- Colunas exatamente conforme pedido: `h3_cell, n_schools, total_enrollment, avg_enrollment, n_federal_neighbors, avg_dist_neighbors_km, avg_dist_nearest_km, geometry` (`ST_Polygon`, SRID 3857).
+- `total_enrollment` do gold = matrículas do silver: **365.835 = 365.835** (nada perdido/duplicado).
+- `n_federal_neighbors ≥ n_schools` em todas as células (disco inclui a própria) — 0 violações.
+- Distância de vizinhas nula ⟺ `n_federal_neighbors==1` (célula com escola isolada) — 0 divergências.
+
+Uma observação: o arquivo GeoParquet traz uma coluna extra `geometry_bbox` — é o *bbox covering* que o writer do Sedona 1.9 adiciona automaticamente em toda escrita `geoparquet` (otimização de filtro espacial), não faz parte do schema lógico que declarei.
+
+Todos os jobs estão persistidos no data lake; para reexecutar: `docker compose exec spark spark-submit apps/educacao/jobs/<camada>/<job>.py` na ordem bronze → silver → gold.

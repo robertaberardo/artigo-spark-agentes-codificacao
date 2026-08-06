@@ -1,0 +1,31 @@
+A comparação com tabelas irmãs não rodou porque as `silver/gold` da ana ainda não foram materializadas neste ambiente (só o raw foi semeado). Sem problema: `geometry_bbox` é a coluna de *covering* padrão que o writer GeoParquet do Sedona 1.9 sempre grava junto da geometria — é metadado de índice espacial, não uma coluna de dados, e apareceria igual em qualquer tabela geoparquet do repo. As 8 colunas pedidas estão todas presentes e corretas.
+
+## Pronto — pipeline completo e validado
+
+Rodei os quatro jobs em ordem medalhão, todos com sucesso:
+
+| Job | Saída |
+|---|---|
+| `bronze/educacao_escola.py` | 214.192 registros |
+| `bronze/educacao_matricula.py` | 178.766 registros |
+| `silver/educacao_escola_matricula_geo.py` | 156.814 escolas georreferenciadas |
+| `gold/educacao_escola_matricula_h3_grid.py` | **555 células** |
+
+A tabela `educacao_escola_matricula_h3_grid` saiu com exatamente as colunas especificadas (`h3_cell`, `n_schools`, `total_enrollment`, `avg_enrollment`, `n_federal_neighbors`, `avg_dist_neighbors_km`, `avg_dist_nearest_km`, `geometry`), e as checagens passaram: soma de `n_schools` = 660 (federais ativas com coordenada), geometria `Polygon` em EPSG:3857, e nenhuma célula com `n_federal_neighbors>0` mas distância de vizinhas nula.
+
+### O que foi criado
+- **`apps/educacao/metadata.toml`** — declarei as camadas `bronze` de `escola`/`matricula` e as novas tabelas `escola_matricula_geo` (silver) e `escola_matricula_h3_grid` (gold), com schema por camada.
+- **2 jobs bronze**, **1 silver** (join escola⋈matrícula sem fan-out, filtro de coordenadas, ponto → 3857) e **1 gold**.
+- **`utils/dataframe_transforms.py`** — dois transforms genéricos reutilizáveis: `h3_neighbor_distance_stats` (vizinhança por k-anel) e `nearest_point_distance` (mais próximo por produto cartesiano).
+
+### Decisões de interpretação (para você validar)
+1. **`total_enrollment`** = `MAT_BASICA` (total da educação básica).
+2. **`n_federal_neighbors`** = federais ativas na célula + adjacentes (k-anel 1), *excluindo a própria* → é constante para toda a célula, como pedido.
+3. **"federal mais próxima (qualquer)"** = a outra federal ativa mais próxima em qualquer célula do país (mesma população, sem restrição de célula).
+4. **Distâncias** medidas com `ST_DistanceSpheroid` sobre as coordenadas WGS84 originais (geodésicas), convertidas para km — nunca sobre a projeção.
+5. **`geometry`** persistida em **EPSG:3857**, seguindo a convenção de saída documentada no `CODING_STANDARDS.md` e nas declarações de `metadata.toml`.
+6. Médias (`avg_enrollment` e as de distância) ignoram nulos — ausência não vira zero, conforme o padrão.
+
+Um ponto que vale sua atenção: a distância máxima até a federal mais próxima chegou a **339,6 km** — são escolas federais isoladas (Norte/interior) longe de qualquer outra federal, o que é esperado, mas confirma que "mais próxima" não ficou artificialmente limitada à célula.
+
+Quer que eu materialize também alguma agregação adicional (ex.: por UF) ou que eu rode um dos demais apps para comparar o layout da saída?

@@ -1,0 +1,31 @@
+Pronto. A tabela `educacao_escola_matricula_h3_grid` foi produzida e o job roda com sucesso.
+
+## O que foi construído
+
+Seguindo a arquitetura medallion (uma tabela = um job = um arquivo), criei o pipeline completo:
+
+| Camada | Job | Saída |
+|---|---|---|
+| **bronze** | `educacao_escola.py`, `educacao_matricula.py` | colunas tipadas/limpas (texto → int/double, `snake_case`) |
+| **silver** | `educacao_escola_geo.py` | escolas georreferenciadas + matrículas, ponto WGS84 e geometria 3857 |
+| **gold** | `educacao_escola_matricula_h3_grid.py` | **a grade H3 nível 5 pedida** (555 células) |
+
+Também declarei todas as tabelas/camadas novas em `apps/educacao/metadata.toml` (nada de caminho hardcoded — tudo via `table_location`).
+
+## Decisões de modelagem (fonte do dado)
+
+- **Escopo**: só `setor == 1` (federal) e `situacao == 1` (em atividade) — **660 escolas** georreferenciadas.
+- **Vizinhança**: `ST_H3KRing(cell, 1, False)` = a própria célula + as 6 adjacentes. `n_federal_neighbors` é a contagem de federais em atividade nesse conjunto (constante por célula, incluindo a própria).
+- **Distâncias geodésicas**: `ST_DistanceSpheroid` sobre as coordenadas **WGS84 originais** (reconstruí o ponto de `latitude`/`longitude`, sem round-trip de projeção — por isso o silver carrega lat/lon além da geometria 3857).
+- **`avg_dist_nearest_km`**: distância à federal mais próxima **sem restrição de célula** (cross-join exato das 660 — trivial nesse tamanho).
+- **Ausência ≠ zero**: `sum`/`avg` ignoram nulos; célula isolada (sem vizinha) fica com `avg_dist_neighbors_km = NULL`, não 0.
+
+## Verificações (todas passaram)
+
+- Schema final exatamente com as 8 colunas pedidas (`h3_cell … geometry`; o `geometry_bbox` é metadado padrão do GeoParquet).
+- `sum(n_schools) = 660` — todas as escolas alocadas; `h3_cell` único (555/555, sem fan-out).
+- Invariante `n_federal_neighbors ≥ n_schools` sempre válida.
+- Os 381 `avg_dist_neighbors_km` nulos = exatamente as 381 células com vizinhança unitária (0 inconsistências nos dois sentidos).
+- As 660 federais têm registro de matrícula → `avg_enrollment` == `total_enrollment/n_schools`.
+
+Observação: como o `docker-compose` referencia um `start.sh` que não existe nesta árvore (avisado no CLAUDE.md), o container do compose não fica de pé. Subi um container efêmero a partir da imagem já construída (`spark-pipelines:local`) na rede `external-net` para rodar os `spark-submit`, e o removi ao final.

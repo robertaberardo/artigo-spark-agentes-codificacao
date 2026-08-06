@@ -1,0 +1,32 @@
+Pronto. A tabela `educacao_escola_matricula_h3_grid` foi gerada e o job roda com sucesso.
+
+## O que foi construído
+
+Segui a arquitetura medallion do repositório, criando a cadeia completa raw → bronze → silver → gold para o app `educacao`:
+
+| Camada | Job | Resultado |
+|---|---|---|
+| bronze | `educacao_escola.py` | 214.192 escolas tipadas/snake_case (lat/long `double`) |
+| bronze | `educacao_matricula.py` | 178.766 registros de matrícula (contagens `int`) |
+| silver | `educacao_escola_matricula_geo.py` | 660 escolas **federais em atividade** com coordenadas válidas + total de matrículas |
+| gold | `educacao_escola_matricula_h3_grid.py` | **555 células** H3 res 5 |
+
+Também declarei todas as tabelas/camadas novas no `metadata.toml` (schemas por camada) e os jobs resolvem os caminhos via `table_location(...)`.
+
+## Decisões de modelagem (conforme os padrões)
+
+- **Federal em atividade**: `setor == 1` e `situacao == 1`.
+- **Distâncias geodésicas corretas**: o silver preserva `latitude`/`longitude` originais e o gold reconstrói o ponto WGS84 a partir delas para usar `ST_DistanceSpheroid`, evitando o round-trip 3857→4326 que o `CODING_STANDARDS.md` proíbe. A geometria de saída (célula) é gravada em EPSG:3857.
+- **Vizinhas**: outras federais ativas na própria célula **ou** nas adjacentes — via `ST_H3KRing(cell, 1, false)` (centro + 6 vizinhas) e `array_contains`. `n_federal_neighbors` = `|ring| − 1` (cada escola exclui só a si mesma), o que o torna **constante dentro da célula** — verifiquei empiricamente que não varia em nenhuma célula.
+- **Mais próxima (qualquer federal, sem restrição de célula)**: cross-join sobre as 660 escolas (barato) com `min` da distância.
+- **Ausência ≠ zero**: `total_enrollment`/médias usam `sum`/`avg` (ignoram nulos); `avg_dist_neighbors_km` fica **nulo** para células isoladas (381 células, batendo exatamente com `n_federal_neighbors == 0`).
+
+## Verificações
+
+- `Σ n_schools = 660` (todas as federais ativas geolocalizadas).
+- Colunas finais exatamente: `h3_cell, n_schools, total_enrollment, avg_enrollment, n_federal_neighbors, avg_dist_neighbors_km, avg_dist_nearest_km, geometry` (polígono `ST_Polygon`, SRID 3857).
+- Invariante de vizinhança confirmada (0 células com contagem divergente entre escolas) e distâncias plausíveis (nearest de 0,37 a 339,6 km; nenhuma coordenada duplicada).
+
+Nota: a coluna extra `geometry_bbox` que aparece no parquet é metadado espacial que o writer GeoParquet do Sedona adiciona automaticamente para indexação — não faz parte do contrato e é inofensiva.
+
+Uma observação sobre o ambiente: o serviço `spark` do `docker-compose.yml` não estava de pé (havia apenas um container de outro projeto, `place-etl-spark-1`, sem Sedona). Subi o serviço com `docker compose up -d` (a imagem `spark-pipelines:local` já existia, sem rebuild) para executar os jobs.

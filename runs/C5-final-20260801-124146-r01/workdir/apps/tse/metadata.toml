@@ -1,0 +1,506 @@
+[data_lake]
+db  = "datalake"
+app = "tse"
+
+# ---------------------------------------------------------------------------
+# tse_candidato — candidatos e votos totalizados na fonte
+# ---------------------------------------------------------------------------
+[tables.candidato]
+name   = "tse_candidato"
+levels = ["raw", "bronze"]
+key    = "id_candidato"
+
+[[tables.candidato.raw.schema]]
+name = "id_candidato"
+type = "string"
+description = "identificador do candidato (chave)"
+
+[[tables.candidato.raw.schema]]
+name = "nome"
+type = "string"
+description = "nome de urna do candidato"
+
+[[tables.candidato.raw.schema]]
+name = "partido_sigla"
+type = "string"
+description = "sigla do partido"
+
+[[tables.candidato.raw.schema]]
+name = "uf"
+type = "string"
+description = "UF da candidatura"
+
+[[tables.candidato.raw.schema]]
+name = "cargo"
+type = "string"
+description = "cargo disputado"
+
+[[tables.candidato.raw.schema]]
+name = "situacao"
+type = "string"
+description = "situação da candidatura"
+
+[[tables.candidato.raw.schema]]
+name = "votos"
+type = "string"
+description = "votos apurados (texto)"
+
+[[tables.candidato.bronze.schema]]
+name = "id_candidato"
+type = "string"
+description = "identificador do candidato (chave)"
+
+[[tables.candidato.bronze.schema]]
+name = "nome"
+type = "string"
+description = "nome de urna (espaçamento padronizado)"
+
+[[tables.candidato.bronze.schema]]
+name = "partido_sigla"
+type = "string"
+description = "sigla do partido"
+
+[[tables.candidato.bronze.schema]]
+name = "uf"
+type = "string"
+description = "UF da candidatura"
+
+[[tables.candidato.bronze.schema]]
+name = "cargo"
+type = "string"
+description = "cargo disputado"
+
+[[tables.candidato.bronze.schema]]
+name = "situacao"
+type = "string"
+description = "situação da candidatura"
+
+[[tables.candidato.bronze.schema]]
+name = "votos"
+type = "int"
+description = "votos apurados"
+
+# ---------------------------------------------------------------------------
+# tse_votacao — votos por candidato, município e zona
+# ---------------------------------------------------------------------------
+[tables.votacao]
+name   = "tse_votacao"
+levels = ["raw", "bronze"]
+key    = "id_votacao"
+
+[[tables.votacao.raw.schema]]
+name = "id_votacao"
+type = "string"
+description = "identificador do registro de votação (chave)"
+
+[[tables.votacao.raw.schema]]
+name = "id_candidato"
+type = "string"
+description = "identificador do candidato"
+
+[[tables.votacao.raw.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município"
+
+[[tables.votacao.raw.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.votacao.raw.schema]]
+name = "zona"
+type = "string"
+description = "número da zona eleitoral"
+
+[[tables.votacao.raw.schema]]
+name = "votos"
+type = "string"
+description = "votos na urna (texto)"
+
+[[tables.votacao.bronze.schema]]
+name = "id_votacao"
+type = "string"
+description = "identificador do registro de votação (chave)"
+
+[[tables.votacao.bronze.schema]]
+name = "id_candidato"
+type = "string"
+description = "identificador do candidato"
+
+[[tables.votacao.bronze.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município (7 dígitos)"
+
+[[tables.votacao.bronze.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.votacao.bronze.schema]]
+name = "zona"
+type = "string"
+description = "número da zona eleitoral"
+
+[[tables.votacao.bronze.schema]]
+name = "votos"
+type = "int"
+description = "votos na urna"
+
+# ---------------------------------------------------------------------------
+# tse_zona — zonas eleitorais georreferenciadas e eleitorado
+# ---------------------------------------------------------------------------
+[tables.zona]
+name   = "tse_zona"
+levels = ["raw", "bronze"]
+key    = "id_zona"
+
+[[tables.zona.raw.schema]]
+name = "id_zona"
+type = "string"
+description = "identificador da zona eleitoral (chave)"
+
+[[tables.zona.raw.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município"
+
+[[tables.zona.raw.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.zona.raw.schema]]
+name = "latitude"
+type = "string"
+description = "latitude da zona (texto)"
+
+[[tables.zona.raw.schema]]
+name = "longitude"
+type = "string"
+description = "longitude da zona (texto)"
+
+[[tables.zona.raw.schema]]
+name = "eleitores"
+type = "string"
+description = "eleitorado da zona (texto)"
+
+[[tables.zona.bronze.schema]]
+name = "id_zona"
+type = "string"
+description = "identificador da zona eleitoral (chave)"
+
+[[tables.zona.bronze.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município (7 dígitos)"
+
+[[tables.zona.bronze.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.zona.bronze.schema]]
+name = "latitude"
+type = "double"
+description = "latitude em graus decimais"
+
+[[tables.zona.bronze.schema]]
+name = "longitude"
+type = "double"
+description = "longitude em graus decimais"
+
+[[tables.zona.bronze.schema]]
+name = "eleitores"
+type = "int"
+description = "eleitorado da zona"
+
+# ---------------------------------------------------------------------------
+# tse_partido — partidos políticos
+# ---------------------------------------------------------------------------
+[tables.partido]
+name   = "tse_partido"
+levels = ["raw", "bronze"]
+key    = "sigla"
+
+[[tables.partido.raw.schema]]
+name = "sigla"
+type = "string"
+description = "sigla do partido (chave)"
+
+[[tables.partido.raw.schema]]
+name = "nome"
+type = "string"
+description = "nome do partido"
+
+[[tables.partido.raw.schema]]
+name = "numero"
+type = "string"
+description = "número de legenda (texto)"
+
+[[tables.partido.bronze.schema]]
+name = "sigla"
+type = "string"
+description = "sigla do partido (chave)"
+
+[[tables.partido.bronze.schema]]
+name = "nome"
+type = "string"
+description = "nome do partido (espaçamento padronizado)"
+
+[[tables.partido.bronze.schema]]
+name = "numero"
+type = "int"
+description = "número de legenda"
+
+# ---------------------------------------------------------------------------
+# tse_municipio — municípios com geometria de polígono
+# ---------------------------------------------------------------------------
+[tables.municipio]
+name   = "tse_municipio"
+levels = ["raw", "bronze"]
+key    = "municipio_ibge"
+
+[[tables.municipio.raw.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município (chave)"
+
+[[tables.municipio.raw.schema]]
+name = "nome"
+type = "string"
+description = "nome do município"
+
+[[tables.municipio.raw.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.municipio.raw.schema]]
+name = "geom_wkt"
+type = "string"
+description = "polígono do município em WKT (WGS84)"
+
+[[tables.municipio.bronze.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município (7 dígitos, chave)"
+
+[[tables.municipio.bronze.schema]]
+name = "nome"
+type = "string"
+description = "nome do município (espaçamento padronizado)"
+
+[[tables.municipio.bronze.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.municipio.bronze.schema]]
+name = "geom_wkt"
+type = "string"
+description = "polígono do município em WKT (WGS84)"
+
+# ---------------------------------------------------------------------------
+# tse_zona_geo — zonas eleitorais como ponto (silver)
+# ---------------------------------------------------------------------------
+[tables.zona_geo]
+name   = "tse_zona_geo"
+levels = ["silver"]
+key    = "id_zona"
+
+[[tables.zona_geo.silver.schema]]
+name = "id_zona"
+type = "string"
+description = "identificador da zona eleitoral (chave)"
+
+[[tables.zona_geo.silver.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município"
+
+[[tables.zona_geo.silver.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.zona_geo.silver.schema]]
+name = "eleitores"
+type = "int"
+description = "eleitorado da zona"
+
+[[tables.zona_geo.silver.schema]]
+name = "geometry"
+type = "geometry(point)"
+description = "ponto da zona eleitoral (EPSG:3857)"
+
+# ---------------------------------------------------------------------------
+# tse_municipio_geo — municípios como polígono, com área (silver)
+# ---------------------------------------------------------------------------
+[tables.municipio_geo]
+name   = "tse_municipio_geo"
+levels = ["silver"]
+key    = "municipio_ibge"
+
+[[tables.municipio_geo.silver.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município (chave)"
+
+[[tables.municipio_geo.silver.schema]]
+name = "nome"
+type = "string"
+description = "nome do município"
+
+[[tables.municipio_geo.silver.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.municipio_geo.silver.schema]]
+name = "area_km2"
+type = "double"
+description = "área do município em km²"
+
+[[tables.municipio_geo.silver.schema]]
+name = "geometry"
+type = "geometry(polygon)"
+description = "polígono do município (EPSG:3857)"
+
+# ---------------------------------------------------------------------------
+# tse_votacao_consolidada — votos totalizados por candidato (silver)
+# ---------------------------------------------------------------------------
+[tables.votacao_consolidada]
+name   = "tse_votacao_consolidada"
+levels = ["silver"]
+key    = "id_candidato"
+
+[[tables.votacao_consolidada.silver.schema]]
+name = "id_candidato"
+type = "string"
+description = "identificador do candidato (chave)"
+
+[[tables.votacao_consolidada.silver.schema]]
+name = "nome"
+type = "string"
+description = "nome de urna do candidato"
+
+[[tables.votacao_consolidada.silver.schema]]
+name = "partido_sigla"
+type = "string"
+description = "sigla do partido"
+
+[[tables.votacao_consolidada.silver.schema]]
+name = "partido_nome"
+type = "string"
+description = "nome do partido"
+
+[[tables.votacao_consolidada.silver.schema]]
+name = "uf"
+type = "string"
+description = "UF da candidatura"
+
+[[tables.votacao_consolidada.silver.schema]]
+name = "cargo"
+type = "string"
+description = "cargo disputado"
+
+[[tables.votacao_consolidada.silver.schema]]
+name = "votos"
+type = "long"
+description = "votos totalizados do candidato"
+
+# ---------------------------------------------------------------------------
+# tse_ranking_candidatos_uf — ranking de candidatos por UF (gold)
+# ---------------------------------------------------------------------------
+[tables.ranking_candidatos_uf]
+name   = "tse_ranking_candidatos_uf"
+levels = ["gold"]
+key    = "id_candidato"
+
+[[tables.ranking_candidatos_uf.gold.schema]]
+name = "id_candidato"
+type = "string"
+description = "identificador do candidato (chave)"
+
+[[tables.ranking_candidatos_uf.gold.schema]]
+name = "nome"
+type = "string"
+description = "nome de urna do candidato"
+
+[[tables.ranking_candidatos_uf.gold.schema]]
+name = "partido_sigla"
+type = "string"
+description = "sigla do partido"
+
+[[tables.ranking_candidatos_uf.gold.schema]]
+name = "uf"
+type = "string"
+description = "UF da candidatura"
+
+[[tables.ranking_candidatos_uf.gold.schema]]
+name = "votos"
+type = "long"
+description = "votos totalizados do candidato"
+
+[[tables.ranking_candidatos_uf.gold.schema]]
+name = "rank_uf"
+type = "int"
+description = "posição na UF por votos (1 = mais votado)"
+
+# ---------------------------------------------------------------------------
+# tse_comparecimento_por_uf — comparecimento por UF (gold)
+# ---------------------------------------------------------------------------
+[tables.comparecimento_por_uf]
+name   = "tse_comparecimento_por_uf"
+levels = ["gold"]
+key    = "uf"
+
+[[tables.comparecimento_por_uf.gold.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF (chave)"
+
+[[tables.comparecimento_por_uf.gold.schema]]
+name = "votos"
+type = "long"
+description = "votos totais apurados na UF"
+
+[[tables.comparecimento_por_uf.gold.schema]]
+name = "eleitores"
+type = "long"
+description = "eleitorado total da UF"
+
+[[tables.comparecimento_por_uf.gold.schema]]
+name = "comparecimento"
+type = "double"
+description = "razão votos sobre eleitores"
+
+# ---------------------------------------------------------------------------
+# tse_votacao_hexbin — eleitorado por célula H3 (gold)
+# ---------------------------------------------------------------------------
+[tables.votacao_hexbin]
+name   = "tse_votacao_hexbin"
+levels = ["gold"]
+key    = "h3_cell"
+
+[[tables.votacao_hexbin.gold.schema]]
+name = "h3_cell"
+type = "long"
+description = "id da célula H3 nível 6 (chave)"
+
+[[tables.votacao_hexbin.gold.schema]]
+name = "eleitores"
+type = "long"
+description = "eleitorado somado na célula"
+
+[[tables.votacao_hexbin.gold.schema]]
+name = "zonas"
+type = "long"
+description = "zonas eleitorais na célula"
+
+[[tables.votacao_hexbin.gold.schema]]
+name = "geometry"
+type = "geometry(polygon)"
+description = "polígono da célula H3 (EPSG:3857)"

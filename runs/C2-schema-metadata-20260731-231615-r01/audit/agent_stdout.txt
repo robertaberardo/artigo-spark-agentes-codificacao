@@ -1,0 +1,27 @@
+Job concluído e validado com sucesso. ✅
+
+## O que foi feito
+
+Como a app `educacao` só tinha os dados brutos (CSV em `raw`, sem bronze/silver), construí o job **gold** direto a partir do raw:
+
+**Arquivos criados:**
+- `apps/educacao/jobs/gold/educacao_escola_matricula_h3_grid.py` — o job
+- Declaração da tabela `[tables.escola_matricula_h3_grid]` (level `gold`) em `apps/educacao/metadata.toml`, seguindo o padrão dos outros hexbins do lake
+
+**Lógica aplicada:**
+1. Filtra escolas **federais** (`SETOR=1`) **em atividade** (`SITUACAO=1`) com coordenadas válidas → 660 escolas
+2. Ponto em EPSG:4326 e célula H3 nível 5 (`ST_H3CellIDs`)
+3. Junta `MAT_BASICA` (matrículas da educação básica) por unidade
+4. Agrega por célula: `n_schools`, `total_enrollment`, `avg_enrollment`
+5. **Vizinhança** = célula + adjacentes (H3 k-ring 1, `ST_H3KRing(cell,1,False)`). `n_federal_neighbors = N−1` (N = federais ativas na vizinhança), igual para toda a célula e excluindo a própria escola
+6. `avg_dist_neighbors_km`: distância geodésica média (`ST_DistanceSpheroid`, km) de cada escola às vizinhas, agregada na célula
+7. `avg_dist_nearest_km`: distância média à federal ativa mais próxima (qualquer célula, self cross-join)
+8. `geometry`: polígono da célula (`ST_H3ToGeom`)
+
+**Correções durante a execução:** dois erros de invocação (não do job) — o Git Bash convertia o caminho do `-w` do Docker (resolvido com `MSYS_NO_PATHCONV=1`) e o `spark-submit` não lê script de stdin (usei arquivo temporário para a validação).
+
+**Resultado validado:** 555 células, `sum(n_schools)=660` (bate com as 660 federais ativas georreferenciadas), todas as 8 colunas com tipos corretos, geometria `POLYGON`, `avg_enrollment` consistente. As 381 células isoladas (1 escola, sem vizinhas) ficam com `n_federal_neighbors=0` e `avg_dist_neighbors_km` nulo — o comportamento correto quando não há vizinhas.
+
+Saída em `s3a://datalake/educacao/educacao_escola_matricula_h3_grid/gold`.
+
+Uma nota sobre uma escolha interpretativa: em `n_federal_neighbors` adotei **N−1** (vizinhas de cada escola, excluindo ela própria — coerente com "as *outras* escolas" e com "a mesma para toda a célula"). Se você preferir contar o total de escolas da vizinhança **incluindo** as da própria célula (N), é uma troca de uma linha — me avise.

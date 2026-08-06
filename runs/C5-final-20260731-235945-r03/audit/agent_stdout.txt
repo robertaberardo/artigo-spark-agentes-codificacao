@@ -1,0 +1,26 @@
+Pronto. A tabela `educacao_escola_matricula_h3_grid` foi produzida e o job roda com sucesso.
+
+## O que foi feito
+
+Como `apps/educacao/` era só um scaffold, construí a cadeia medalhão completa (`bronze → silver → gold`), seguindo os padrões do repositório (transforms genéricos de `utils/`, sem UDF, `select` como contrato de schema, distância geodésica sobre WGS84 original, caminhos via `metadata.toml`).
+
+**Arquivos criados/alterados**
+- `apps/educacao/metadata.toml` — declarei os níveis `bronze` (escola/matrícula) e as tabelas novas `escola_matricula_geo` (silver) e `escola_matricula_h3_grid` (gold), com schema por camada.
+- `apps/educacao/utils/column_transforms.py` — helpers `is_federal`/`is_active`.
+- `jobs/bronze/educacao_escola.py` e `educacao_matricula.py` — tipagem do raw.
+- `jobs/silver/educacao_escola_matricula_geo.py` — filtra **federais em atividade** + coordenadas válidas, junta matrículas (`left`, sem fan-out), gera geometria 3857 e **mantém lat/long WGS84 originais** (necessárias para as distâncias e o H3 do gold).
+- `jobs/gold/educacao_escola_matricula_h3_grid.py` — agregação por célula H3 nível 5.
+
+**Lógica das colunas exigidas**
+- Vizinhas via disco `ST_H3KRing(célula, 1, false)` (própria célula + adjacentes); pares self-join, distância `ST_DistanceSpheroid`.
+- `n_federal_neighbors` = nº de outras escolas no disco — idêntico para toda a célula (uso `max`, com `0` para células isoladas).
+- `avg_dist_neighbors_km` / `avg_dist_nearest_km` = média, na célula, da distância média de cada escola às vizinhas / da distância de cada escola à federal mais próxima (cross join, sem restrição de célula).
+
+**Execução (na ordem, no container)**
+- bronze escola: 214.192 · bronze matrícula: 178.766
+- silver: **660** escolas federais em atividade
+- gold: **555** células — schema com exatamente as 8 colunas pedidas (`h3_cell, n_schools, total_enrollment, avg_enrollment, n_federal_neighbors, avg_dist_neighbors_km, avg_dist_nearest_km, geometry`).
+
+**Verificações**: `sum(n_schools)=660` bate com o silver; `avg_enrollment = total/n`; e três invariantes passaram sem violação (`n_federal_neighbors ≥ n_schools−1`, coerência entre distância-de-vizinha nula ⟺ zero vizinhas, `nearest ≤ média das vizinhas`, sem valores negativos).
+
+Nota: o container em execução `place-etl-spark-1` não é o deste projeto (Java 8, sem PySpark); subi o serviço `spark` deste compose (`workdir-spark-1`, imagem `spark-pipelines:local`) apontando para o mesmo MinIO. O geoparquet grava a célula H3 em EPSG:4326 (mesmo padrão dos demais jobs gold hexbin do repo) e adiciona um `geometry_bbox` automático de metadados do formato.

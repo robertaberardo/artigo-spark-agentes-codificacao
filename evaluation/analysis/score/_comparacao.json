@@ -1,0 +1,4518 @@
+[
+ {
+  "run": "C1-baseline-20260731-230551-r01",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.6": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 2,
+   "avg_dist_neighbors_km": 2,
+   "avg_dist_nearest_km": 2
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:3857",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": true,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": true,
+    "registrada_nove": true
+   },
+   "fixo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   },
+   "adaptativo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    3,
+    12
+   ],
+   "estilo": [
+    14,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py"
+  ],
+  "utils_promovidos": [],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C1-baseline-20260731-230551-r01\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C2-schema-metadata-20260731-231615-r01",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.6": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 2,
+   "avg_dist_neighbors_km": 3,
+   "avg_dist_nearest_km": 3
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 11,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 24,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:4326",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": false,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": true,
+    "registrada_nove": false
+   },
+   "adaptativo": {
+    "m1_oito": true,
+    "registrada_nove": false
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    4,
+    12
+   ],
+   "estilo": [
+    15,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py"
+  ],
+  "utils_promovidos": [],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C2-schema-metadata-20260731-231615-r01\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C3-standards-20260731-232609-r01",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.6": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 2,
+   "avg_dist_neighbors_km": 3,
+   "avg_dist_nearest_km": 3
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 11,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 24,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:3857",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": true,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   },
+   "adaptativo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    8,
+    12
+   ],
+   "estilo": [
+    13,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py",
+   "_promovido_utils.py"
+  ],
+  "utils_promovidos": [
+   "dataframe_transforms.py:add_h3_kring",
+   "dataframe_transforms.py:add_nearest_neighbor_distance"
+  ],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C3-standards-20260731-232609-r01\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C4-claude-md-init-20260731-234434-r01",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.6": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 2,
+   "avg_dist_neighbors_km": 3,
+   "avg_dist_nearest_km": 3
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 11,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 24,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:3857",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": true,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   },
+   "adaptativo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    8,
+    12
+   ],
+   "estilo": [
+    15,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py"
+  ],
+  "utils_promovidos": [],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C4-claude-md-init-20260731-234434-r01\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260731-235945-r01",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": false,
+    "fixo": false,
+    "adaptativo": false
+   },
+   "1.6": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 13,
+   "avg_dist_neighbors_km": 15,
+   "avg_dist_nearest_km": 15
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 555,
+    "fixo": 555,
+    "adaptativo": 555
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:3857",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": true,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "adaptativo": {
+    "m1_oito": false,
+    "registrada_nove": false
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    9,
+    12
+   ],
+   "estilo": [
+    13,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py"
+  ],
+  "utils_promovidos": [],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260731-235945-r01\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260731-235945-r02",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.6": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 2,
+   "avg_dist_neighbors_km": 3,
+   "avg_dist_nearest_km": 3
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 11,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 24,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:3857",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": true,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   },
+   "adaptativo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    9,
+    12
+   ],
+   "estilo": [
+    13,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py"
+  ],
+  "utils_promovidos": [],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260731-235945-r02\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260731-235945-r03",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.6": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 13,
+   "avg_dist_neighbors_km": 15,
+   "avg_dist_nearest_km": 15
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:4326",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": false,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": true,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": true,
+    "registrada_nove": false
+   },
+   "adaptativo": {
+    "m1_oito": true,
+    "registrada_nove": false
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    9,
+    12
+   ],
+   "estilo": [
+    13,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py"
+  ],
+  "utils_promovidos": [],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260731-235945-r03\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260731-235945-r04",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.6": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 2,
+   "avg_dist_neighbors_km": 3,
+   "avg_dist_nearest_km": 3
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 11,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 24,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:3857",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": true,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   },
+   "adaptativo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    9,
+    12
+   ],
+   "estilo": [
+    15,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py",
+   "_promovido_utils.py"
+  ],
+  "utils_promovidos": [
+   "dataframe_transforms.py:add_kring_neighbor_stats",
+   "dataframe_transforms.py:add_nearest_neighbor_distance"
+  ],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260731-235945-r04\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260731-235945-r05",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.6": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 2,
+   "avg_dist_neighbors_km": 3,
+   "avg_dist_nearest_km": 3
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 11,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 24,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:3857",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": true,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   },
+   "adaptativo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    8,
+    12
+   ],
+   "estilo": [
+    13,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py"
+  ],
+  "utils_promovidos": [],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260731-235945-r05\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260731-235945-r06",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.6": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 2,
+   "avg_dist_neighbors_km": 3,
+   "avg_dist_nearest_km": 3
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 11,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 24,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:3857",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": true,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   },
+   "adaptativo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    7,
+    12
+   ],
+   "estilo": [
+    16,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py"
+  ],
+  "utils_promovidos": [],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260731-235945-r06\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260731-235945-r07",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.6": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 2,
+   "avg_dist_neighbors_km": 3,
+   "avg_dist_nearest_km": 3
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 11,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 24,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:3857",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": true,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   },
+   "adaptativo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    8,
+    12
+   ],
+   "estilo": [
+    14,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py"
+  ],
+  "utils_promovidos": [],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260731-235945-r07\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260731-235945-r08",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": false,
+    "fixo": false,
+    "adaptativo": false
+   },
+   "1.6": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 2,
+   "avg_dist_neighbors_km": 3,
+   "avg_dist_nearest_km": 3
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 555,
+    "fixo": 555,
+    "adaptativo": 555
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 11,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 24,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:4326",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": false,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "adaptativo": {
+    "m1_oito": false,
+    "registrada_nove": false
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    9,
+    12
+   ],
+   "estilo": [
+    15,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py"
+  ],
+  "utils_promovidos": [],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260731-235945-r08\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260731-235945-r09",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.6": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 2,
+   "avg_dist_neighbors_km": 3,
+   "avg_dist_nearest_km": 3
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 11,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 24,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:3857",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": true,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   },
+   "adaptativo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    6,
+    12
+   ],
+   "estilo": [
+    14,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py"
+  ],
+  "utils_promovidos": [],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260731-235945-r09\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260731-235945-r10",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.6": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 2,
+   "avg_dist_neighbors_km": 3,
+   "avg_dist_nearest_km": 3
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 11,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 24,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:4326",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": false,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": true,
+    "registrada_nove": false
+   },
+   "adaptativo": {
+    "m1_oito": true,
+    "registrada_nove": false
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    8,
+    12
+   ],
+   "estilo": [
+    13,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py"
+  ],
+  "utils_promovidos": [],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260731-235945-r10\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260731-235945-r11",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.6": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 2,
+   "avg_dist_neighbors_km": 3,
+   "avg_dist_nearest_km": 3
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 11,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 24,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:3857",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": true,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   },
+   "adaptativo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    9,
+    12
+   ],
+   "estilo": [
+    14,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py"
+  ],
+  "utils_promovidos": [],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260731-235945-r11\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260731-235945-r12",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": false,
+    "fixo": false,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.6": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 1,
+   "avg_dist_neighbors_km": 3,
+   "avg_dist_nearest_km": 3
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 11,
+    "fixo": 11,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 11,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 24,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:3857",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": true,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "adaptativo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    8,
+    12
+   ],
+   "estilo": [
+    15,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py"
+  ],
+  "utils_promovidos": [],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260731-235945-r12\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260801-100109-r01",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": false,
+    "fixo": false,
+    "adaptativo": false
+   },
+   "1.6": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 2,
+   "avg_dist_neighbors_km": 3,
+   "avg_dist_nearest_km": 3
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 555,
+    "fixo": 555,
+    "adaptativo": 555
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 11,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 24,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:3857",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": true,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "adaptativo": {
+    "m1_oito": false,
+    "registrada_nove": false
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    8,
+    12
+   ],
+   "estilo": [
+    13,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py"
+  ],
+  "utils_promovidos": [],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260801-100109-r01\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260801-101847-r01",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": false,
+    "fixo": false,
+    "adaptativo": false
+   },
+   "1.6": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 2,
+   "avg_dist_neighbors_km": 2,
+   "avg_dist_nearest_km": 2
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 555,
+    "fixo": 555,
+    "adaptativo": 555
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:3857",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": true,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "adaptativo": {
+    "m1_oito": false,
+    "registrada_nove": false
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    8,
+    12
+   ],
+   "estilo": [
+    14,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py",
+   "_promovido_utils.py"
+  ],
+  "utils_promovidos": [
+   "dataframe_transforms.py:add_h3_kring"
+  ],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260801-101847-r01\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260801-103603-r01",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": false,
+    "fixo": false,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.6": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 1,
+   "avg_dist_neighbors_km": 3,
+   "avg_dist_nearest_km": 3
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 11,
+    "fixo": 11,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 11,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 24,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:3857",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": true,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "adaptativo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    8,
+    12
+   ],
+   "estilo": [
+    14,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py",
+   "_promovido_utils.py"
+  ],
+  "utils_promovidos": [
+   "dataframe_transforms.py:add_nearest_other_distance_km",
+   "dataframe_transforms.py:add_h3_ring_neighbor_stats"
+  ],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260801-103603-r01\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260801-111603-r01",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.6": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 2,
+   "avg_dist_neighbors_km": 3,
+   "avg_dist_nearest_km": 3
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 11,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 24,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:4326",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": false,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": true,
+    "registrada_nove": false
+   },
+   "adaptativo": {
+    "m1_oito": true,
+    "registrada_nove": false
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    7,
+    12
+   ],
+   "estilo": [
+    14,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py"
+  ],
+  "utils_promovidos": [],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260801-111603-r01\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260801-113317-r01",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.6": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 2,
+   "avg_dist_neighbors_km": 3,
+   "avg_dist_nearest_km": 3
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 11,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 24,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:4326",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": false,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": true,
+    "registrada_nove": false
+   },
+   "adaptativo": {
+    "m1_oito": true,
+    "registrada_nove": false
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    7,
+    12
+   ],
+   "estilo": [
+    15,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py"
+  ],
+  "utils_promovidos": [],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260801-113317-r01\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260801-115148-r01",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.6": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 2,
+   "avg_dist_neighbors_km": 3,
+   "avg_dist_nearest_km": 3
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 11,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 24,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:3857",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": true,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   },
+   "adaptativo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    9,
+    12
+   ],
+   "estilo": [
+    16,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py",
+   "_promovido_utils.py"
+  ],
+  "utils_promovidos": [
+   "dataframe_transforms.py:add_nearest_neighbor_distance",
+   "dataframe_transforms.py:add_h3_ring_neighbor_stats"
+  ],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260801-115148-r01\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260801-121004-r01",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": false,
+    "fixo": false,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.6": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 1,
+   "avg_dist_neighbors_km": 3,
+   "avg_dist_nearest_km": 3
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 11,
+    "fixo": 11,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 11,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 24,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:4326",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": false,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "adaptativo": {
+    "m1_oito": true,
+    "registrada_nove": false
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    5,
+    12
+   ],
+   "estilo": [
+    14,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py"
+  ],
+  "utils_promovidos": [],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260801-121004-r01\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260801-122257-r01",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.6": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 13,
+   "avg_dist_neighbors_km": 15,
+   "avg_dist_nearest_km": 15
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:3857",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": true,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": true,
+    "registrada_nove": true
+   },
+   "fixo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   },
+   "adaptativo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    8,
+    12
+   ],
+   "estilo": [
+    13,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py"
+  ],
+  "utils_promovidos": [],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260801-122257-r01\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260801-124146-r01",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": false,
+    "fixo": false,
+    "adaptativo": false
+   },
+   "1.6": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 13,
+   "avg_dist_neighbors_km": 15,
+   "avg_dist_nearest_km": 15
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 555,
+    "fixo": 555,
+    "adaptativo": 555
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:3857",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": true,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "adaptativo": {
+    "m1_oito": false,
+    "registrada_nove": false
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    7,
+    12
+   ],
+   "estilo": [
+    12,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py"
+  ],
+  "utils_promovidos": [],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260801-124146-r01\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260801-132147-r01",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.6": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 13,
+   "avg_dist_neighbors_km": 15,
+   "avg_dist_nearest_km": 15
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:3857",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": true,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": true,
+    "registrada_nove": true
+   },
+   "fixo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   },
+   "adaptativo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    9,
+    12
+   ],
+   "estilo": [
+    14,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py"
+  ],
+  "utils_promovidos": [],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260801-132147-r01\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260801-134035-r01",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.6": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 2,
+   "avg_dist_neighbors_km": 3,
+   "avg_dist_nearest_km": 3
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 11,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 24,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:3857",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": true,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   },
+   "adaptativo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    9,
+    12
+   ],
+   "estilo": [
+    14,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py",
+   "_promovido_utils.py"
+  ],
+  "utils_promovidos": [
+   "dataframe_transforms.py:h3_neighbor_distance_stats",
+   "dataframe_transforms.py:nearest_point_distance"
+  ],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260801-134035-r01\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260801-142035-r01",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.6": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 2,
+   "avg_dist_neighbors_km": 3,
+   "avg_dist_nearest_km": 3
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 11,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 24,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:3857",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": true,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   },
+   "adaptativo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    9,
+    12
+   ],
+   "estilo": [
+    14,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py"
+  ],
+  "utils_promovidos": [],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260801-142035-r01\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260801-143919-r01",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": false,
+    "fixo": false,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.6": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 1,
+   "avg_dist_neighbors_km": 3,
+   "avg_dist_nearest_km": 3
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 11,
+    "fixo": 11,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 11,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 24,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:3857",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": true,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "adaptativo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    8,
+    12
+   ],
+   "estilo": [
+    15,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py"
+  ],
+  "utils_promovidos": [],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260801-143919-r01\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260801-145412-r01",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": false,
+    "fixo": false,
+    "adaptativo": false
+   },
+   "1.6": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 2,
+   "avg_dist_neighbors_km": 3,
+   "avg_dist_nearest_km": 3
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 555,
+    "fixo": 555,
+    "adaptativo": 555
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 11,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 24,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:3857",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": true,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "adaptativo": {
+    "m1_oito": false,
+    "registrada_nove": false
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    8,
+    12
+   ],
+   "estilo": [
+    14,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py"
+  ],
+  "utils_promovidos": [],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260801-145412-r01\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260801-173727-r01",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.6": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 2,
+   "avg_dist_neighbors_km": 3,
+   "avg_dist_nearest_km": 3
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 11,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 24,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:3857",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": true,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   },
+   "adaptativo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    8,
+    12
+   ],
+   "estilo": [
+    16,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py"
+  ],
+  "utils_promovidos": [],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260801-173727-r01\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260801-175415-r01",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.6": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 13,
+   "avg_dist_neighbors_km": 15,
+   "avg_dist_nearest_km": 15
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:3857",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": true,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": true,
+    "registrada_nove": true
+   },
+   "fixo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   },
+   "adaptativo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    9,
+    12
+   ],
+   "estilo": [
+    14,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py",
+   "_promovido_utils.py"
+  ],
+  "utils_promovidos": [
+   "dataframe_transforms.py:count_h3_kring_members",
+   "dataframe_transforms.py:h3_kring_neighbor_distances",
+   "dataframe_transforms.py:nearest_neighbor_distance"
+  ],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260801-175415-r01\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260801-181042-r01",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": false,
+    "fixo": false,
+    "adaptativo": false
+   },
+   "1.6": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 2,
+   "avg_dist_neighbors_km": 3,
+   "avg_dist_nearest_km": 3
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 555,
+    "fixo": 555,
+    "adaptativo": 555
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 11,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 24,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:4326",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": false,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "adaptativo": {
+    "m1_oito": false,
+    "registrada_nove": false
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    7,
+    12
+   ],
+   "estilo": [
+    15,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py"
+  ],
+  "utils_promovidos": [],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260801-181042-r01\\checklist.tsv",
+  "completude_ok": true
+ },
+ {
+  "run": "C5-final-20260801-182624-r01",
+  "erro": null,
+  "gate_schema": true,
+  "colunas_faltando": [],
+  "colunas_extras": [],
+  "n_cand": 555,
+  "n_ref": 555,
+  "so_candidato": 0,
+  "so_referencia": 0,
+  "itens": {
+   "1.1": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.2": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.3": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.4": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.5": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.6": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.7": {
+    "registrado": false,
+    "fixo": true,
+    "adaptativo": true
+   },
+   "1.8": {
+    "registrado": true,
+    "fixo": true,
+    "adaptativo": true
+   }
+  },
+  "casas": {
+   "avg_enrollment": 2,
+   "avg_dist_neighbors_km": 3,
+   "avg_dist_nearest_km": 3
+  },
+  "divergencias": {
+   "n_schools": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "total_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_enrollment": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "n_federal_neighbors": {
+    "registrado": 0,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_neighbors_km": {
+    "registrado": 11,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "avg_dist_nearest_km": {
+    "registrado": 24,
+    "fixo": 0,
+    "adaptativo": 0
+   },
+   "geometry": 0
+  },
+  "crs_candidato": "EPSG:3857",
+  "crs_referencia": "EPSG:3857",
+  "crs_ok": true,
+  "composicoes": {
+   "registrado": {
+    "m1_oito": false,
+    "registrada_nove": false
+   },
+   "fixo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   },
+   "adaptativo": {
+    "m1_oito": true,
+    "registrada_nove": true
+   }
+  },
+  "m2_registrada_recomputada": {
+   "esquema": [
+    2,
+    2
+   ],
+   "reuso": [
+    5,
+    12
+   ],
+   "estilo": [
+    15,
+    16
+   ],
+   "convencao": [
+    4,
+    4
+   ]
+  },
+  "corpo": [
+   "_all_jobs.py"
+  ],
+  "utils_promovidos": [],
+  "checklist": "D:\\rob\\mba\\repos\\spark-pipelines-automation\\evaluation\\analysis\\rescore\\C5-final-20260801-182624-r01\\checklist.tsv",
+  "completude_ok": true
+ }
+]

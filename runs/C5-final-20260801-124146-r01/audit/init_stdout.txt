@@ -1,0 +1,15 @@
+I've created `CLAUDE.md`. There was no existing one, no README, and no Cursor/Copilot rules, so this is a fresh file built from analyzing the codebase.
+
+## What I found and captured
+
+**Architecture (the big picture that spans files):**
+- **Medallion pipeline** — `raw → bronze → silver → gold`, one S3A prefix per layer, one job reads exactly one layer and writes the next. I documented what each layer is responsible for (bronze = cleaning + schema/rename, silver = joins + geometry, gold = aggregations/rankings/H3 hexbins).
+- **`metadata.toml` as the contract** — paths resolve through `utils.metadata.table_location(app, table, level)`, which fails fast on undeclared tables/layers. Noted that ~15 of ~94 jobs still hardcode `s3a://` (the older pattern) but `table_location` is the standard.
+- **The shared `utils/` transform library** — the reuse-before-you-write rule, with a map of what's in `column_transforms.py` vs `dataframe_transforms.py`, since that's the single most productivity-relevant thing to know before writing a job.
+- **Job skeleton + the SedonaContext vs SparkSession distinction** for geospatial jobs (geoparquet I/O, geodesic distance before projection).
+
+**Commands:** the real workflow is `docker compose up -d --build` then `docker compose exec spark spark-submit apps/<app>/jobs/<layer>/<job>.py`. I flagged honestly that **there is no test suite or linter** — verification is the row-count print at the end of each `main()` — and that `validate_setup.py`/`exploration/` are referenced by `start.sh` but don't exist yet.
+
+**Conventions:** I pointed to `CODING_STANDARDS.md` as authoritative rather than duplicating it, and surfaced only the highest-leverage rules (PT/EN language split, absence-is-NULL, no UDFs, no `F.expr`, explicit joins/window frames).
+
+I deliberately left out the discoverable file-by-file listing of all 12 apps and 94 jobs, and skipped generic advice.

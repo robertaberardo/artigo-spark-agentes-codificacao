@@ -1,0 +1,23 @@
+The pipeline is complete and running successfully end-to-end. Here's a summary.
+
+## O que foi feito
+
+Construí a tabela `educacao_escola_matricula_h3_grid` seguindo a arquitetura medallion do repositório (bronze → silver → gold), com tudo declarado antes no `metadata.toml`.
+
+**Camadas criadas:**
+1. **bronze** `educacao_escola` (214.192 registros) e `educacao_matricula` (178.766) — leitura do CSV cru (`;`, header, schema explícito), colunas tipadas e em `snake_case`, chaves inválidas filtradas.
+2. **silver** `educacao_escola_federal_geo` (660 escolas) — filtra federais (`setor=1`) em atividade (`situacao=1`), coordenadas válidas, junta as matrículas (`mat_basica` → `enrollment`), preserva `latitude`/`longitude` e grava o ponto em EPSG:3857.
+3. **gold** `educacao_escola_matricula_h3_grid` (**555 células**) — agregação por célula H3 nível 5 com todas as colunas pedidas.
+
+**Dois transforms genéricos** foram adicionados a `utils/dataframe_transforms.py` (onde os padrões pedem que fiquem): `add_kring_neighbor_stats` (vizinhos via `ST_H3KRing` k=1) e `add_nearest_neighbor_distance` (vizinho mais próximo global). Distâncias sempre geodésicas (`ST_DistanceSpheroid`) sobre WGS84 original, geometria de saída em 3857.
+
+**Erros corrigidos durante a execução:** as expressões de agregação (`F.count`/`F.lit`) estavam no nível do módulo e falhavam no import (precisam de sessão Spark ativa) — movidas para dentro de uma função chamada no `main()`.
+
+## Validação (invariantes conferidas)
+- `sum(n_schools) = 660` — nenhuma escola perdida, nenhuma célula nula.
+- Nenhuma célula viola `n_federal_neighbors ≥ n_schools − 1` (escolas da própria célula contam como vizinhas).
+- **Vizinhos vs. mais próxima corretamente distintos:** 381 células isoladas têm `n_federal_neighbors = 0` e `avg_dist_neighbors_km` **nulo** (ausência ≠ zero), mas `avg_dist_nearest_km` continua calculado globalmente (0 nulos).
+- Geometria: `ST_Polygon` em metros (EPSG:3857 confirmado).
+- `avg_enrollment` == `total_enrollment / n_schools` (todas as 660 têm matrícula).
+
+Colunas finais, na ordem pedida: `h3_cell, n_schools, total_enrollment, avg_enrollment, n_federal_neighbors, avg_dist_neighbors_km, avg_dist_nearest_km, geometry`.

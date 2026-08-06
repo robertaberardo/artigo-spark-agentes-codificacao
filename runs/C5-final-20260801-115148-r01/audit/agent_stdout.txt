@@ -1,0 +1,35 @@
+The job runs successfully and the output is correct. Here's what I built.
+
+## Resultado
+
+A tabela **`educacao_escola_matricula_h3_grid`** foi produzida — **555 células H3 nível 5** cobrindo as **660 escolas federais em atividade** com coordenada válida.
+
+## Pipeline (medalhão, seguindo as convenções do repo)
+
+Como os jobs de `educacao/` estavam vazios, montei a cadeia completa `raw → bronze → silver → gold`:
+
+| Job | O que faz |
+|---|---|
+| `bronze/educacao_escola.py` | Tipa as escolas (lat/long → `double`, snake_case). 214.192 registros |
+| `bronze/educacao_matricula.py` | Tipa as matrículas (contagens → `int`). 178.766 registros |
+| `silver/educacao_escola_geo.py` | Filtra **federais (SETOR=1) em atividade (SITUACAO=1)** com coordenada válida, junta `mat_basica` como `total_enrollment`, gera ponto EPSG:3857. 660 escolas |
+| `gold/educacao_escola_matricula_h3_grid.py` | Agrega por célula H3 nível 5 |
+
+Declarei todas as camadas/tabelas novas em `metadata.toml` e usei `table_location(...)` em todos os jobs (sem paths hardcoded).
+
+## Decisões de modelagem
+
+- **Vizinhas** = via `ST_H3KRing(célula, 1, exact_ring=False)` — outras federais na própria célula ou nas 6 adjacentes. `n_federal_neighbors` é a contagem de vizinhas *de cada escola* (= escolas no disco − 1), que é constante dentro da célula — exatamente o "a mesma para toda a célula" do enunciado. Verifiquei de forma independente: célula com 13 escolas tem 31 no disco → 30 gravado. ✓
+- **Distâncias** medidas com `ST_DistanceSpheroid` sobre as coordenadas **WGS84 originais** (não sobre a projeção 3857), conforme o `CODING_STANDARDS.md`. Por isso o silver preserva `latitude`/`longitude` e o gold reconstrói o ponto WGS84 para medir.
+- **`avg_dist_nearest_km`**: mínima até qualquer outra federal do país (self cross-join, sem restrição de célula — 660×660 é trivial).
+- **Ausência = null** (não zero): células com uma escola isolada e sem federal adjacente ficam com `avg_dist_neighbors_km` nulo (381 células).
+
+## Transforms reutilizáveis adicionadas a `utils/dataframe_transforms.py`
+
+Conforme a regra de "transformações genéricas pertencem a `utils/`":
+- `add_nearest_neighbor_distance(...)` — distância geodésica à linha mais próxima do conjunto.
+- `add_h3_ring_neighbor_stats(...)` — contagem e distância média às vizinhas no disco H3.
+
+O restante reusa utils existentes (`filter_valid_coordinates`, `add_point_geometry`, `to_web_mercator`, `attach_h3_index`, `aggregate_by_h3`, `join_no_fanout`).
+
+Uma observação sobre o schema: o GeoParquet de saída inclui uma coluna extra `geometry_bbox` — é o *covering* padrão que o writer do Sedona adiciona automaticamente a toda saída geoparquet do repo, não uma coluna lógica.

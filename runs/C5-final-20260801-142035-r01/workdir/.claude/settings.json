@@ -1,0 +1,50 @@
+{
+  "model": "claude-opus-4-8",
+  "enableAllProjectMcpServers": false,
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "additionalDirectories": [],
+    "deny": [
+      "Read(~/**)",
+      "Edit(~/**)",
+      "Read(../**)",
+      "Edit(../**)",
+      "Read(../../**)",
+      "Edit(../../**)",
+      "Read(../../../**)",
+      "Edit(../../../**)",
+      "Read(../../../../**)",
+      "Edit(../../../../**)",
+      "Read(//etc/**)",
+      "Edit(//etc/**)",
+      "Read(//root/**)",
+      "Read(//home/**)",
+      "Bash(sudo *)",
+      "Bash(rm -rf *)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/hook_log.sh\""
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/hook_log.sh\""
+          }
+        ]
+      }
+    ]
+  }
+}

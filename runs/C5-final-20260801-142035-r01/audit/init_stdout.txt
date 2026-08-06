@@ -1,0 +1,18 @@
+I've created `CLAUDE.md`. There was no existing one, so this is a fresh file. Here's what it captures:
+
+**Big-picture architecture** (the parts that require reading multiple files to grasp):
+- **Medallion pipeline** (raw → bronze → silver → gold) over PySpark 3.5.4 + Sedona 1.9.0 + GDAL, targeting an S3A/MinIO data lake.
+- **The "app" pattern** — each of the 12 Brazilian data sources (`ana`, `anac`, `bcb`, …) is self-contained with `metadata.toml`, `jobs/{bronze,silver,gold}/`, and app-local `utils/`.
+- **Metadata-driven paths** — the crucial rule that jobs never hardcode table paths; they go through `table_location(app, table, level)`, and new tables/layers must be declared in `metadata.toml` with schemas.
+- **Shared `utils/` split** by return type (`Column→Column` vs `DataFrame→DataFrame`), chained via `.transform(...)`.
+- **Geospatial specifics** — geodesic distance over original WGS84 before projecting, 3857 as output convention, geoparquet, H3 hexbins.
+
+**Commands** — how to build/run via `docker compose`, run a single job with `spark-submit`, the external-network/S3 prerequisites, and UI ports.
+
+**Non-obvious conventions** — the English-code / Portuguese-comments split, and a pointer to `CODING_STANDARDS.md` as the authoritative style guide (with the highest-impact rules summarized).
+
+A few things I deliberately handled:
+- **No test framework exists**, so I stated that plainly rather than inventing test commands.
+- `docker/resources/start.sh` references a `validate_setup.py` and an `exploration/` dir that **don't exist** in the repo — I left those out rather than documenting commands that would fail.
+
+If you'd like, I can also drop this into a shorter form or add a per-app quick reference — but I kept it lean per the init guidance.

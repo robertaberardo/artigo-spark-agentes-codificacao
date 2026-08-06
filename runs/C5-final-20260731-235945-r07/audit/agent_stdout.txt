@@ -1,0 +1,28 @@
+Pronto. A tabela `educacao_escola_matricula_h3_grid` foi produzida e o job roda com sucesso, gerando **555 células** cobrindo as **660 escolas federais em atividade** com coordenada.
+
+## O que foi construído
+
+Segui a arquitetura medallion (`raw → bronze → silver → gold`) exigida pelo `CLAUDE.md`, já que a app `educacao` só tinha `raw`:
+
+| Camada | Job | Resultado |
+|---|---|---|
+| **bronze** | `educacao_escola.py` | 214.192 escolas tipadas |
+| **bronze** | `educacao_matricula.py` | 178.766 matrículas tipadas |
+| **silver** | `educacao_escola_matricula.py` | 156.814 escolas consolidadas + ponto (EPSG:3857) |
+| **gold** | `educacao_escola_matricula_h3_grid.py` | 555 células H3 nível 5 |
+
+Também declarei todas as tabelas/schemas por camada no `metadata.toml` e criei o util de domínio `is_valid_id_unidade`.
+
+## Decisões-chave
+
+- **Escopo federal em atividade**: filtrado por `setor="1"` e `situacao="1"` na gold.
+- **Vizinhança** = célula + adjacentes via `ST_H3KRing(cell, 1, false)`. `n_federal_neighbors = N − 1` (N = federais na vizinhança), idêntico para toda a célula — validei a invariante `n_federal_neighbors ≥ n_schools−1` (0 violações).
+- **Distâncias geodésicas** com `ST_DistanceSpheroid` medidas sobre o ponto **4326 original** (reconstruído de lat/long preservados na silver), nunca voltando do 3857 — conforme o padrão. Convertidas para km.
+  - `avg_dist_neighbors_km`: média por escola da distância às vizinhas, depois média por célula.
+  - `avg_dist_nearest_km`: menor distância a qualquer federal (sem restrição de célula), depois média por célula.
+- **Ausência = null** (sem null-fill): `avg_dist_neighbors_km` fica nulo nas 381 células isoladas (escola sem vizinha), o que é o comportamento correto.
+- **Geometria de saída**: polígono da célula H3 em EPSG:3857 (todos os 555 são `ST_Polygon`).
+
+Colunas finais, na ordem pedida: `h3_cell, n_schools, total_enrollment, avg_enrollment, n_federal_neighbors, avg_dist_neighbors_km, avg_dist_nearest_km, geometry`.
+
+Uma observação: interpretei "média de matrículas por escola" como a média estatística das matrículas (`F.avg`, que ignora nulos) e "escolas federais mais próximas (qualquer)" como o universo de federais **em atividade** — coerente com o escopo do restante da análise. Se você quiser `avg_enrollment = total_enrollment / n_schools` ou incluir federais paralisadas/extintas no "mais próxima", é um ajuste de uma linha.

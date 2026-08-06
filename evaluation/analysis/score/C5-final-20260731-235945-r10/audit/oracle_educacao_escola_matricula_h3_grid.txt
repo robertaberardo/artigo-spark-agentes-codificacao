@@ -1,0 +1,14 @@
+# comparação sob predicado 'adaptativo' — C5-final-20260731-235945-r10
+# linhas: candidato=555 referência=555 só_candidato=0 só_referência=0
+1.1 h3_cell PASS  só_cand=0 só_ref=0
+1.2 n_schools PASS  divergências=0
+1.3 total_enrollment PASS  divergências=0
+1.4 avg_enrollment PASS  divergências=0 d=2 tol=5.0e-03
+1.5 n_federal_neighbors PASS  divergências=0
+1.6 avg_dist_neighbors_km PASS  divergências=0 d=3 tol=5.0e-04
+1.7 avg_dist_nearest_km PASS  divergências=0 d=3 tol=5.0e-04
+1.8 geometry PASS  divergências=0 (CRS-agnóstico)
+RATIO 1 = 8/8
+GATE schema_contrato PASS faltando=— extras=—
+VAR crs EPSG:4326  candidato=EPSG:4326 referência=EPSG:3857 conforme=False  [registrado 1.9]
+VAR casas avg_dist_nearest_km=3;avg_dist_neighbors_km=3;avg_enrollment=2  casas decimais gravadas por coluna double

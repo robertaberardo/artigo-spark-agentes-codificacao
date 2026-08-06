@@ -1,0 +1,15 @@
+I've analyzed the codebase and created `CLAUDE.md`. Here's what I found and captured:
+
+**What the project is:** PySpark + Apache Sedona geospatial pipelines over Brazilian public-data sources, organized as a medallion architecture (`raw → bronze → silver → gold`) writing to an S3/MinIO data lake. No test suite — it's a validation environment.
+
+**Key architecture points documented (things that require reading multiple files to grasp):**
+- **One app per data source** (12 apps; `educacao` is empty scaffolding), each self-contained with `jobs/{bronze,silver,gold}/`, a `metadata.toml` that is the source of truth for table locations + schemas, and app-local domain transforms.
+- **`utils/metadata.py:table_location()`** builds all `s3a://` paths from `metadata.toml` — jobs never hand-build paths.
+- The **shared `utils/`** split: pure `Column → Column` (`column_transforms`) vs. pure `DataFrame → DataFrame` incl. the Sedona geo toolkit (`dataframe_transforms`) — and the rule to reuse/extend these rather than inline generic logic.
+- Layer conventions (bronze = plain SparkSession + CSV→parquet + column renaming; silver = `SedonaContext` + geoparquet in EPSG:3857; gold = aggregations/H3).
+
+**Standards** distilled from `CODING_STANDARDS.md`: the English-code/Portuguese-docstrings split, no-UDF/native-functions rule, `F.lit(None)` for missing data, explicit join `how`, explicit window frames, and the geodesic-distance-before-projecting rule.
+
+**Commands:** the Docker-only workflow (`external-net` prereq, build/up, `docker compose exec spark spark-submit <job>`), run-order dependency between layers, and where S3/Spark config comes from.
+
+A couple of notes I chose to fold in rather than list exhaustively: there's no `README.md`, no `validate_setup.py` (referenced by `start.sh` but absent), and no tests — so I documented "run the job, check the printed count" as the actual verification loop, matching what `CODING_STANDARDS.md` states.

@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spark-pipelines"
+version = "0.1.0"
+description = "PySpark + Apache Sedona + GDAL geospatial pipelines (validation environment)"
+requires-python = "==3.11.*"
+dependencies = [
+    "pyspark==3.5.4",
+    "apache-sedona==1.9.0",
+    "shapely>=2.0,<3",
+    # apache-sedona's `sedona.spark` package imports geopandas at init
+    # (Kepler map utils), so it is required even for plain SedonaContext use.
+    "geopandas>=1.0",
+]
+
+[project.optional-dependencies]
+dev = ["jupyterlab>=4"]
+
+# This project's Python sources are mounted at runtime (apps/...), so the
+# build is metadata/deps-only. py-modules = [] tells setuptools there are no
+# modules to package, producing a dependency-only wheel.
+[tool.setuptools]
+py-modules = []

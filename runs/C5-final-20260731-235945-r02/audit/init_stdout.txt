@@ -1,0 +1,16 @@
+I created `CLAUDE.md` at the project root. Here's what it captures and why:
+
+**Architecture (the parts that need reading multiple files to grasp):**
+- The **medallion flow** — `apps/<app>/jobs/{bronze,silver,gold}/<table>.py`, raw→bronze→silver→gold, each job a standalone `main()` that persists at the end, with no orchestrator. Includes the parquet-vs-geoparquet split and the two session-creation patterns (`SparkSession.builder` vs `SedonaContext.create`).
+- **`metadata.toml` as source of truth** — jobs resolve S3A paths via `utils.metadata.table_location(...)` rather than hand-building them; new tables/layers must be declared there first.
+- **Where transformations live** — the three-tier reuse rule (`utils/column_transforms.py`, `utils/dataframe_transforms.py`, per-app `apps/<app>/utils/`), which is easy to miss and central to how the codebase is meant to grow.
+
+**Commands** — Docker-only workflow (`docker compose up`, `docker compose exec`, `spark-submit apps/.../job.py`), plus the honest note that there's **no test/lint tooling**; verification is running the job and checking the printed row count.
+
+**Conventions** — I did *not* re-transcribe `CODING_STANDARDS.md`; I pointed to it and pulled out only the high-impact, easy-to-violate rules (no UDFs, native functions over `F.expr`, `F.lit(None)` for absence, geodesic distance measured before projecting, explicit joins/window frames).
+
+A few things I flagged deliberately:
+- The **bilingual convention** (English code / Portuguese docs) up front, since it governs every edit.
+- That this is a **validation environment** — `start.sh` references a `validate_setup.py` and `exploration/` that don't exist, and some jobs (e.g. `ana_ranking_estacoes.py`) hardcode S3A paths instead of using `table_location`. I noted that `CODING_STANDARDS.md` and `metadata.toml` are the intended target, so future instances don't cargo-cult the divergences.
+
+I kept out boilerplate file listings and generic advice per your `/init` guidance. Want me to write it in English instead of Portuguese, or adjust the level of detail anywhere?

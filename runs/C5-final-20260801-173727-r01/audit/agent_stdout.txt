@@ -1,0 +1,25 @@
+Pronto. A tabela `educacao_escola_matricula_h3_grid` foi produzida e o pipeline roda com sucesso.
+
+## O que foi feito
+
+Segui o padrão medallion do repositório (não havia jobs em `apps/educacao/`), criando 4 jobs e declarando tudo no `metadata.toml` (nada de caminhos S3 montados à mão):
+
+**`metadata.toml`** — adicionei o nível `bronze` a `escola`/`matricula` e declarei as tabelas novas `escola_matricula` (silver) e `escola_matricula_h3_grid` (gold), com o schema de cada camada.
+
+**bronze** (`educacao_escola.py`, `educacao_matricula.py`) — leem o raw CSV com schema explícito e `sep=";"`, padronizam colunas para `snake_case`, tipam (`setor`/`situacao`/`area` → int, coordenadas → double).
+
+**silver** (`educacao_escola_matricula.py`) — filtra **federais (`setor=1`) em atividade (`situacao=1`)**, descarta coordenadas inválidas e anexa `enrollment` (=`mat_basica`) via `join_no_fanout`. Mantém `latitude`/`longitude` WGS84 como `double` — deliberadamente **sem** geometria projetada, para o gold medir distância geodésica sobre as coordenadas originais (regra do `CODING_STANDARDS.md`). → **660 escolas**.
+
+**gold** (`educacao_escola_matricula_h3_grid.py`) — célula H3 res. 5 por escola; vizinhança via `ST_H3KRing(cell, 1)` (própria célula + 6 adjacentes); distâncias geodésicas com `ST_DistanceSpheroid` (WGS84); polígono da célula reprojetado para EPSG:3857 no `.format("geoparquet")`. → **555 células** com as colunas pedidas: `h3_cell, n_schools, total_enrollment, avg_enrollment, n_federal_neighbors, avg_dist_neighbors_km, avg_dist_nearest_km, geometry`.
+
+## Correções durante o desenvolvimento
+- `safely_convert_int` de `utils` devolve coluna **string** (o ramo `otherwise` é a string original), o que quebraria o contrato `int` do schema — troquei por `trim + cast("int")` direto nos campos numéricos curtos.
+- Path `/tmp` era mutilado pelo Git Bash (MSYS) em `spark-submit`; rodei a validação a partir de arquivo dentro do projeto bind-montado.
+
+## Validação (recomputo independente)
+- `sum(n_schools)` = 660 = total de escolas; toda célula com escola aparece (555=555).
+- `n_federal_neighbors` recomputado por `ST_H3CellDistance≤1` (método independente do kRing): **0 divergências**.
+- `avg_dist_nearest_km` e `avg_dist_neighbors_km` vs. força-bruta: **delta máximo 0.0**.
+- 381 células isoladas (federal única, sem vizinha federal) têm `avg_dist_neighbors_km` **nulo** — ausência tratada como null, nunca zero.
+
+Observação: 56 das 716 federais ativas não têm coordenadas na fonte e foram descartadas pela filtragem geoespacial (necessário para grade/distâncias). Se quiser, posso registrar essa contagem de descarte num `print` do silver.

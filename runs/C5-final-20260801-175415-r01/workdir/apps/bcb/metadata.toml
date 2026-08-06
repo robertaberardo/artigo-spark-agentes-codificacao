@@ -1,0 +1,337 @@
+[data_lake]
+db  = "datalake"
+app = "bcb"
+
+# ---------------------------------------------------------------------------
+# bcb_cambio — cotações diárias de câmbio (compra/venda por moeda)
+# ---------------------------------------------------------------------------
+[tables.cambio]
+name   = "bcb_cambio"
+levels = ["raw", "bronze"]
+key    = "data"
+
+[[tables.cambio.raw.schema]]
+name = "data"
+type = "string"
+description = "data da cotação (dd/MM/yyyy, texto)"
+
+[[tables.cambio.raw.schema]]
+name = "moeda"
+type = "string"
+description = "código da moeda (ex.: USD, EUR)"
+
+[[tables.cambio.raw.schema]]
+name = "compra"
+type = "string"
+description = "cotação de compra (texto, decimal brasileiro)"
+
+[[tables.cambio.raw.schema]]
+name = "venda"
+type = "string"
+description = "cotação de venda (texto, decimal brasileiro)"
+
+[[tables.cambio.bronze.schema]]
+name = "data"
+type = "date"
+description = "data da cotação"
+
+[[tables.cambio.bronze.schema]]
+name = "moeda"
+type = "string"
+description = "código da moeda (ex.: USD, EUR)"
+
+[[tables.cambio.bronze.schema]]
+name = "compra"
+type = "double"
+description = "cotação de compra em reais"
+
+[[tables.cambio.bronze.schema]]
+name = "venda"
+type = "double"
+description = "cotação de venda em reais"
+
+# ---------------------------------------------------------------------------
+# bcb_selic — taxa Selic diária (meta e efetiva)
+# ---------------------------------------------------------------------------
+[tables.selic]
+name   = "bcb_selic"
+levels = ["raw", "bronze"]
+key    = "data"
+
+[[tables.selic.raw.schema]]
+name = "data"
+type = "string"
+description = "data de referência (dd/MM/yyyy, texto)"
+
+[[tables.selic.raw.schema]]
+name = "taxa_meta_pct"
+type = "string"
+description = "taxa Selic meta em % ao ano (texto)"
+
+[[tables.selic.raw.schema]]
+name = "taxa_efetiva_pct"
+type = "string"
+description = "taxa Selic efetiva em % ao ano (texto)"
+
+[[tables.selic.bronze.schema]]
+name = "data"
+type = "date"
+description = "data de referência"
+
+[[tables.selic.bronze.schema]]
+name = "taxa_meta_pct"
+type = "double"
+description = "taxa Selic meta em % ao ano"
+
+[[tables.selic.bronze.schema]]
+name = "taxa_efetiva_pct"
+type = "double"
+description = "taxa Selic efetiva em % ao ano (limitada a 0..100)"
+
+# ---------------------------------------------------------------------------
+# bcb_pix — estatísticas diárias do Pix por UF
+# ---------------------------------------------------------------------------
+[tables.pix]
+name   = "bcb_pix"
+levels = ["raw", "bronze"]
+key    = "data"
+
+[[tables.pix.raw.schema]]
+name = "data"
+type = "string"
+description = "data de referência (dd/MM/yyyy, texto)"
+
+[[tables.pix.raw.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.pix.raw.schema]]
+name = "quantidade"
+type = "string"
+description = "número de transações (texto)"
+
+[[tables.pix.raw.schema]]
+name = "valor_total"
+type = "string"
+description = "valor total transacionado (R$ 1.234,56)"
+
+[[tables.pix.bronze.schema]]
+name = "data"
+type = "date"
+description = "data de referência"
+
+[[tables.pix.bronze.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.pix.bronze.schema]]
+name = "quantidade"
+type = "long"
+description = "número de transações"
+
+[[tables.pix.bronze.schema]]
+name = "valor_total"
+type = "double"
+description = "valor total transacionado em reais"
+
+# ---------------------------------------------------------------------------
+# bcb_ipca — índice de preços ao consumidor amplo (IPCA)
+# ---------------------------------------------------------------------------
+[tables.ipca]
+name   = "bcb_ipca"
+levels = ["raw", "bronze"]
+key    = "data"
+
+[[tables.ipca.raw.schema]]
+name = "data"
+type = "string"
+description = "data de referência (dd/MM/yyyy, texto)"
+
+[[tables.ipca.raw.schema]]
+name = "indice"
+type = "string"
+description = "número-índice do IPCA (texto, decimal brasileiro)"
+
+[[tables.ipca.raw.schema]]
+name = "variacao_mensal_pct"
+type = "string"
+description = "variação mensal em % (texto)"
+
+[[tables.ipca.bronze.schema]]
+name = "data"
+type = "date"
+description = "data de referência"
+
+[[tables.ipca.bronze.schema]]
+name = "indice"
+type = "double"
+description = "número-índice do IPCA"
+
+[[tables.ipca.bronze.schema]]
+name = "variacao_mensal_pct"
+type = "double"
+description = "variação mensal como fração (0,0045 = 0,45%)"
+
+# ---------------------------------------------------------------------------
+# bcb_serie_diaria — série diária de câmbio enriquecida com a Selic (silver)
+# ---------------------------------------------------------------------------
+[tables.serie_diaria]
+name   = "bcb_serie_diaria"
+levels = ["silver"]
+key    = "data"
+
+[[tables.serie_diaria.silver.schema]]
+name = "data"
+type = "date"
+description = "data da cotação (chave)"
+
+[[tables.serie_diaria.silver.schema]]
+name = "moeda"
+type = "string"
+description = "código da moeda"
+
+[[tables.serie_diaria.silver.schema]]
+name = "compra"
+type = "double"
+description = "cotação de compra em reais"
+
+[[tables.serie_diaria.silver.schema]]
+name = "venda"
+type = "double"
+description = "cotação de venda em reais"
+
+[[tables.serie_diaria.silver.schema]]
+name = "spread"
+type = "double"
+description = "diferença entre venda e compra"
+
+[[tables.serie_diaria.silver.schema]]
+name = "selic_meta"
+type = "double"
+description = "taxa Selic meta do dia"
+
+[[tables.serie_diaria.silver.schema]]
+name = "selic_efetiva"
+type = "double"
+description = "taxa Selic efetiva do dia"
+
+[[tables.serie_diaria.silver.schema]]
+name = "venda_ma7"
+type = "double"
+description = "média móvel de 7 dias da cotação de venda"
+
+[[tables.serie_diaria.silver.schema]]
+name = "spread_acumulado"
+type = "double"
+description = "spread acumulado ao longo do período, por moeda"
+
+# ---------------------------------------------------------------------------
+# bcb_pix_consolidado — Pix deduplicado por (data, uf) com ticket médio (silver)
+# ---------------------------------------------------------------------------
+[tables.pix_consolidado]
+name   = "bcb_pix_consolidado"
+levels = ["silver"]
+key    = "data"
+
+[[tables.pix_consolidado.silver.schema]]
+name = "data"
+type = "date"
+description = "data de referência (chave)"
+
+[[tables.pix_consolidado.silver.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF (chave)"
+
+[[tables.pix_consolidado.silver.schema]]
+name = "quantidade"
+type = "long"
+description = "número de transações"
+
+[[tables.pix_consolidado.silver.schema]]
+name = "valor_total"
+type = "double"
+description = "valor total transacionado em reais"
+
+[[tables.pix_consolidado.silver.schema]]
+name = "ticket_medio"
+type = "double"
+description = "valor médio por transação (valor_total / quantidade)"
+
+# ---------------------------------------------------------------------------
+# bcb_cambio_mensal — média mensal da série de câmbio por moeda (gold)
+# ---------------------------------------------------------------------------
+[tables.cambio_mensal]
+name   = "bcb_cambio_mensal"
+levels = ["gold"]
+key    = "month"
+
+[[tables.cambio_mensal.gold.schema]]
+name = "month"
+type = "string"
+description = "mês de referência (yyyy-MM, chave)"
+
+[[tables.cambio_mensal.gold.schema]]
+name = "year"
+type = "int"
+description = "ano de referência"
+
+[[tables.cambio_mensal.gold.schema]]
+name = "currency"
+type = "string"
+description = "código da moeda"
+
+[[tables.cambio_mensal.gold.schema]]
+name = "avg_buy"
+type = "double"
+description = "cotação média de compra no mês"
+
+[[tables.cambio_mensal.gold.schema]]
+name = "avg_sell"
+type = "double"
+description = "cotação média de venda no mês"
+
+[[tables.cambio_mensal.gold.schema]]
+name = "media_mensal"
+type = "double"
+description = "média mensal do ponto médio (compra e venda)"
+
+# ---------------------------------------------------------------------------
+# bcb_pix_por_uf — totais e ranking do Pix por UF (gold)
+# ---------------------------------------------------------------------------
+[tables.pix_por_uf]
+name   = "bcb_pix_por_uf"
+levels = ["gold"]
+key    = "uf"
+
+[[tables.pix_por_uf.gold.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF (chave)"
+
+[[tables.pix_por_uf.gold.schema]]
+name = "total_quantidade"
+type = "long"
+description = "número total de transações na UF"
+
+[[tables.pix_por_uf.gold.schema]]
+name = "total_valor"
+type = "double"
+description = "valor total transacionado na UF"
+
+[[tables.pix_por_uf.gold.schema]]
+name = "ticket_medio"
+type = "double"
+description = "valor médio por transação na UF"
+
+[[tables.pix_por_uf.gold.schema]]
+name = "share_valor"
+type = "double"
+description = "participação da UF no valor nacional"
+
+[[tables.pix_por_uf.gold.schema]]
+name = "rank_valor"
+type = "int"
+description = "posição por valor transacionado (1 = maior)"

@@ -1,0 +1,16 @@
+Created `CLAUDE.md`. Here's what it captures, based on reading the configs, `CODING_STANDARDS.md`, `utils/`, and representative jobs across the apps:
+
+**Big-picture architecture the docs alone don't spell out:**
+- **Medallion lake** (`raw → bronze → silver → gold`) over Brazilian public-data sources, materialized as parquet/geoparquet in an S3-compatible store, all inside one Docker container (Spark 3.5.4 + Sedona 1.9.0 + GDAL, Python pinned to 3.11).
+- **`metadata.toml` is the source of truth** for both paths and per-layer schemas; `table_location()` resolves `s3a://` paths and validates the requested level. I flagged the real inconsistency I found — 79 files use `table_location`, ~15 still hardcode `s3a://` literals — and pointed new/edited code at the metadata path.
+- **The uniform job anatomy** (resolve ORIGEM/DESTINO → `main()` → `.transform()` chains → overwrite + read-back count) and the rule that **any geometry-touching job must use `SedonaContext`**, else `st_*` functions aren't registered.
+
+**Operational facts worth surfacing:**
+- No git, no test runner — jobs "test" themselves by printing a record count; verification = run the job.
+- Jobs must run **in medallion order** (no orchestrator).
+- `start.sh` references `validate_setup.py` / `exploration/` scripts that **don't exist** in this checkout — noted so a future instance doesn't chase them.
+- The `docker network create external-net` prerequisite (compose expects an external net).
+
+**Code style:** pointed to `CODING_STANDARDS.md` and distilled the load-bearing rules — the PT/EN language split, no-UDF/no-`F.expr`, "absence is never zero," explicit window frames, and the geodesic-distance-before-projection rule.
+
+I kept it to architecture and non-discoverable conventions rather than restating the file tree or the full style guide.

@@ -1,0 +1,30 @@
+Pronto. O job rodou com sucesso e a saída foi verificada.
+
+## O que foi feito
+
+**Dados descobertos** (o app `educacao` estava vazio — sem jobs nem schemas declarados). Inspecionei o raw no MinIO:
+- `educacao_escola` (214.192 linhas): `SETOR` = dependência administrativa (**1=Federal**, 2=Estadual, 3=Municipal, 4=Privada) e `SITUACAO` (**1=Em Atividade**, 2=Paralisada, 3=Extinta).
+- `educacao_matricula`: `MAT_BASICA` = total de matrículas da educação básica por escola.
+- Recorte pedido: **716** escolas federais em atividade, das quais **660** têm coordenadas válidas.
+
+**Arquivos criados:**
+- `apps/educacao/metadata.toml` — declarei as tabelas `escola` (raw), `matricula` (raw) e `escola_matricula_h3_grid` (gold), no padrão do repo.
+- `apps/educacao/jobs/gold/educacao_escola_matricula_h3_grid.py` — o job.
+
+**Como cada coluna foi calculada** (H3 nível 5, distâncias geodésicas `ST_DistanceSpheroid` em km):
+- `n_schools`, `total_enrollment` (soma de `MAT_BASICA`), `avg_enrollment` — agregação direta por célula.
+- `n_federal_neighbors` — nº de escolas federais ativas no disco H3 k=1 (própria célula + adjacentes) **menos a própria escola**; igual para toda a célula, via `ST_H3KRing`.
+- `avg_dist_neighbors_km` — média por célula da distância média de cada escola às suas vizinhas (as demais do disco k=1).
+- `avg_dist_nearest_km` — média por célula da distância de cada escola à federal ativa mais próxima, **sem restrição de célula** (cross join do conjunto).
+- `geometry` — polígono da célula (`ST_H3ToGeom`) reprojetado para EPSG:3857, como nas demais tabelas gold.
+
+**Resultado:** `s3a://datalake/educacao/educacao_escola_matricula_h3_grid/gold` — **555 células**, schema exatamente com as colunas pedidas.
+
+**Verificações que passaram:**
+- Schema idêntico ao especificado (o `geometry_bbox` extra é gerado automaticamente pelo formato GeoParquet, como nas outras tabelas gold).
+- `n_federal_neighbors ≥ n_schools − 1` em todas as células; nas 381 células isoladas (1 escola, sem vizinha) o valor é 0 e `avg_dist_neighbors_km` fica nulo — comportamento correto para a rede federal esparsa nessa resolução.
+- `avg_enrollment == round(total/n, 2)` sempre; nenhum `avg_dist_nearest_km` nulo.
+
+Rodei via container `spark-pipelines:local` já existente (não foi preciso rebuildar), apontando para o MinIO `datalake` na rede `external-net`.
+
+Uma observação de escopo: como não havia camadas bronze/silver para `educacao`, o job gold lê o `raw` diretamente (filtro e tipagem inline). Se preferir seguir a medalhão completa (bronze → silver → gold), posso quebrar em etapas — é só avisar.

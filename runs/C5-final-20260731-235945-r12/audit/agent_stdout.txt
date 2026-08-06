@@ -1,0 +1,26 @@
+All invariants verified independently: neighbor counts match a from-scratch recomputation across all 555 cells, zero-neighbor cells correctly carry null neighbor-distance, and all 660 schools have enrollment data. The pipeline ran successfully end to end.
+
+## Resumo
+
+Produzi a tabela **`educacao_escola_matricula_h3_grid`** seguindo o fluxo medallion do repositório (a app `educacao` só tinha os `raw`). Criei a cadeia completa e rodei cada job com sucesso:
+
+| Camada | Job | Resultado |
+|---|---|---|
+| bronze | `educacao_escola.py` | 214.192 escolas tipadas (snake_case, lat/lon `double`) |
+| bronze | `educacao_matricula.py` | 178.766 registros de matrícula |
+| silver | `educacao_escola_matricula_geo.py` | 660 escolas federais em atividade, com matrículas e geometria |
+| gold | `educacao_escola_matricula_h3_grid.py` | **555 células** H3 nível 5 |
+
+Também declarei os níveis/tabelas novos no `metadata.toml` (bronze de escola/matrícula, silver `escola_matricula_geo`, gold `escola_matricula_h3_grid`), como manda a convenção.
+
+**Decisões-chave:**
+- **Universo**: 716 escolas federais (`setor=1`) em atividade (`situacao=1`); 660 com coordenadas válidas entram na grade (as 56 sem lat/lon não podem ser gridadas).
+- **Vizinhas** via `ST_H3KRing(cell, 1, false)` — célula própria + 6 adjacentes. `n_federal_neighbors` = (federais no k-ring) − 1, que é **idêntico para toda a célula** (verificado: bate com recomputação independente nas 555 células).
+- **Distâncias geodésicas** (`ST_DistanceSpheroid`) medidas sobre as **coordenadas WGS84 originais** (preservadas em `latitude`/`longitude` no silver), sem round-trip por projeção — conforme o `CODING_STANDARDS.md`. Convertidas para km.
+- **`avg_dist_nearest_km`**: federal em atividade mais próxima em qualquer célula (cross join, exclui a própria).
+- **Ausência ≠ zero**: célula sem vizinha federal fica com `n_federal_neighbors=0` e `avg_dist_neighbors_km` **null** (não zero forçado). Todas as 660 escolas têm matrícula, então `avg_enrollment` = `total_enrollment`/`n_schools`.
+- **Geometria** do polígono da célula em **EPSG:3857** (GeoParquet), como no restante do lake.
+
+Colunas finais: `h3_cell, n_schools, total_enrollment, avg_enrollment, n_federal_neighbors, avg_dist_neighbors_km, avg_dist_nearest_km, geometry` — todas presentes e validadas (`sum(n_schools)=660`, centróides caem no Brasil).
+
+Uma observação: os jobs de hexbin já existentes (datasus, anac, etc.) calculam H3 direto sobre a geometria em 3857, o que gera células geograficamente incorretas. Aqui calculei o H3 sobre WGS84 (o correto), então este job não replica esse bug dos vizinhos.

@@ -1,0 +1,22 @@
+I've created `CLAUDE.md`. Here's what I found and captured:
+
+## Key findings
+
+**It's a medallion-architecture data-pipeline repo** — PySpark + Apache Sedona + GDAL, ingesting 12 Brazilian public-data sources (`ana`, `anac`, `bcb`, `caged`, `cvm`, `datasus`, `dnit`, `educacao`, `ibge`, `inmet`, `snis`, `tse`) into an S3/MinIO data lake. It's explicitly a validation/dev environment.
+
+**Architecture that spans multiple files** (the "big picture" worth documenting):
+- Layers map to directories: `jobs/{bronze,silver,gold}/`, each job a standalone `spark-submit` script with a `main()` — no orchestrator/DAG.
+- **Metadata-driven paths**: `metadata.toml` declares every table + per-layer schema; jobs resolve locations via `table_location()` rather than hardcoding S3A paths.
+- **Pure-function transforms** composed with `.transform()`, split across shared `utils/column_transforms.py` (Column→Column) and `utils/dataframe_transforms.py` (DataFrame→DataFrame), plus per-app domain utils.
+- Docker/Java 11/Python 3.11 runtime, with `PYTHONPATH` set so `utils`/`apps` imports resolve.
+
+**Commands**: the run flow is Docker-based (`docker compose up --build` → `docker compose exec spark spark-submit apps/<app>/jobs/<layer>/<job>.py`), needs the external `external-net` network and an S3 service at `s3:9000`.
+
+**Conventions** (pointing to `CODING_STANDARDS.md` rather than duplicating it): the load-bearing ones — English code / Portuguese docs, no UDFs, `F.lit(None)` for absence, geodesic distance before projecting, explicit window frames.
+
+## Things I noted honestly rather than inventing
+- **No test suite ships** — `CODING_STANDARDS.md` says "run tests," but there's no `tests/` dir or pytest config, so I documented the actual validation approach (run the job, check the printed count; exercise pure transforms in Jupyter).
+- **An inconsistency**: `start.sh` references `validate_setup.py` and `exploration/start_jupyter.sh` that don't exist in the repo, so I left them out of the commands.
+- **A deviation from the standards**: `apps/ana/jobs/gold/ana_ranking_estacoes.py` hardcodes S3A paths instead of using `table_location()` — flagged so future work follows the metadata pattern.
+
+Want me to adjust the level of detail, or translate the CLAUDE.md to Portuguese to match the repo's documentation language?

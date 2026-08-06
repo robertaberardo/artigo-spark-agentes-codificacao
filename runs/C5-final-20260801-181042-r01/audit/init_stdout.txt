@@ -1,0 +1,18 @@
+I created `CLAUDE.md`. Here's what I documented after exploring the codebase:
+
+**What the repo is** — PySpark + Apache Sedona geospatial ETL over 12 Brazilian public-data sources, organized as a medallion data lake (`raw → bronze → silver → gold`) on S3/MinIO, run as standalone `spark-submit` jobs.
+
+**The three cross-cutting mechanisms** future instances need to read multiple files to grasp:
+1. `metadata.toml` + `utils.metadata.table_location()` as the single source of truth for paths and schemas (jobs don't build S3 paths by hand) — and I flagged that some older gold jobs still hardcode paths.
+2. Pure-function transforms chained via `.transform(...)`, reused from the sizable `utils/` library, with fixed import aliases (`ct`/`dt`, `F`).
+3. Layer responsibilities — bronze (CSV→Parquet, explicit schema, snake_case), silver (Sedona geometry, geoparquet, EPSG:3857), gold (aggregations/rankings/H3 hexbin).
+
+**Geospatial gotchas** — the geodesic-distance-before-reprojection rule, which is subtle and explicitly called out in the code.
+
+**Commands** — the Docker-based build/run flow (`docker compose build`/`up`, `docker compose exec spark spark-submit apps/<app>/jobs/<layer>/<job>.py`), the one-time `external-net` network, and `.env` config.
+
+**Two honest caveats** I verified rather than assumed: there is **no test suite** in the repo, and the `validate_setup.py` the container banner references **does not exist**.
+
+I pointed to `CODING_STANDARDS.md` as the authoritative style guide (Palantir PySpark style, Portuguese docstrings / English code) and summarized its highest-value rules rather than restating the whole file. I deliberately left out the per-app file listing (easily discoverable) and generic advice.
+
+One thing worth your attention: the codebase is **inconsistent about path construction** — `apps/ana/jobs/silver/ana_estacao_geo.py` uses `table_location()`, but `apps/ana/jobs/gold/ana_ranking_estacoes.py` hardcodes `s3a://...`. I documented `table_location` as the preferred approach; let me know if you'd like me to sweep the gold jobs to standardize them.

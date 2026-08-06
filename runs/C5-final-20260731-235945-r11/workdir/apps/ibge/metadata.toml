@@ -1,0 +1,197 @@
+[data_lake]
+db  = "datalake"
+app = "ibge"
+
+# ---------------------------------------------------------------------------
+# ibge_municipios — cadastro/território dos municípios
+# ---------------------------------------------------------------------------
+[tables.municipios]
+name   = "ibge_municipios"
+levels = ["raw", "bronze"]
+key    = "code"
+
+[[tables.municipios.raw.schema]]
+name = "code"
+type = "string"
+description = "código IBGE do município (chave)"
+
+[[tables.municipios.raw.schema]]
+name = "name"
+type = "string"
+description = "nome do município"
+
+[[tables.municipios.raw.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.municipios.raw.schema]]
+name = "area_km2"
+type = "string"
+description = "área territorial em km² (texto, como aterrissa)"
+
+[[tables.municipios.raw.schema]]
+name = "lat"
+type = "string"
+description = "latitude da sede (texto, como aterrissa)"
+
+[[tables.municipios.raw.schema]]
+name = "lon"
+type = "string"
+description = "longitude da sede (texto, como aterrissa)"
+
+[[tables.municipios.bronze.schema]]
+name = "code"
+type = "string"
+description = "código IBGE do município (chave)"
+
+[[tables.municipios.bronze.schema]]
+name = "name"
+type = "string"
+description = "nome do município (espaçamento padronizado)"
+
+[[tables.municipios.bronze.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.municipios.bronze.schema]]
+name = "area_km2"
+type = "double"
+description = "área territorial em km²"
+
+[[tables.municipios.bronze.schema]]
+name = "lat"
+type = "double"
+description = "latitude da sede em graus decimais"
+
+[[tables.municipios.bronze.schema]]
+name = "lon"
+type = "double"
+description = "longitude da sede em graus decimais"
+
+# ---------------------------------------------------------------------------
+# ibge_populacao — população estimada por município
+# ---------------------------------------------------------------------------
+[tables.populacao]
+name   = "ibge_populacao"
+levels = ["raw", "bronze"]
+key    = "code"
+
+[[tables.populacao.raw.schema]]
+name = "code"
+type = "string"
+description = "código IBGE do município (chave)"
+
+[[tables.populacao.raw.schema]]
+name = "populacao"
+type = "string"
+description = "população estimada (texto, como aterrissa)"
+
+[[tables.populacao.bronze.schema]]
+name = "code"
+type = "string"
+description = "código IBGE do município (chave)"
+
+[[tables.populacao.bronze.schema]]
+name = "populacao"
+type = "long"
+description = "população estimada"
+
+# ---------------------------------------------------------------------------
+# ibge_relation_municipio_populacao — municípios × população, enriquecida
+# (grão: um município por linha)
+# ---------------------------------------------------------------------------
+[tables.relation_municipio_populacao]
+name   = "ibge_relation_municipio_populacao"
+levels = ["silver"]
+key    = "code"
+
+[[tables.relation_municipio_populacao.silver.schema]]
+name = "code"
+type = "string"
+description = "código IBGE do município (chave)"
+
+[[tables.relation_municipio_populacao.silver.schema]]
+name = "name"
+type = "string"
+description = "nome do município"
+
+[[tables.relation_municipio_populacao.silver.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.relation_municipio_populacao.silver.schema]]
+name = "area_km2"
+type = "double"
+description = "área territorial em km²"
+
+[[tables.relation_municipio_populacao.silver.schema]]
+name = "lat"
+type = "double"
+description = "latitude da sede em graus decimais"
+
+[[tables.relation_municipio_populacao.silver.schema]]
+name = "lon"
+type = "double"
+description = "longitude da sede em graus decimais"
+
+[[tables.relation_municipio_populacao.silver.schema]]
+name = "populacao"
+type = "long"
+description = "população estimada"
+
+[[tables.relation_municipio_populacao.silver.schema]]
+name = "geometry"
+type = "geometry(point)"
+description = "ponto da sede municipal (lon/lat, WGS84)"
+
+[[tables.relation_municipio_populacao.silver.schema]]
+name = "distance_m"
+type = "double"
+description = "distância geodésica da sede até Brasília, em metros"
+
+[[tables.relation_municipio_populacao.silver.schema]]
+name = "density"
+type = "double"
+description = "densidade demográfica (habitantes por km²)"
+
+# ---------------------------------------------------------------------------
+# ibge_relation_municipio_populacao_por_uf — agregação por UF
+# (grão: uma UF por linha)
+# ---------------------------------------------------------------------------
+[tables.relation_municipio_populacao_por_uf]
+name   = "ibge_relation_municipio_populacao_por_uf"
+levels = ["gold"]
+key    = "uf"
+
+[[tables.relation_municipio_populacao_por_uf.gold.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF (chave)"
+
+[[tables.relation_municipio_populacao_por_uf.gold.schema]]
+name = "n_municipios"
+type = "long"
+description = "número de municípios da UF"
+
+[[tables.relation_municipio_populacao_por_uf.gold.schema]]
+name = "populacao_total"
+type = "long"
+description = "população total da UF"
+
+[[tables.relation_municipio_populacao_por_uf.gold.schema]]
+name = "area_km2_total"
+type = "double"
+description = "área total da UF em km² (2 casas)"
+
+[[tables.relation_municipio_populacao_por_uf.gold.schema]]
+name = "density_media"
+type = "double"
+description = "densidade demográfica média dos municípios (2 casas)"
+
+[[tables.relation_municipio_populacao_por_uf.gold.schema]]
+name = "distance_m_media"
+type = "double"
+description = "distância média das sedes até Brasília, em metros (2 casas)"

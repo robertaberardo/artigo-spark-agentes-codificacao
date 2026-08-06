@@ -1,0 +1,32 @@
+Pronto. Construí o pipeline completo e ele roda com sucesso, produzindo a tabela `educacao_escola_matricula_h3_grid`.
+
+## O que foi feito
+
+**`metadata.toml`** (fonte da verdade) — declarei antes de escrever qualquer job:
+- camada `bronze` (com schema) para `escola` e `matricula`;
+- nova tabela silver `escola_matricula` e nova tabela gold `escola_matricula_h3_grid`, com schema por camada.
+
+**Jobs (medalhão raw→bronze→silver→gold):**
+- `bronze/educacao_escola.py` e `bronze/educacao_matricula.py` — CSV `;` com schema explícito, tipagem/normalização via `utils/column_transforms` (nada de `inferSchema`).
+- `silver/educacao_escola_matricula.py` — join escola+matrícula sem fan-out (`join_no_fanout`), filtro de coordenadas válidas, ponto e geometria em EPSG:3857, **mantendo `latitude`/`longitude` originais** para a medição geodésica.
+- `gold/educacao_escola_matricula_h3_grid.py` — agrega por célula H3 res 5 só das **federais em atividade** (`setor=1`, `situacao=1`).
+
+**Decisões-chave no gold:**
+- H3 e distâncias são calculados sobre o **ponto WGS84 original** (H3 opera em 4326; `ST_DistanceSpheroid` sem round-trip), e só o polígono da célula persiste em 3857.
+- Vizinhas = disco H3 k=1 (`ST_H3KRing(cell,1,False)` → própria célula + 6 adjacentes). `n_federal_neighbors = |N|−1` (idêntico para toda a célula, como pedido); `avg_dist_neighbors_km` é a média, sobre as escolas da célula, da distância média de cada escola às suas vizinhas.
+- `avg_dist_nearest_km` usa a federal mais próxima em qualquer lugar (cross-join das 660 federais, ~436K pares — trivial).
+
+## Resultado e verificação
+
+| verificação | valor |
+|---|---|
+| células (linhas) | **555** (h3_cell único) |
+| Σ n_schools | **660** = total de federais ativas |
+| geometria nula / SRID | 0 nulas / **3857** |
+| células sem vizinhas | 381 (1 escola, sem federal adjacente) → `n_federal_neighbors=0`, `avg_dist_neighbors_km` NULL |
+
+Assertivas de consistência (todas 0 violações): `n_federal_neighbors ≥ n_schools−1`; `avg_dist_neighbors_km` é NULL **sse e somente se** não há vizinhas; nenhuma célula com >1 escola tem 0 vizinhas; `avg_enrollment == total_enrollment/n_schools`.
+
+Colunas finais entregues: `h3_cell, n_schools, total_enrollment, avg_enrollment, n_federal_neighbors, avg_dist_neighbors_km, avg_dist_nearest_km, geometry`.
+
+Uma observação: os jobs de hexbin já existentes (ana, anac, datasus…) rodam `ST_H3CellIDs` sobre a geometria já reprojetada para 3857 — o que é uma divergência latente, já que o H3 espera 4326. Não mexi neles (o CLAUDE.md diz que alguns jobs divergem de propósito), mas o job novo faz da forma correta.

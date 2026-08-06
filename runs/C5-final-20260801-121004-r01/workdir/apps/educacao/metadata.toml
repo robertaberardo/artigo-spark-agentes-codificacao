@@ -1,0 +1,227 @@
+[data_lake]
+db  = "datalake"
+app = "educacao"
+
+# -------------------------------------------------------------------------
+# educacao_escola
+# -------------------------------------------------------------------------
+[tables.escola]
+name   = "educacao_escola"
+levels = ["raw"]
+key    = "ID_UNIDADE"
+
+[[tables.escola.raw.schema]]
+name = "ID_UNIDADE"
+type = "string"
+description = "código da unidade escolar (chave, 8 dígitos)"
+
+[[tables.escola.raw.schema]]
+name = "NOME_UNIDADE"
+type = "string"
+description = "nome da unidade"
+
+[[tables.escola.raw.schema]]
+name = "UF"
+type = "string"
+description = "sigla da unidade federativa"
+
+[[tables.escola.raw.schema]]
+name = "COD_UF"
+type = "string"
+description = "código IBGE da UF"
+
+[[tables.escola.raw.schema]]
+name = "NOME_MUNICIPIO"
+type = "string"
+description = "nome do município"
+
+[[tables.escola.raw.schema]]
+name = "COD_MUNICIPIO"
+type = "string"
+description = "código IBGE do município"
+
+[[tables.escola.raw.schema]]
+name = "SETOR"
+type = "string"
+description = "setor administrativo (1 federal, 2 estadual, 3 municipal, 4 privada)"
+
+[[tables.escola.raw.schema]]
+name = "AREA"
+type = "string"
+description = "área (1 urbana, 2 rural)"
+
+[[tables.escola.raw.schema]]
+name = "SITUACAO"
+type = "string"
+description = "situação de funcionamento (1 em atividade, 2 paralisada, 3 extinta)"
+
+[[tables.escola.raw.schema]]
+name = "LATITUDE"
+type = "string"
+description = "latitude em graus decimais (texto, como aterrissa)"
+
+[[tables.escola.raw.schema]]
+name = "LONGITUDE"
+type = "string"
+description = "longitude em graus decimais (texto, como aterrissa)"
+
+[[tables.escola.raw.schema]]
+name = "QT_SALAS"
+type = "string"
+description = "quantidade de salas de aula utilizadas"
+
+[[tables.escola.raw.schema]]
+name = "TEM_AGUA"
+type = "string"
+description = "indicador (0/1) de fornecimento de água potável"
+
+[[tables.escola.raw.schema]]
+name = "TEM_ENERGIA"
+type = "string"
+description = "indicador (0/1) de energia elétrica da rede pública"
+
+[[tables.escola.raw.schema]]
+name = "TEM_ESGOTO"
+type = "string"
+description = "indicador (0/1) de esgotamento sanitário da rede pública"
+
+[[tables.escola.raw.schema]]
+name = "TEM_BANHEIRO"
+type = "string"
+description = "indicador (0/1) de banheiro"
+
+[[tables.escola.raw.schema]]
+name = "TEM_BIBLIOTECA"
+type = "string"
+description = "indicador (0/1) de biblioteca"
+
+[[tables.escola.raw.schema]]
+name = "TEM_LAB_INFO"
+type = "string"
+description = "indicador (0/1) de laboratório de informática"
+
+[[tables.escola.raw.schema]]
+name = "TEM_QUADRA"
+type = "string"
+description = "indicador (0/1) de quadra de esportes"
+
+[[tables.escola.raw.schema]]
+name = "TEM_INTERNET"
+type = "string"
+description = "indicador (0/1) de acesso à internet"
+
+# -------------------------------------------------------------------------
+# educacao_matricula
+# -------------------------------------------------------------------------
+[tables.matricula]
+name   = "educacao_matricula"
+levels = ["raw"]
+key    = "ID_UNIDADE"
+
+[[tables.matricula.raw.schema]]
+name = "ID_UNIDADE"
+type = "string"
+description = "código da unidade escolar (chave)"
+
+[[tables.matricula.raw.schema]]
+name = "MAT_BASICA"
+type = "string"
+description = "matrículas na educação básica (total)"
+
+[[tables.matricula.raw.schema]]
+name = "MAT_INFANTIL"
+type = "string"
+description = "matrículas na educação infantil"
+
+[[tables.matricula.raw.schema]]
+name = "MAT_FUNDAMENTAL"
+type = "string"
+description = "matrículas no ensino fundamental"
+
+[[tables.matricula.raw.schema]]
+name = "MAT_MEDIO"
+type = "string"
+description = "matrículas no ensino médio"
+
+[[tables.matricula.raw.schema]]
+name = "MAT_PROFISSIONAL"
+type = "string"
+description = "matrículas na educação profissional"
+
+[[tables.matricula.raw.schema]]
+name = "MAT_EJA"
+type = "string"
+description = "matrículas na educação de jovens e adultos"
+
+[[tables.matricula.raw.schema]]
+name = "MAT_ESPECIAL"
+type = "string"
+description = "matrículas na educação especial"
+
+# -------------------------------------------------------------------------
+# educacao_escola_matricula_h3_grid
+# Agregação por célula H3 (nível 5) das escolas federais em atividade, com
+# vizinhança (própria célula + células adjacentes) e distâncias geodésicas.
+# -------------------------------------------------------------------------
+[tables.escola_matricula_h3_grid]
+name   = "educacao_escola_matricula_h3_grid"
+levels = ["gold"]
+key    = "h3_cell"
+
+[[tables.escola_matricula_h3_grid.gold.schema]]
+name = "h3_cell"
+type = "long"
+description = "id da célula H3 (nível 5) que contém as escolas"
+
+[[tables.escola_matricula_h3_grid.gold.schema]]
+name = "n_schools"
+type = "long"
+description = "quantidade de escolas federais em atividade na célula"
+
+[[tables.escola_matricula_h3_grid.gold.schema]]
+name = "total_enrollment"
+type = "long"
+description = "total de matrículas da educação básica na célula"
+
+[[tables.escola_matricula_h3_grid.gold.schema]]
+name = "avg_enrollment"
+type = "double"
+description = "média de matrículas por escola na célula"
+
+[[tables.escola_matricula_h3_grid.gold.schema]]
+name = "n_federal_neighbors"
+type = "long"
+description = "quantidade de escolas vizinhas (própria célula + adjacentes, exceto a própria); igual para toda a célula"
+
+[[tables.escola_matricula_h3_grid.gold.schema]]
+name = "avg_dist_neighbors_km"
+type = "double"
+description = "distância geodésica média de cada escola às suas vizinhas, em km"
+
+[[tables.escola_matricula_h3_grid.gold.schema]]
+name = "avg_dist_nearest_km"
+type = "double"
+description = "distância geodésica média de cada escola à federal mais próxima (qualquer, sem restrição de célula), em km"
+
+[[tables.escola_matricula_h3_grid.gold.schema]]
+name = "geometry"
+type = "geometry"
+description = "polígono da célula H3 (EPSG:4326)"
+
+# -------------------------------------------------------------------------
+# educacao_turma
+# -------------------------------------------------------------------------
+[tables.turma]
+name   = "educacao_turma"
+levels = ["raw"]
+key    = "ID_UNIDADE"
+
+[[tables.turma.raw.schema]]
+name = "ID_UNIDADE"
+type = "string"
+description = "código da unidade escolar (chave)"
+
+[[tables.turma.raw.schema]]
+name = "TUR_BASICA"
+type = "string"
+description = "turmas da educação básica (total)"

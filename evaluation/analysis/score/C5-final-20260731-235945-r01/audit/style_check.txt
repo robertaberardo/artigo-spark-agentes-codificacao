@@ -1,0 +1,18 @@
+# corpo: _all_jobs.py
+2.3.1 [strict] PASS  _all_jobs.py: sem import*
+2.3.2 [strict] PASS  _all_jobs.py: todas com docstring
+2.3.3 [strict] PASS  _all_jobs.py: sem bare except
+2.3.4 [strict] PASS  _all_jobs.py: ausente
+2.3.5 [strict] PASS  _all_jobs.py: sem inferSchema
+2.3.6 [strict] PASS  _all_jobs.py: sem F.expr
+2.3.7 [strict] PASS  _all_jobs.py: sem UDF
+2.3.8 [strict] FAIL  _all_jobs.py: join [(288, 'sem how'), (237, 'sem how')]
+2.3.9 [strict] FAIL  _all_jobs.py: dropDuplicates/distinct em L[258]
+2.3.10 [heur] PASS  _all_jobs.py: sem acesso-coluna por atributo
+2.3.11 [heur] PASS  _all_jobs.py: snake_case ok
+2.3.12 [heur] PASS  _all_jobs.py: identificadores ASCII
+2.3.13 [heur] PASS  _all_jobs.py: sem preenchimento de vazio por ''/0
+2.3.14 [heur] FAIL  _all_jobs.py: faltou alias F/T
+2.3.15 [heur] PASS  _all_jobs.py: lat/long double
+2.3.16 [heur] PASS  _all_jobs.py: geod�sica WGS84
+RATIO 2.3 = 13/16

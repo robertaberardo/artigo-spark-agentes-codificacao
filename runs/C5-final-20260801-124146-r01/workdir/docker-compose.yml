@@ -1,0 +1,28 @@
+services:
+
+  spark:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: spark-pipelines:local
+    oom_kill_disable: true
+    restart: 'no'
+    environment:
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-admin}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-admin1234}
+      S3_ENDPOINT: ${S3_ENDPOINT:-http://s3:9000}
+      S3_BUCKET: ${S3_BUCKET:-datalake}
+      SPARK_CONF_DIR: ${SPARK_CONF_DIR:-/workspace/spark-project/conf}
+      PYTHONPATH: ${PYTHONPATH:-/workspace/spark-project}
+    volumes:
+      - .:/workspace/spark-project:cached
+    command: bash -c "/docker/start.sh"
+    ports:
+      - "${SPARK_UI_PORT:-14040}:4040"
+      - "${JUPYTER_PORT:-18888}:8888"
+    networks:
+      - external-net
+
+networks:
+  external-net:
+    external: true

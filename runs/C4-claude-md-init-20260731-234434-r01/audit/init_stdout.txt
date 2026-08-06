@@ -1,0 +1,15 @@
+I've created `CLAUDE.md` at the repository root. Here's what it captures, based on reading the config, Docker setup, shared `utils/`, `metadata.toml`, and representative jobs across all three layers:
+
+**Big-picture architecture** (the parts requiring multiple files to grasp):
+- **Medallion layers as directory structure** — `apps/<app>/jobs/{bronze,silver,gold}/`, one job = one table, with the distinct idiom of each layer (bronze = `SparkSession` + explicit CSV `RAW_SCHEMA`; silver = `SedonaContext` + geoparquet + EPSG:3857; gold = aggregations/rankings/H3).
+- **`metadata.toml` as the table/path contract**, resolved through `utils/metadata.py:table_location()`.
+- **Shared vs. app-specific transforms**, split strictly by `Column` vs `DataFrame` return type.
+- **Sedona geospatial conventions** — active-context requirement, `ST_Point(lon, lat)` order, the 3857 CRS convention, and the "measure before you reproject" rule from the ANA silver job.
+
+**Commands** — the real workflow is Docker + `spark-submit` (no build/test/lint tooling exists), including the `external-net` network prerequisite and port mappings.
+
+Two things I flagged rather than glossed over:
+- **The path inconsistency**: ~79 jobs use `table_location()` but ~15 hardcode `s3a://...` literals (which ignore `S3_BUCKET`).
+- **The "validation environment" caveat**: `validate_setup.py` / `exploration/` are referenced by `start.sh` but aren't in this tree, so future instances won't chase missing files.
+
+I also noted the codebase writes **comments/docstrings in Brazilian Portuguese** so edits stay consistent, and that `educacao` is a metadata-only scaffold. There's no existing README, Cursor, or Copilot rules to fold in.

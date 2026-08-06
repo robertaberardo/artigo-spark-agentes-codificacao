@@ -1,0 +1,352 @@
+[data_lake]
+db  = "datalake"
+app = "cvm"
+
+# ---------------------------------------------------------------------------
+# cvm_fundo — cadastro dos fundos de investimento
+# ---------------------------------------------------------------------------
+[tables.fundo]
+name   = "cvm_fundo"
+levels = ["raw", "bronze"]
+key    = "cnpj"
+
+[[tables.fundo.raw.schema]]
+name = "cnpj"
+type = "string"
+description = "CNPJ do fundo (chave)"
+
+[[tables.fundo.raw.schema]]
+name = "nome"
+type = "string"
+description = "denominação social do fundo"
+
+[[tables.fundo.raw.schema]]
+name = "classe"
+type = "string"
+description = "classe CVM do fundo"
+
+[[tables.fundo.raw.schema]]
+name = "situacao"
+type = "string"
+description = "situação cadastral"
+
+[[tables.fundo.raw.schema]]
+name = "data_registro"
+type = "string"
+description = "data de registro (dd/MM/yyyy, texto)"
+
+[[tables.fundo.bronze.schema]]
+name = "cnpj"
+type = "string"
+description = "CNPJ do fundo (chave)"
+
+[[tables.fundo.bronze.schema]]
+name = "nome"
+type = "string"
+description = "denominação social (espaçamento padronizado)"
+
+[[tables.fundo.bronze.schema]]
+name = "classe"
+type = "string"
+description = "classe CVM (espaçamento padronizado)"
+
+[[tables.fundo.bronze.schema]]
+name = "situacao"
+type = "string"
+description = "situação cadastral"
+
+[[tables.fundo.bronze.schema]]
+name = "data_registro"
+type = "date"
+description = "data de registro"
+
+# ---------------------------------------------------------------------------
+# cvm_cota — série diária de cotas por fundo
+# ---------------------------------------------------------------------------
+[tables.cota]
+name   = "cvm_cota"
+levels = ["raw", "bronze"]
+key    = "cnpj_fundo"
+
+[[tables.cota.raw.schema]]
+name = "cnpj_fundo"
+type = "string"
+description = "CNPJ do fundo (chave)"
+
+[[tables.cota.raw.schema]]
+name = "data"
+type = "string"
+description = "data de referência (dd/MM/yyyy, texto)"
+
+[[tables.cota.raw.schema]]
+name = "valor_cota"
+type = "string"
+description = "valor da cota (texto)"
+
+[[tables.cota.raw.schema]]
+name = "patrimonio_liquido"
+type = "string"
+description = "patrimônio líquido (R$ 1.234,56, texto)"
+
+[[tables.cota.raw.schema]]
+name = "cotistas"
+type = "string"
+description = "número de cotistas (texto)"
+
+[[tables.cota.bronze.schema]]
+name = "cnpj_fundo"
+type = "string"
+description = "CNPJ do fundo (chave)"
+
+[[tables.cota.bronze.schema]]
+name = "data"
+type = "date"
+description = "data de referência"
+
+[[tables.cota.bronze.schema]]
+name = "valor_cota"
+type = "double"
+description = "valor da cota"
+
+[[tables.cota.bronze.schema]]
+name = "patrimonio_liquido"
+type = "double"
+description = "patrimônio líquido em reais"
+
+[[tables.cota.bronze.schema]]
+name = "cotistas"
+type = "long"
+description = "número de cotistas"
+
+# ---------------------------------------------------------------------------
+# cvm_informe_diario — captação e resgate diários por fundo
+# ---------------------------------------------------------------------------
+[tables.informe_diario]
+name   = "cvm_informe_diario"
+levels = ["raw", "bronze"]
+key    = "cnpj_fundo"
+
+[[tables.informe_diario.raw.schema]]
+name = "cnpj_fundo"
+type = "string"
+description = "CNPJ do fundo (chave)"
+
+[[tables.informe_diario.raw.schema]]
+name = "data"
+type = "string"
+description = "data de referência (dd/MM/yyyy, texto)"
+
+[[tables.informe_diario.raw.schema]]
+name = "captacao"
+type = "string"
+description = "captação do dia (R$ ..., texto)"
+
+[[tables.informe_diario.raw.schema]]
+name = "resgate"
+type = "string"
+description = "resgate do dia (R$ ..., texto)"
+
+[[tables.informe_diario.bronze.schema]]
+name = "cnpj_fundo"
+type = "string"
+description = "CNPJ do fundo (chave)"
+
+[[tables.informe_diario.bronze.schema]]
+name = "data"
+type = "date"
+description = "data de referência"
+
+[[tables.informe_diario.bronze.schema]]
+name = "captacao"
+type = "double"
+description = "captação do dia em reais"
+
+[[tables.informe_diario.bronze.schema]]
+name = "resgate"
+type = "double"
+description = "resgate do dia em reais"
+
+# ---------------------------------------------------------------------------
+# cvm_administrador — cadastro dos administradores
+# ---------------------------------------------------------------------------
+[tables.administrador]
+name   = "cvm_administrador"
+levels = ["raw", "bronze"]
+key    = "cnpj"
+
+[[tables.administrador.raw.schema]]
+name = "cnpj"
+type = "string"
+description = "CNPJ do administrador (chave)"
+
+[[tables.administrador.raw.schema]]
+name = "nome"
+type = "string"
+description = "razão social do administrador"
+
+[[tables.administrador.raw.schema]]
+name = "tipo"
+type = "string"
+description = "tipo de administrador"
+
+[[tables.administrador.bronze.schema]]
+name = "cnpj"
+type = "string"
+description = "CNPJ do administrador (chave)"
+
+[[tables.administrador.bronze.schema]]
+name = "nome"
+type = "string"
+description = "razão social (espaçamento padronizado)"
+
+[[tables.administrador.bronze.schema]]
+name = "tipo"
+type = "string"
+description = "tipo de administrador"
+
+# ---------------------------------------------------------------------------
+# cvm_fundo_consolidado — fundos com administrador resolvido (silver)
+# ---------------------------------------------------------------------------
+[tables.fundo_consolidado]
+name   = "cvm_fundo_consolidado"
+levels = ["silver"]
+key    = "cnpj"
+
+[[tables.fundo_consolidado.silver.schema]]
+name = "cnpj"
+type = "string"
+description = "CNPJ do fundo (chave)"
+
+[[tables.fundo_consolidado.silver.schema]]
+name = "nome"
+type = "string"
+description = "denominação social do fundo"
+
+[[tables.fundo_consolidado.silver.schema]]
+name = "classe"
+type = "string"
+description = "classe CVM do fundo"
+
+[[tables.fundo_consolidado.silver.schema]]
+name = "situacao"
+type = "string"
+description = "situação cadastral"
+
+[[tables.fundo_consolidado.silver.schema]]
+name = "data_registro"
+type = "date"
+description = "data de registro"
+
+[[tables.fundo_consolidado.silver.schema]]
+name = "admin_nome"
+type = "string"
+description = "razão social do administrador"
+
+[[tables.fundo_consolidado.silver.schema]]
+name = "admin_tipo"
+type = "string"
+description = "tipo do administrador"
+
+# ---------------------------------------------------------------------------
+# cvm_cota_serie — série de cotas enriquecida por fundo (silver)
+# ---------------------------------------------------------------------------
+[tables.cota_serie]
+name   = "cvm_cota_serie"
+levels = ["silver"]
+key    = "cnpj_fundo"
+
+[[tables.cota_serie.silver.schema]]
+name = "cnpj_fundo"
+type = "string"
+description = "CNPJ do fundo (chave)"
+
+[[tables.cota_serie.silver.schema]]
+name = "data"
+type = "date"
+description = "data de referência"
+
+[[tables.cota_serie.silver.schema]]
+name = "valor_cota"
+type = "double"
+description = "valor da cota"
+
+[[tables.cota_serie.silver.schema]]
+name = "patrimonio_liquido"
+type = "double"
+description = "patrimônio líquido em reais"
+
+[[tables.cota_serie.silver.schema]]
+name = "cotistas"
+type = "long"
+description = "número de cotistas"
+
+[[tables.cota_serie.silver.schema]]
+name = "captacao"
+type = "double"
+description = "captação do dia em reais"
+
+[[tables.cota_serie.silver.schema]]
+name = "valor_cota_mm"
+type = "double"
+description = "média móvel de 3 pregões do valor da cota"
+
+[[tables.cota_serie.silver.schema]]
+name = "captacao_acumulada"
+type = "double"
+description = "captação acumulada do fundo"
+
+# ---------------------------------------------------------------------------
+# cvm_ranking_fundos — ranking de fundos por patrimônio (gold)
+# ---------------------------------------------------------------------------
+[tables.ranking_fundos]
+name   = "cvm_ranking_fundos"
+levels = ["gold"]
+key    = "cnpj_fundo"
+
+[[tables.ranking_fundos.gold.schema]]
+name = "cnpj_fundo"
+type = "string"
+description = "CNPJ do fundo (chave)"
+
+[[tables.ranking_fundos.gold.schema]]
+name = "patrimonio_liquido"
+type = "double"
+description = "patrimônio líquido mais recente"
+
+[[tables.ranking_fundos.gold.schema]]
+name = "cotistas"
+type = "long"
+description = "número de cotistas mais recente"
+
+[[tables.ranking_fundos.gold.schema]]
+name = "rank_patrimonio"
+type = "int"
+description = "posição por patrimônio (1 = maior)"
+
+# ---------------------------------------------------------------------------
+# cvm_patrimonio_por_classe — patrimônio agregado por classe (gold)
+# ---------------------------------------------------------------------------
+[tables.patrimonio_por_classe]
+name   = "cvm_patrimonio_por_classe"
+levels = ["gold"]
+key    = "classe"
+
+[[tables.patrimonio_por_classe.gold.schema]]
+name = "classe"
+type = "string"
+description = "classe CVM (chave)"
+
+[[tables.patrimonio_por_classe.gold.schema]]
+name = "fundos"
+type = "long"
+description = "número de fundos na classe"
+
+[[tables.patrimonio_por_classe.gold.schema]]
+name = "patrimonio_total"
+type = "double"
+description = "patrimônio líquido total da classe"
+
+[[tables.patrimonio_por_classe.gold.schema]]
+name = "participacao"
+type = "double"
+description = "participação da classe no patrimônio total"

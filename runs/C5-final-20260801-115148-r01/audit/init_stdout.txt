@@ -1,0 +1,22 @@
+I've created `CLAUDE.md`. Here's what I found and captured:
+
+## What this codebase is
+A collection of **PySpark batch pipelines** for Brazilian public open-data (12 apps: ANAC, DATASUS, IBGE, TSE, BCB, CAGED, CVM, DNIT, INMET, ANA, SNIS, educação), following a **medallion architecture** (`raw → bronze → silver → gold`), writing Parquet to S3-compatible storage. Geospatial work uses **Apache Sedona + GDAL**.
+
+## Key things I documented (that require reading multiple files to grasp)
+
+1. **Language split** — code/names/columns in English, docstrings/comments in Portuguese. This is a hard convention across every file.
+
+2. **`metadata.toml` as the schema+location contract** — each app declares tables, layers, per-layer schemas, and keys there; paths resolve through `utils.metadata.table_location()`. Jobs aren't meant to build S3 paths by hand.
+
+3. **The `utils/` architecture** — the split between `column_transforms` (`Column→Column`), `dataframe_transforms` (`DataFrame→DataFrame`), plus per-app domain utils, and the "check utils before writing a new generic transform" rule.
+
+4. **`CODING_STANDARDS.md` is authoritative** — I pointed to it and surfaced the non-obvious rules (no UDFs, no `F.expr`, absence≠zero, explicit join `how`, explicit window frames, no `inferSchema`) rather than duplicating the whole guide.
+
+5. **How to run** — `docker compose exec spark spark-submit apps/<app>/jobs/<layer>/<job>.py`, with the container/JAR/S3A setup notes.
+
+6. **A real inconsistency worth flagging:** bronze jobs use `table_location(...)`, but many silver/gold jobs hardcode `s3a://...` strings — contrary to the standard. I noted that `table_location` is preferred and migrating is an improvement.
+
+I also noted there's **no automated test suite** (verification is by running jobs and checking counts/output), and that `start.sh` references a `validate_setup.py` and `exploration/` directory that don't currently exist in the repo — so I did not invent commands around them.
+
+One note: your organization instructions about the `tom-e-regras`/`humanizer` skills apply to third-party-facing text (articles, posts, emails, etc.). `CLAUDE.md` is internal developer documentation, so I didn't apply those — let me know if you'd like otherwise.

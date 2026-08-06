@@ -1,0 +1,45 @@
+item	tipo	resultado	registrado	fonte	evidencia
+1.1	pontuado	PASS	1.1	oracle_educacao_escola_matricula_h3_grid.txt	só_cand=0 só_ref=0
+1.2	pontuado	PASS	1.2	oracle_educacao_escola_matricula_h3_grid.txt	divergências=0
+1.3	pontuado	PASS	1.3	oracle_educacao_escola_matricula_h3_grid.txt	divergências=0
+1.4	pontuado	PASS	1.4	oracle_educacao_escola_matricula_h3_grid.txt	divergências=0 d=2 tol=5.0e-03
+1.5	pontuado	PASS	1.5	oracle_educacao_escola_matricula_h3_grid.txt	divergências=0
+1.6	pontuado	PASS	1.6	oracle_educacao_escola_matricula_h3_grid.txt	divergências=0 d=3 tol=5.0e-04
+1.7	pontuado	PASS	1.7	oracle_educacao_escola_matricula_h3_grid.txt	divergências=0 d=3 tol=5.0e-04
+1.8	pontuado	PASS	1.8	oracle_educacao_escola_matricula_h3_grid.txt	divergências=0 (CRS-agnóstico)
+2.1.1	pontuado	PASS	2.1.1	schema_fields.txt	_all_jobs.py: lidos=[] alucinados=[]
+2.1.2	pontuado	PASS	2.1.2	schema_fields.txt	_all_jobs.py: lidos=[] alucinados=[]
+2.2.1	pontuado	FAIL	2.2.1	reuse_check.txt	nenhum membro de {blank_to_null} chamado de utils/
+2.2.2	pontuado	PASS	2.2.2	reuse_check.txt	to_coordinate em _all_jobs.py:68
+2.2.3	pontuado	PASS	2.2.3	reuse_check.txt	normalize_text em _all_jobs.py:60
+2.2.4	pontuado	PASS	2.2.4	reuse_check.txt	digits_only em _all_jobs.py:62
+2.2.5	pontuado	PASS	2.2.5	reuse_check.txt	zero_pad_code em _all_jobs.py:59
+2.2.6	pontuado	PASS	2.2.7	reuse_check.txt	filter_valid_coordinates em _all_jobs.py:337
+2.2.7	pontuado	PASS	2.2.8	reuse_check.txt	join_no_fanout em _all_jobs.py:340
+2.2.8	pontuado	PASS	2.2.9	reuse_check.txt	add_point_geometry em _all_jobs.py:346
+2.2.9	pontuado	FAIL	2.2.10+2.2.11	reuse_check.txt	nenhum membro de {to_web_mercator, reproject_geometry} chamado de utils/
+2.2.10	pontuado	FAIL	2.2.12	reuse_check.txt	nenhum membro de {h3_join, aggregate_by_h3, attach_h3_index} chamado de utils/
+2.3.1	pontuado	PASS	2.3.1	style_check.txt	_all_jobs.py: sem import*
+2.3.2	pontuado	PASS	2.3.2	style_check.txt	_all_jobs.py: todas com docstring
+2.3.3	pontuado	PASS	2.3.3	style_check.txt	_all_jobs.py: sem bare except
+2.3.4	pontuado	PASS	2.3.4	style_check.txt	_all_jobs.py: ausente
+2.3.5	pontuado	PASS	2.3.5	style_check.txt	_all_jobs.py: sem inferSchema
+2.3.6	pontuado	PASS	2.3.6	style_check.txt	_all_jobs.py: sem F.expr
+2.3.7	pontuado	PASS	2.3.7	style_check.txt	_all_jobs.py: sem UDF
+2.3.8	pontuado	FAIL	2.3.8	style_check.txt	_all_jobs.py: join [(284, 'sem how'), (253, 'sem how'), (284, 'sem how'), (239, 'sem how')]
+2.3.9	pontuado	PASS	2.3.9	style_check.txt	_all_jobs.py: ausente
+2.3.10	pontuado	PASS	2.3.10	style_check.txt	_all_jobs.py: sem acesso-coluna por atributo
+2.3.11	pontuado	PASS	2.3.11	style_check.txt	_all_jobs.py: snake_case ok
+2.3.12	pontuado	PASS	2.3.12	style_check.txt	_all_jobs.py: identificadores ASCII
+2.3.13	pontuado	PASS	2.3.13	style_check.txt	_all_jobs.py: sem preenchimento de vazio por ''/0
+2.3.14	pontuado	PASS	2.3.14	style_check.txt	_all_jobs.py: aliases F/T
+2.3.15	pontuado	PASS	2.3.15	style_check.txt	_all_jobs.py: lat/long double
+2.3.16	pontuado	PASS	2.3.16	style_check.txt	_all_jobs.py: geod�sica WGS84
+2.4.1	pontuado	PASS	2.4.1	convention.txt	produtor=D:/runs\C5-final-20260801-113317-r01\workdir\apps\educacao\jobs\gold\educacao_escola_matricula_h3_grid.py
+2.4.2	pontuado	PASS	2.4.2	convention.txt	procurou educacao/educacao_escola_matricula_h3_grid/gold na �rvore exportada
+2.4.3	pontuado	PASS	2.4.3	convention.txt	metadata=D:/runs\C5-final-20260801-113317-r01\workdir\apps\educacao\metadata.toml
+2.4.4	pontuado	PASS	2.4.4	convention.txt	writer geoparquet na gold
+2.4.5	pontuado	PASS	—	convention.txt	camadas materializadas em educacao/: ['bronze', 'gold', 'silver']
+crs	registrada	EPSG:4326	1.9	oracle_educacao_escola_matricula_h3_grid.txt	candidato=EPSG:4326 referência=EPSG:3857 conforme=False
+casas	registrada	avg_dist_nearest_km=3;avg_dist_neighbors_km=3;avg_enrollment=2	—	oracle_educacao_escola_matricula_h3_grid.txt	casas decimais gravadas por coluna double
+dedupe	registrada	nao_usado	2.2.6	reuse_check.txt	deduplicate_by_key ausente

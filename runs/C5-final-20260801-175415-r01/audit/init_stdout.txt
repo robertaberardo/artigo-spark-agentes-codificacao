@@ -1,0 +1,21 @@
+I've created `CLAUDE.md`. Here's what I captured about this codebase:
+
+**What it is** — A PySpark 3.5.4 + Apache Sedona + GDAL geospatial pipeline monorepo over 12 Brazilian open-data sources, using a medallion architecture (`raw → bronze → silver → gold`) writing to S3/MinIO.
+
+The doc focuses on the non-obvious, big-picture things a future instance can't quickly discover:
+
+1. **Language convention** — code/identifiers/columns in English, docstrings/comments in Portuguese; columns become `snake_case` at the bronze layer.
+
+2. **Architecture** — the self-contained `apps/<app>/` layout, what each medallion layer means (and that layer dictates session type + file format: bronze→Parquet/SparkSession, geo silver/gold→GeoParquet/SedonaContext in EPSG:3857).
+
+3. **`metadata.toml` as the single source of table paths** — jobs resolve paths only via `table_location(app, table, level)`, which fails early; new tables/schemas must be declared there.
+
+4. **Shared vs. domain transforms** — the `utils/column_transforms.py` / `utils/dataframe_transforms.py` split, the per-app domain utils, and the rule to reuse before writing.
+
+5. **Geospatial gotchas** — geodesic `ST_DistanceSpheroid` on original WGS84 before projecting; no `4326→3857→4326` round-trips.
+
+6. **Commands** — the Docker Compose + `spark-submit` workflow (there's no test/lint tooling — validated by running jobs), plus the S3A/conf wiring.
+
+7. **Coding standards** — pointed to `CODING_STANDARDS.md` and pulled out the load-bearing rules (no UDFs, `select` as schema contract, "absence is never zero", explicit window frames/joins).
+
+A couple of notes on things I deliberately left out: the container's `start.sh` banner references a `validate_setup.py` and an `exploration/` directory that don't exist in the repo, so I didn't mention them. I also didn't invent a test command, since none exists.

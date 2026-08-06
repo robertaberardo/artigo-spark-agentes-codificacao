@@ -1,0 +1,13 @@
+# corpo: _all_jobs.py
+2.2.1 blank_to_null [2.2.1] FAIL  nenhum membro de {blank_to_null} chamado de utils/
+2.2.2 to_coordinate [2.2.2] PASS  to_coordinate em _all_jobs.py:68
+2.2.3 normalize_text [2.2.3] PASS  normalize_text em _all_jobs.py:60
+2.2.4 digits_only [2.2.4] PASS  digits_only em _all_jobs.py:62
+2.2.5 zero_pad_code [2.2.5] PASS  zero_pad_code em _all_jobs.py:59
+2.2.6 filter_valid_coordinates [2.2.7] PASS  filter_valid_coordinates em _all_jobs.py:337
+2.2.7 join_no_fanout [2.2.8] PASS  join_no_fanout em _all_jobs.py:340
+2.2.8 add_point_geometry [2.2.9] PASS  add_point_geometry em _all_jobs.py:346
+2.2.9 reprojecao [2.2.10+2.2.11] FAIL  nenhum membro de {to_web_mercator, reproject_geometry} chamado de utils/
+2.2.10 grade_h3 [2.2.12] FAIL  nenhum membro de {h3_join, aggregate_by_h3, attach_h3_index} chamado de utils/
+VAR dedupe nao_usado  deduplicate_by_key ausente  [registrado 2.2.6]
+RATIO 2.2 = 7/10

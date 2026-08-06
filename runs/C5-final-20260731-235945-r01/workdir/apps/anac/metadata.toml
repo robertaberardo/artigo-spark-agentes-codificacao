@@ -1,0 +1,480 @@
+[data_lake]
+db  = "datalake"
+app = "anac"
+
+# ---------------------------------------------------------------------------
+# anac_aerodromo — cadastro dos aeródromos
+# ---------------------------------------------------------------------------
+[tables.aerodromo]
+name   = "anac_aerodromo"
+levels = ["raw", "bronze"]
+key    = "codigo_oaci"
+
+[[tables.aerodromo.raw.schema]]
+name = "codigo_oaci"
+type = "string"
+description = "código OACI do aeródromo (chave)"
+
+[[tables.aerodromo.raw.schema]]
+name = "nome"
+type = "string"
+description = "nome do aeródromo"
+
+[[tables.aerodromo.raw.schema]]
+name = "municipio"
+type = "string"
+description = "município"
+
+[[tables.aerodromo.raw.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.aerodromo.raw.schema]]
+name = "tipo"
+type = "string"
+description = "público ou privado"
+
+[[tables.aerodromo.raw.schema]]
+name = "latitude"
+type = "string"
+description = "latitude (texto, como aterrissa)"
+
+[[tables.aerodromo.raw.schema]]
+name = "longitude"
+type = "string"
+description = "longitude (texto, como aterrissa)"
+
+[[tables.aerodromo.raw.schema]]
+name = "altitude_m"
+type = "string"
+description = "altitude em metros (texto)"
+
+[[tables.aerodromo.bronze.schema]]
+name = "codigo_oaci"
+type = "string"
+description = "código OACI do aeródromo (chave)"
+
+[[tables.aerodromo.bronze.schema]]
+name = "nome"
+type = "string"
+description = "nome do aeródromo (espaçamento padronizado)"
+
+[[tables.aerodromo.bronze.schema]]
+name = "municipio"
+type = "string"
+description = "município"
+
+[[tables.aerodromo.bronze.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.aerodromo.bronze.schema]]
+name = "tipo"
+type = "string"
+description = "público ou privado"
+
+[[tables.aerodromo.bronze.schema]]
+name = "latitude"
+type = "double"
+description = "latitude em graus decimais"
+
+[[tables.aerodromo.bronze.schema]]
+name = "longitude"
+type = "double"
+description = "longitude em graus decimais"
+
+[[tables.aerodromo.bronze.schema]]
+name = "altitude_m"
+type = "double"
+description = "altitude em metros"
+
+# ---------------------------------------------------------------------------
+# anac_voo — voos operados (movimento)
+# ---------------------------------------------------------------------------
+[tables.voo]
+name   = "anac_voo"
+levels = ["raw", "bronze"]
+key    = "id_voo"
+
+[[tables.voo.raw.schema]]
+name = "id_voo"
+type = "string"
+description = "identificador do voo (chave)"
+
+[[tables.voo.raw.schema]]
+name = "empresa_icao"
+type = "string"
+description = "código ICAO da empresa aérea"
+
+[[tables.voo.raw.schema]]
+name = "origem_oaci"
+type = "string"
+description = "OACI do aeródromo de origem"
+
+[[tables.voo.raw.schema]]
+name = "destino_oaci"
+type = "string"
+description = "OACI do aeródromo de destino"
+
+[[tables.voo.raw.schema]]
+name = "data_partida"
+type = "string"
+description = "timestamp de partida (ISO, texto)"
+
+[[tables.voo.raw.schema]]
+name = "passageiros"
+type = "string"
+description = "passageiros transportados (texto)"
+
+[[tables.voo.raw.schema]]
+name = "assentos"
+type = "string"
+description = "assentos ofertados (texto)"
+
+[[tables.voo.bronze.schema]]
+name = "id_voo"
+type = "string"
+description = "identificador do voo (chave)"
+
+[[tables.voo.bronze.schema]]
+name = "empresa_icao"
+type = "string"
+description = "código ICAO da empresa aérea"
+
+[[tables.voo.bronze.schema]]
+name = "origem_oaci"
+type = "string"
+description = "OACI do aeródromo de origem"
+
+[[tables.voo.bronze.schema]]
+name = "destino_oaci"
+type = "string"
+description = "OACI do aeródromo de destino"
+
+[[tables.voo.bronze.schema]]
+name = "data_partida"
+type = "timestamp"
+description = "timestamp de partida"
+
+[[tables.voo.bronze.schema]]
+name = "passageiros"
+type = "int"
+description = "passageiros transportados"
+
+[[tables.voo.bronze.schema]]
+name = "assentos"
+type = "int"
+description = "assentos ofertados"
+
+# ---------------------------------------------------------------------------
+# anac_aeronave — frota registrada
+# ---------------------------------------------------------------------------
+[tables.aeronave]
+name   = "anac_aeronave"
+levels = ["raw", "bronze"]
+key    = "matricula"
+
+[[tables.aeronave.raw.schema]]
+name = "matricula"
+type = "string"
+description = "matrícula da aeronave (chave)"
+
+[[tables.aeronave.raw.schema]]
+name = "empresa_icao"
+type = "string"
+description = "código ICAO da empresa operadora"
+
+[[tables.aeronave.raw.schema]]
+name = "modelo"
+type = "string"
+description = "modelo da aeronave"
+
+[[tables.aeronave.raw.schema]]
+name = "fabricante"
+type = "string"
+description = "fabricante"
+
+[[tables.aeronave.raw.schema]]
+name = "ano_fabricacao"
+type = "string"
+description = "ano de fabricação (texto)"
+
+[[tables.aeronave.raw.schema]]
+name = "assentos"
+type = "string"
+description = "assentos da aeronave (texto)"
+
+[[tables.aeronave.bronze.schema]]
+name = "matricula"
+type = "string"
+description = "matrícula da aeronave (chave)"
+
+[[tables.aeronave.bronze.schema]]
+name = "empresa_icao"
+type = "string"
+description = "código ICAO da empresa operadora"
+
+[[tables.aeronave.bronze.schema]]
+name = "modelo"
+type = "string"
+description = "modelo da aeronave"
+
+[[tables.aeronave.bronze.schema]]
+name = "fabricante"
+type = "string"
+description = "fabricante"
+
+[[tables.aeronave.bronze.schema]]
+name = "ano_fabricacao"
+type = "int"
+description = "ano de fabricação"
+
+[[tables.aeronave.bronze.schema]]
+name = "assentos"
+type = "int"
+description = "assentos da aeronave"
+
+# ---------------------------------------------------------------------------
+# anac_empresa — empresas aéreas
+# ---------------------------------------------------------------------------
+[tables.empresa]
+name   = "anac_empresa"
+levels = ["raw", "bronze"]
+key    = "icao"
+
+[[tables.empresa.raw.schema]]
+name = "icao"
+type = "string"
+description = "código ICAO da empresa (chave)"
+
+[[tables.empresa.raw.schema]]
+name = "nome"
+type = "string"
+description = "razão social"
+
+[[tables.empresa.raw.schema]]
+name = "uf"
+type = "string"
+description = "UF da sede"
+
+[[tables.empresa.raw.schema]]
+name = "ativa"
+type = "string"
+description = "operação ativa (S/N)"
+
+[[tables.empresa.bronze.schema]]
+name = "icao"
+type = "string"
+description = "código ICAO da empresa (chave)"
+
+[[tables.empresa.bronze.schema]]
+name = "nome"
+type = "string"
+description = "razão social (espaçamento padronizado)"
+
+[[tables.empresa.bronze.schema]]
+name = "uf"
+type = "string"
+description = "UF da sede"
+
+[[tables.empresa.bronze.schema]]
+name = "ativa"
+type = "int"
+description = "operação ativa (1/0)"
+
+# ---------------------------------------------------------------------------
+# anac_aerodromo_geo — aeródromos georreferenciados (silver)
+# ---------------------------------------------------------------------------
+[tables.aerodromo_geo]
+name   = "anac_aerodromo_geo"
+levels = ["silver"]
+key    = "codigo_oaci"
+
+[[tables.aerodromo_geo.silver.schema]]
+name = "codigo_oaci"
+type = "string"
+description = "código OACI do aeródromo (chave)"
+
+[[tables.aerodromo_geo.silver.schema]]
+name = "nome"
+type = "string"
+description = "nome do aeródromo"
+
+[[tables.aerodromo_geo.silver.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.aerodromo_geo.silver.schema]]
+name = "tipo"
+type = "string"
+description = "público ou privado"
+
+[[tables.aerodromo_geo.silver.schema]]
+name = "altitude_m"
+type = "double"
+description = "altitude em metros"
+
+[[tables.aerodromo_geo.silver.schema]]
+name = "distance_brasilia_m"
+type = "double"
+description = "distância geodésica até Brasília, em metros"
+
+[[tables.aerodromo_geo.silver.schema]]
+name = "geometry"
+type = "geometry(point)"
+description = "ponto do aeródromo (EPSG:3857)"
+
+# ---------------------------------------------------------------------------
+# anac_voo_consolidado — voos com origem/destino/empresa resolvidos (silver)
+# ---------------------------------------------------------------------------
+[tables.voo_consolidado]
+name   = "anac_voo_consolidado"
+levels = ["silver"]
+key    = "id_voo"
+
+[[tables.voo_consolidado.silver.schema]]
+name = "id_voo"
+type = "string"
+description = "identificador do voo (chave)"
+
+[[tables.voo_consolidado.silver.schema]]
+name = "empresa_icao"
+type = "string"
+description = "código ICAO da empresa"
+
+[[tables.voo_consolidado.silver.schema]]
+name = "empresa_nome"
+type = "string"
+description = "razão social da empresa"
+
+[[tables.voo_consolidado.silver.schema]]
+name = "origem_oaci"
+type = "string"
+description = "OACI de origem"
+
+[[tables.voo_consolidado.silver.schema]]
+name = "destino_oaci"
+type = "string"
+description = "OACI de destino"
+
+[[tables.voo_consolidado.silver.schema]]
+name = "origem_uf"
+type = "string"
+description = "UF de origem"
+
+[[tables.voo_consolidado.silver.schema]]
+name = "data_partida"
+type = "timestamp"
+description = "timestamp de partida"
+
+[[tables.voo_consolidado.silver.schema]]
+name = "passageiros"
+type = "int"
+description = "passageiros transportados"
+
+[[tables.voo_consolidado.silver.schema]]
+name = "assentos"
+type = "int"
+description = "assentos ofertados"
+
+[[tables.voo_consolidado.silver.schema]]
+name = "load_factor"
+type = "double"
+description = "aproveitamento (passageiros / assentos)"
+
+# ---------------------------------------------------------------------------
+# anac_ranking_rotas — ranking de rotas por passageiros (gold)
+# ---------------------------------------------------------------------------
+[tables.ranking_rotas]
+name   = "anac_ranking_rotas"
+levels = ["gold"]
+key    = "rota"
+
+[[tables.ranking_rotas.gold.schema]]
+name = "rota"
+type = "string"
+description = "par origem-destino (chave)"
+
+[[tables.ranking_rotas.gold.schema]]
+name = "origem_oaci"
+type = "string"
+description = "OACI de origem"
+
+[[tables.ranking_rotas.gold.schema]]
+name = "destino_oaci"
+type = "string"
+description = "OACI de destino"
+
+[[tables.ranking_rotas.gold.schema]]
+name = "voos"
+type = "long"
+description = "número de voos na rota"
+
+[[tables.ranking_rotas.gold.schema]]
+name = "total_passageiros"
+type = "long"
+description = "passageiros totais na rota"
+
+[[tables.ranking_rotas.gold.schema]]
+name = "rank_passageiros"
+type = "int"
+description = "posição por passageiros (1 = maior)"
+
+# ---------------------------------------------------------------------------
+# anac_movimento_por_uf — movimento agregado por UF de origem (gold)
+# ---------------------------------------------------------------------------
+[tables.movimento_por_uf]
+name   = "anac_movimento_por_uf"
+levels = ["gold"]
+key    = "uf"
+
+[[tables.movimento_por_uf.gold.schema]]
+name = "uf"
+type = "string"
+description = "UF de origem (chave)"
+
+[[tables.movimento_por_uf.gold.schema]]
+name = "voos"
+type = "long"
+description = "número de voos partindo da UF"
+
+[[tables.movimento_por_uf.gold.schema]]
+name = "passageiros_total"
+type = "long"
+description = "passageiros totais partindo da UF"
+
+[[tables.movimento_por_uf.gold.schema]]
+name = "load_factor_medio"
+type = "double"
+description = "aproveitamento médio (2 casas)"
+
+# ---------------------------------------------------------------------------
+# anac_hub_hexbin — densidade de aeródromos por célula H3 (gold)
+# ---------------------------------------------------------------------------
+[tables.hub_hexbin]
+name   = "anac_hub_hexbin"
+levels = ["gold"]
+key    = "h3_cell"
+
+[[tables.hub_hexbin.gold.schema]]
+name = "h3_cell"
+type = "long"
+description = "id da célula H3 nível 6 (chave)"
+
+[[tables.hub_hexbin.gold.schema]]
+name = "aerodromos"
+type = "long"
+description = "aeródromos na célula"
+
+[[tables.hub_hexbin.gold.schema]]
+name = "altitude_media_m"
+type = "double"
+description = "altitude média dos aeródromos da célula"
+
+[[tables.hub_hexbin.gold.schema]]
+name = "geometry"
+type = "geometry(polygon)"
+description = "polígono da célula H3 (EPSG:3857)"

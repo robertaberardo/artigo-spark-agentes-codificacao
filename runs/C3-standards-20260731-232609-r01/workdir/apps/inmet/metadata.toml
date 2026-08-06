@@ -1,0 +1,342 @@
+[data_lake]
+db  = "datalake"
+app = "inmet"
+
+# ---------------------------------------------------------------------------
+# inmet_estacao — cadastro das estações meteorológicas
+# ---------------------------------------------------------------------------
+[tables.estacao]
+name   = "inmet_estacao"
+levels = ["raw", "bronze"]
+key    = "codigo_wmo"
+
+[[tables.estacao.raw.schema]]
+name = "codigo_wmo"
+type = "string"
+description = "código da estação (WMO/INMET) (chave)"
+
+[[tables.estacao.raw.schema]]
+name = "nome"
+type = "string"
+description = "nome da estação"
+
+[[tables.estacao.raw.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.estacao.raw.schema]]
+name = "latitude"
+type = "string"
+description = "latitude (texto, como aterrissa)"
+
+[[tables.estacao.raw.schema]]
+name = "longitude"
+type = "string"
+description = "longitude (texto, como aterrissa)"
+
+[[tables.estacao.raw.schema]]
+name = "altitude"
+type = "string"
+description = "altitude em metros (texto)"
+
+[[tables.estacao.bronze.schema]]
+name = "codigo_wmo"
+type = "string"
+description = "código da estação (WMO/INMET) (chave)"
+
+[[tables.estacao.bronze.schema]]
+name = "nome"
+type = "string"
+description = "nome da estação (espaçamento padronizado)"
+
+[[tables.estacao.bronze.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.estacao.bronze.schema]]
+name = "latitude"
+type = "double"
+description = "latitude em graus decimais"
+
+[[tables.estacao.bronze.schema]]
+name = "longitude"
+type = "double"
+description = "longitude em graus decimais"
+
+[[tables.estacao.bronze.schema]]
+name = "altitude"
+type = "double"
+description = "altitude em metros"
+
+# ---------------------------------------------------------------------------
+# inmet_medicao — medições horárias das estações
+# ---------------------------------------------------------------------------
+[tables.medicao]
+name   = "inmet_medicao"
+levels = ["raw", "bronze"]
+key    = "codigo_estacao"
+
+[[tables.medicao.raw.schema]]
+name = "codigo_estacao"
+type = "string"
+description = "código da estação medidora (chave)"
+
+[[tables.medicao.raw.schema]]
+name = "data_hora"
+type = "string"
+description = "timestamp da medição (ISO, texto)"
+
+[[tables.medicao.raw.schema]]
+name = "temp_c"
+type = "string"
+description = "temperatura do ar em °C (texto)"
+
+[[tables.medicao.raw.schema]]
+name = "umidade_pct"
+type = "string"
+description = "umidade relativa em % (texto)"
+
+[[tables.medicao.raw.schema]]
+name = "precip_mm"
+type = "string"
+description = "precipitação em mm (texto)"
+
+[[tables.medicao.raw.schema]]
+name = "vento_ms"
+type = "string"
+description = "velocidade do vento em m/s (texto)"
+
+[[tables.medicao.bronze.schema]]
+name = "codigo_estacao"
+type = "string"
+description = "código da estação medidora (chave)"
+
+[[tables.medicao.bronze.schema]]
+name = "data_hora"
+type = "timestamp"
+description = "timestamp da medição"
+
+[[tables.medicao.bronze.schema]]
+name = "temp_c"
+type = "double"
+description = "temperatura do ar em °C (leituras implausíveis viram NULL)"
+
+[[tables.medicao.bronze.schema]]
+name = "umidade_pct"
+type = "double"
+description = "umidade relativa em %"
+
+[[tables.medicao.bronze.schema]]
+name = "precip_mm"
+type = "double"
+description = "precipitação em mm"
+
+[[tables.medicao.bronze.schema]]
+name = "vento_ms"
+type = "double"
+description = "velocidade do vento em m/s"
+
+# ---------------------------------------------------------------------------
+# inmet_normal_climatologica — normais climatológicas mensais por estação
+# ---------------------------------------------------------------------------
+[tables.normal_climatologica]
+name   = "inmet_normal_climatologica"
+levels = ["raw", "bronze"]
+key    = "codigo_estacao"
+
+[[tables.normal_climatologica.raw.schema]]
+name = "codigo_estacao"
+type = "string"
+description = "código da estação (chave)"
+
+[[tables.normal_climatologica.raw.schema]]
+name = "mes"
+type = "string"
+description = "mês de referência 1-12 (texto)"
+
+[[tables.normal_climatologica.raw.schema]]
+name = "temp_media"
+type = "string"
+description = "temperatura média normal em °C (texto)"
+
+[[tables.normal_climatologica.raw.schema]]
+name = "precip_media"
+type = "string"
+description = "precipitação média normal em mm (texto)"
+
+[[tables.normal_climatologica.bronze.schema]]
+name = "codigo_estacao"
+type = "string"
+description = "código da estação (chave)"
+
+[[tables.normal_climatologica.bronze.schema]]
+name = "mes"
+type = "int"
+description = "mês de referência 1-12"
+
+[[tables.normal_climatologica.bronze.schema]]
+name = "temp_media"
+type = "double"
+description = "temperatura média normal em °C"
+
+[[tables.normal_climatologica.bronze.schema]]
+name = "precip_media"
+type = "double"
+description = "precipitação média normal em mm"
+
+# ---------------------------------------------------------------------------
+# inmet_estacao_geo — estações georreferenciadas (silver)
+# ---------------------------------------------------------------------------
+[tables.estacao_geo]
+name   = "inmet_estacao_geo"
+levels = ["silver"]
+key    = "codigo_wmo"
+
+[[tables.estacao_geo.silver.schema]]
+name = "codigo_wmo"
+type = "string"
+description = "código da estação (chave)"
+
+[[tables.estacao_geo.silver.schema]]
+name = "nome"
+type = "string"
+description = "nome da estação"
+
+[[tables.estacao_geo.silver.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.estacao_geo.silver.schema]]
+name = "altitude"
+type = "double"
+description = "altitude em metros"
+
+[[tables.estacao_geo.silver.schema]]
+name = "geometry"
+type = "geometry(point)"
+description = "ponto da estação (EPSG:4326)"
+
+# ---------------------------------------------------------------------------
+# inmet_medicao_diaria — medições agregadas ao grão diário (silver)
+# ---------------------------------------------------------------------------
+[tables.medicao_diaria]
+name   = "inmet_medicao_diaria"
+levels = ["silver"]
+key    = "codigo_estacao"
+
+[[tables.medicao_diaria.silver.schema]]
+name = "codigo_estacao"
+type = "string"
+description = "código da estação (chave)"
+
+[[tables.medicao_diaria.silver.schema]]
+name = "data"
+type = "date"
+description = "dia de referência"
+
+[[tables.medicao_diaria.silver.schema]]
+name = "temp_media"
+type = "double"
+description = "temperatura média do dia em °C"
+
+[[tables.medicao_diaria.silver.schema]]
+name = "umidade_media"
+type = "double"
+description = "umidade relativa média do dia em %"
+
+[[tables.medicao_diaria.silver.schema]]
+name = "precip_total"
+type = "double"
+description = "precipitação acumulada do dia em mm"
+
+[[tables.medicao_diaria.silver.schema]]
+name = "vento_medio"
+type = "double"
+description = "velocidade média do vento no dia em m/s"
+
+# ---------------------------------------------------------------------------
+# inmet_clima_por_uf — médias climáticas por UF (gold)
+# ---------------------------------------------------------------------------
+[tables.clima_por_uf]
+name   = "inmet_clima_por_uf"
+levels = ["gold"]
+key    = "uf"
+
+[[tables.clima_por_uf.gold.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF (chave)"
+
+[[tables.clima_por_uf.gold.schema]]
+name = "avg_temp_c"
+type = "double"
+description = "temperatura média diária média da UF em °C"
+
+[[tables.clima_por_uf.gold.schema]]
+name = "avg_precip_mm"
+type = "double"
+description = "precipitação diária média da UF em mm"
+
+[[tables.clima_por_uf.gold.schema]]
+name = "umidade_media"
+type = "double"
+description = "umidade relativa média da UF em %"
+
+[[tables.clima_por_uf.gold.schema]]
+name = "station_count"
+type = "long"
+description = "número de estações que contribuíram"
+
+# ---------------------------------------------------------------------------
+# inmet_ranking_chuva — ranking de estações por chuva acumulada (gold)
+# ---------------------------------------------------------------------------
+[tables.ranking_chuva]
+name   = "inmet_ranking_chuva"
+levels = ["gold"]
+key    = "codigo_estacao"
+
+[[tables.ranking_chuva.gold.schema]]
+name = "codigo_estacao"
+type = "string"
+description = "código da estação (chave)"
+
+[[tables.ranking_chuva.gold.schema]]
+name = "precip_total"
+type = "double"
+description = "precipitação total acumulada no período em mm"
+
+[[tables.ranking_chuva.gold.schema]]
+name = "rank_chuva"
+type = "int"
+description = "posição por chuva acumulada (1 = maior)"
+
+# ---------------------------------------------------------------------------
+# inmet_estacoes_hexbin — densidade de estações por célula H3 (gold)
+# ---------------------------------------------------------------------------
+[tables.estacoes_hexbin]
+name   = "inmet_estacoes_hexbin"
+levels = ["gold"]
+key    = "h3_cell"
+
+[[tables.estacoes_hexbin.gold.schema]]
+name = "h3_cell"
+type = "long"
+description = "id da célula H3 nível 5 (chave)"
+
+[[tables.estacoes_hexbin.gold.schema]]
+name = "estacoes"
+type = "long"
+description = "estações na célula"
+
+[[tables.estacoes_hexbin.gold.schema]]
+name = "altitude_media"
+type = "double"
+description = "altitude média das estações da célula"
+
+[[tables.estacoes_hexbin.gold.schema]]
+name = "geometry"
+type = "geometry(polygon)"
+description = "polígono da célula H3 (EPSG:4326)"

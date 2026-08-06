@@ -1,0 +1,34 @@
+Pronto. A tabela `educacao_escola_matricula_h3_grid` foi produzida com sucesso e o pipeline roda de ponta a ponta.
+
+## O que foi construído
+
+Segui a arquitetura medalhão do repositório (`raw → bronze → silver → gold`), já que só existiam os dados `raw`. Todos os caminhos vêm de `table_location` e as tabelas/schemas foram declaradas primeiro no `metadata.toml`:
+
+1. **Bronze** (`educacao_escola`, `educacao_matricula`) — leitura do CSV cru com schema explícito, `snake_case` via `.alias()`, lat/long → `double`, contagens → `int`, chave filtrada.
+2. **Silver** `educacao_escola_geo` — junta escola + matrícula, filtra **federais em atividade** (`setor=1`, `situacao=1`) e coordenadas válidas, monta o ponto e grava geoparquet em EPSG:3857. **Preservei lat/long WGS84 originais** para medir distância antes de reprojetar.
+3. **Gold** `educacao_escola_matricula_h3_grid` — grade H3 nível 5 com as 8 colunas pedidas.
+
+Pontos geoespaciais delicados que respeitei:
+- Distâncias **geodésicas** (`ST_DistanceSpheroid`) medidas sobre o ponto **WGS84 original**, nunca no round-trip 3857.
+- Vizinhança via `ST_H3KRing(cell, 1, false)` (própria célula + adjacentes).
+- `n_federal_neighbors` calculado por célula (igual para toda a célula); `avg_dist_neighbors_km` por escola→vizinhas e depois média na célula; `avg_dist_nearest_km` por escola→federal mais próxima **sem restrição de célula** (cross join global).
+
+## Execução (todos com sucesso)
+
+| Job | Resultado |
+|---|---|
+| bronze escola | 214.192 registros |
+| bronze matrícula | 178.766 registros |
+| silver escola_geo | 660 escolas federais em atividade |
+| **gold h3_grid** | **555 células** |
+
+## Verificação dos invariantes
+- `sum(n_schools)` = 660 = total da silver ✓
+- `n_federal_neighbors ≥ n_schools` em todas as células ✓
+- `avg_dist_neighbors_km` nulo **exatamente** nas 381 células isoladas (1 escola, sem vizinha) — ausência tratada como `NULL`, não zero ✓
+- `avg_dist_nearest_km` nunca nulo (sempre há outra federal no país) ✓
+- Faixas plausíveis: vizinhas 0,37–31,4 km; mais próxima 0,37–339,6 km (federais remotas na Amazônia/interior).
+
+Sobre uma decisão que vale destacar: `avg_enrollment` usa `F.avg` (ignora nulos, conforme o CODING_STANDARDS — "ausência não é zero"), então difere de `total_enrollment / n_schools` caso alguma federal não tenha linha de matrícula. Se você preferir a razão `total/n_schools`, é uma troca de uma linha — me avise.
+
+Observação: o único ponto sem execução real foi que não há suíte de testes no repo (conforme o CLAUDE.md); a validação foi feita rodando os jobs e conferindo contagem/schema/invariantes da saída.

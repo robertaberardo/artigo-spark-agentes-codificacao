@@ -1,0 +1,23 @@
+I've created `CLAUDE.md`. Here's what I captured and why:
+
+**What this codebase is** — PySpark + Apache Sedona geospatial pipelines over Brazilian open-data sources, one *app* per source, each following a `raw → bronze → silver → gold` medallion architecture over S3A/Parquet.
+
+**The non-obvious things that require reading multiple files to discover:**
+
+1. **Language split** — code/names/columns in English, docstrings/comments in Portuguese; source casing preserved in raw, lowercased in the bronze `select`. This is enforced but invisible until you read `CODING_STANDARDS.md`.
+
+2. **Everything runs in Docker** — there's no local Spark or `pip install` path; `apps/`/`utils/`/`conf/` are bind-mounted so edits apply without rebuild. I gave the exact `docker compose` + `spark-submit` commands.
+
+3. **The job pattern** — one file = one output table, with the `main()` → build session → transform → overwrite-write → read-back-and-count shape, and when to use `SedonaContext` vs plain `SparkSession`.
+
+4. **`metadata.toml` drives table paths** via `table_location()` — jobs shouldn't hardcode `s3a://` strings (I noted that ~79 jobs follow this and ~15 still hardcode, so "prefer `table_location`").
+
+5. **The three-tier transforms layout** — generic `Column→Column` in `utils/column_transforms.py`, generic `DataFrame→DataFrame` in `utils/dataframe_transforms.py`, domain-specific in `apps/<app>/utils/` — with the "check here before writing" guidance.
+
+6. **Geospatial gotchas** — geodesic distance on original WGS84 before projecting, EPSG:3857 as output-only convention, Brazil coordinate bounds.
+
+**Honesty notes I included:** there's no test/lint/build runner (testing = run and check counts), and `start.sh`/Dockerfile reference a `validate_setup.py` and `exploration/` that **don't exist in this tree** — so future instances don't chase them.
+
+I kept the full style rules in `CODING_STANDARDS.md` (which I pointed to as authoritative) and only surfaced the handful most likely to bite, rather than duplicating the guide.
+
+One thing worth flagging: the `apps/educacao/` app is scaffolded (packages exist) but has **zero jobs** — a stub, in case you were expecting it to be populated.

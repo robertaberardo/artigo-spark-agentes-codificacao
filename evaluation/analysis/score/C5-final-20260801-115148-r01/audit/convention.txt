@@ -1,0 +1,6 @@
+2.4.1 PASS  produtor=D:/runs\C5-final-20260801-115148-r01\workdir\apps\educacao\jobs\gold\educacao_escola_matricula_h3_grid.py
+2.4.2 PASS  procurou educacao/educacao_escola_matricula_h3_grid/gold na �rvore exportada
+2.4.3 PASS  metadata=D:/runs\C5-final-20260801-115148-r01\workdir\apps\educacao\metadata.toml
+2.4.4 PASS  writer geoparquet na gold
+2.4.5 PASS  camadas materializadas em educacao/: ['bronze', 'gold', 'silver']
+RATIO 2.4 = 5/5

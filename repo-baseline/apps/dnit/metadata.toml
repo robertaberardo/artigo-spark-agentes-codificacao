@@ -1,0 +1,455 @@
+[data_lake]
+db  = "datalake"
+app = "dnit"
+
+# ---------------------------------------------------------------------------
+# dnit_rodovia — cadastro das rodovias federais (BRs)
+# ---------------------------------------------------------------------------
+[tables.rodovia]
+name   = "dnit_rodovia"
+levels = ["raw", "bronze"]
+key    = "sigla_br"
+
+[[tables.rodovia.raw.schema]]
+name = "sigla_br"
+type = "string"
+description = "número da BR (chave)"
+
+[[tables.rodovia.raw.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.rodovia.raw.schema]]
+name = "extensao_km"
+type = "string"
+description = "extensão da rodovia em km (texto)"
+
+[[tables.rodovia.raw.schema]]
+name = "geom_wkt"
+type = "string"
+description = "traçado da rodovia em WKT (LINESTRING)"
+
+[[tables.rodovia.bronze.schema]]
+name = "sigla_br"
+type = "string"
+description = "número da BR com três dígitos (chave)"
+
+[[tables.rodovia.bronze.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.rodovia.bronze.schema]]
+name = "extensao_km"
+type = "double"
+description = "extensão da rodovia em km"
+
+[[tables.rodovia.bronze.schema]]
+name = "geom_wkt"
+type = "string"
+description = "traçado da rodovia em WKT (LINESTRING)"
+
+# ---------------------------------------------------------------------------
+# dnit_acidente — acidentes registrados nas rodovias federais
+# ---------------------------------------------------------------------------
+[tables.acidente]
+name   = "dnit_acidente"
+levels = ["raw", "bronze"]
+key    = "id"
+
+[[tables.acidente.raw.schema]]
+name = "id"
+type = "string"
+description = "identificador do acidente (chave)"
+
+[[tables.acidente.raw.schema]]
+name = "br"
+type = "string"
+description = "número da BR onde ocorreu"
+
+[[tables.acidente.raw.schema]]
+name = "km"
+type = "string"
+description = "quilômetro da ocorrência (texto)"
+
+[[tables.acidente.raw.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.acidente.raw.schema]]
+name = "data"
+type = "string"
+description = "data da ocorrência (dd/MM/yyyy)"
+
+[[tables.acidente.raw.schema]]
+name = "mortos"
+type = "string"
+description = "número de mortos (texto)"
+
+[[tables.acidente.raw.schema]]
+name = "feridos"
+type = "string"
+description = "número de feridos (texto)"
+
+[[tables.acidente.raw.schema]]
+name = "latitude"
+type = "string"
+description = "latitude (texto)"
+
+[[tables.acidente.raw.schema]]
+name = "longitude"
+type = "string"
+description = "longitude (texto)"
+
+[[tables.acidente.bronze.schema]]
+name = "id"
+type = "string"
+description = "identificador do acidente (chave)"
+
+[[tables.acidente.bronze.schema]]
+name = "br"
+type = "string"
+description = "número da BR onde ocorreu"
+
+[[tables.acidente.bronze.schema]]
+name = "km"
+type = "double"
+description = "quilômetro da ocorrência"
+
+[[tables.acidente.bronze.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.acidente.bronze.schema]]
+name = "data"
+type = "date"
+description = "data da ocorrência"
+
+[[tables.acidente.bronze.schema]]
+name = "mortos"
+type = "int"
+description = "número de mortos"
+
+[[tables.acidente.bronze.schema]]
+name = "feridos"
+type = "int"
+description = "número de feridos"
+
+[[tables.acidente.bronze.schema]]
+name = "latitude"
+type = "double"
+description = "latitude em graus decimais"
+
+[[tables.acidente.bronze.schema]]
+name = "longitude"
+type = "double"
+description = "longitude em graus decimais"
+
+# ---------------------------------------------------------------------------
+# dnit_trecho — trechos das rodovias federais
+# ---------------------------------------------------------------------------
+[tables.trecho]
+name   = "dnit_trecho"
+levels = ["raw", "bronze"]
+key    = "id_trecho"
+
+[[tables.trecho.raw.schema]]
+name = "id_trecho"
+type = "string"
+description = "identificador do trecho (chave)"
+
+[[tables.trecho.raw.schema]]
+name = "br"
+type = "string"
+description = "número da BR"
+
+[[tables.trecho.raw.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.trecho.raw.schema]]
+name = "km_inicial"
+type = "string"
+description = "quilômetro inicial do trecho (texto)"
+
+[[tables.trecho.raw.schema]]
+name = "km_final"
+type = "string"
+description = "quilômetro final do trecho (texto)"
+
+[[tables.trecho.raw.schema]]
+name = "tipo_pista"
+type = "string"
+description = "tipo de pista (simples, dupla, ...)"
+
+[[tables.trecho.bronze.schema]]
+name = "id_trecho"
+type = "string"
+description = "identificador do trecho (chave)"
+
+[[tables.trecho.bronze.schema]]
+name = "br"
+type = "string"
+description = "número da BR com três dígitos"
+
+[[tables.trecho.bronze.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.trecho.bronze.schema]]
+name = "km_inicial"
+type = "double"
+description = "quilômetro inicial do trecho"
+
+[[tables.trecho.bronze.schema]]
+name = "km_final"
+type = "double"
+description = "quilômetro final do trecho"
+
+[[tables.trecho.bronze.schema]]
+name = "tipo_pista"
+type = "string"
+description = "tipo de pista (simples, dupla, ...)"
+
+# ---------------------------------------------------------------------------
+# dnit_pnv — Plano Nacional de Viação: superfície e condição por trecho
+# ---------------------------------------------------------------------------
+[tables.pnv]
+name   = "dnit_pnv"
+levels = ["raw", "bronze"]
+key    = "codigo_pnv"
+
+[[tables.pnv.raw.schema]]
+name = "codigo_pnv"
+type = "string"
+description = "código do trecho no PNV (chave)"
+
+[[tables.pnv.raw.schema]]
+name = "br"
+type = "string"
+description = "número da BR"
+
+[[tables.pnv.raw.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.pnv.raw.schema]]
+name = "superficie"
+type = "string"
+description = "tipo de superfície (texto)"
+
+[[tables.pnv.raw.schema]]
+name = "condicao"
+type = "string"
+description = "condição da pista (texto)"
+
+[[tables.pnv.bronze.schema]]
+name = "codigo_pnv"
+type = "string"
+description = "código do trecho no PNV (chave)"
+
+[[tables.pnv.bronze.schema]]
+name = "br"
+type = "string"
+description = "número da BR com três dígitos"
+
+[[tables.pnv.bronze.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.pnv.bronze.schema]]
+name = "superficie"
+type = "string"
+description = "tipo de superfície (normalizado, sem acento)"
+
+[[tables.pnv.bronze.schema]]
+name = "condicao"
+type = "string"
+description = "condição da pista (normalizada, sem acento)"
+
+# ---------------------------------------------------------------------------
+# dnit_rodovia_geo — rodovias georreferenciadas (silver)
+# ---------------------------------------------------------------------------
+[tables.rodovia_geo]
+name   = "dnit_rodovia_geo"
+levels = ["silver"]
+key    = "sigla_br"
+
+[[tables.rodovia_geo.silver.schema]]
+name = "sigla_br"
+type = "string"
+description = "número da BR com três dígitos (chave)"
+
+[[tables.rodovia_geo.silver.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.rodovia_geo.silver.schema]]
+name = "extensao_km"
+type = "double"
+description = "extensão declarada da rodovia em km"
+
+[[tables.rodovia_geo.silver.schema]]
+name = "comprimento_m"
+type = "double"
+description = "comprimento geodésico do traçado, em metros"
+
+[[tables.rodovia_geo.silver.schema]]
+name = "geometry"
+type = "geometry(linestring)"
+description = "traçado da rodovia (EPSG:4326)"
+
+# ---------------------------------------------------------------------------
+# dnit_acidente_geo — acidentes georreferenciados (silver)
+# ---------------------------------------------------------------------------
+[tables.acidente_geo]
+name   = "dnit_acidente_geo"
+levels = ["silver"]
+key    = "id"
+
+[[tables.acidente_geo.silver.schema]]
+name = "id"
+type = "string"
+description = "identificador do acidente (chave)"
+
+[[tables.acidente_geo.silver.schema]]
+name = "br"
+type = "string"
+description = "número da BR onde ocorreu"
+
+[[tables.acidente_geo.silver.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.acidente_geo.silver.schema]]
+name = "km"
+type = "double"
+description = "quilômetro da ocorrência"
+
+[[tables.acidente_geo.silver.schema]]
+name = "data"
+type = "date"
+description = "data da ocorrência"
+
+[[tables.acidente_geo.silver.schema]]
+name = "mortos"
+type = "int"
+description = "número de mortos"
+
+[[tables.acidente_geo.silver.schema]]
+name = "feridos"
+type = "int"
+description = "número de feridos"
+
+[[tables.acidente_geo.silver.schema]]
+name = "geometry"
+type = "geometry(point)"
+description = "ponto do acidente (EPSG:3857)"
+
+# ---------------------------------------------------------------------------
+# dnit_acidentes_por_br — acidentes agregados por BR/UF (gold)
+# ---------------------------------------------------------------------------
+[tables.acidentes_por_br]
+name   = "dnit_acidentes_por_br"
+levels = ["gold"]
+key    = "br"
+
+[[tables.acidentes_por_br.gold.schema]]
+name = "br"
+type = "string"
+description = "número da BR (chave)"
+
+[[tables.acidentes_por_br.gold.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.acidentes_por_br.gold.schema]]
+name = "total_acidentes"
+type = "long"
+description = "número de acidentes na BR/UF"
+
+[[tables.acidentes_por_br.gold.schema]]
+name = "total_mortos"
+type = "long"
+description = "total de mortos na BR/UF"
+
+[[tables.acidentes_por_br.gold.schema]]
+name = "total_feridos"
+type = "long"
+description = "total de feridos na BR/UF"
+
+# ---------------------------------------------------------------------------
+# dnit_indice_perigo — índice de perigo por BR/UF (gold)
+# ---------------------------------------------------------------------------
+[tables.indice_perigo]
+name   = "dnit_indice_perigo"
+levels = ["gold"]
+key    = "br"
+
+[[tables.indice_perigo.gold.schema]]
+name = "br"
+type = "string"
+description = "número da BR (chave)"
+
+[[tables.indice_perigo.gold.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.indice_perigo.gold.schema]]
+name = "mortos_total"
+type = "long"
+description = "total de mortos na BR/UF"
+
+[[tables.indice_perigo.gold.schema]]
+name = "feridos_total"
+type = "long"
+description = "total de feridos na BR/UF"
+
+[[tables.indice_perigo.gold.schema]]
+name = "indice_perigo"
+type = "long"
+description = "índice de perigo (mortos*3 + feridos)"
+
+[[tables.indice_perigo.gold.schema]]
+name = "faixa"
+type = "string"
+description = "faixa de severidade do índice"
+
+# ---------------------------------------------------------------------------
+# dnit_segmentos_criticos — concentração de acidentes por célula H3 (gold)
+# ---------------------------------------------------------------------------
+[tables.segmentos_criticos]
+name   = "dnit_segmentos_criticos"
+levels = ["gold"]
+key    = "h3_cell"
+
+[[tables.segmentos_criticos.gold.schema]]
+name = "h3_cell"
+type = "long"
+description = "id da célula H3 nível 7 (chave)"
+
+[[tables.segmentos_criticos.gold.schema]]
+name = "acidentes"
+type = "long"
+description = "acidentes na célula"
+
+[[tables.segmentos_criticos.gold.schema]]
+name = "mortos_total"
+type = "long"
+description = "total de mortos na célula"
+
+[[tables.segmentos_criticos.gold.schema]]
+name = "geometry"
+type = "geometry(polygon)"
+description = "polígono da célula H3 (EPSG:3857)"

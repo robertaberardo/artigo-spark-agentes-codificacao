@@ -1,0 +1,25 @@
+The job is implemented, runs successfully, and its output is validated. Here's a summary.
+
+## Resultado
+
+Criei o job **`apps/educacao/jobs/gold/educacao_escola_matricula_h3_grid.py`**, registrei a tabela no **`apps/educacao/metadata.toml`** e o executei com sucesso: **555 células** gravadas em `s3a://datalake/educacao/educacao_escola_matricula_h3_grid/gold` (geoparquet), com as 8 colunas pedidas.
+
+### O que o job faz
+1. **Filtra** escolas **federais** (`SETOR=1`) **em atividade** (`SITUACAO=1`) — 716 no total, 660 com coordenada válida.
+2. Constrói o ponto WGS84, atribui a **célula H3 nível 5** e cruza com `MAT_BASICA` (matrículas da educação básica) por `ID_UNIDADE`.
+3. **Vizinhança**: para cada escola, as demais federais em atividade na própria célula ou nas adjacentes, via `ST_H3KRing(cell, 1, false)` (anel = célula central + 6 adjacentes) — produz `n_federal_neighbors` e `avg_dist_neighbors_km`.
+4. **Mais próxima**: distância de cada escola à federal mais próxima (qualquer, sem restrição de célula), por cross join das 660 escolas.
+5. Agrega por célula e reprojeta o polígono da célula para EPSG:3857 na saída.
+
+### Aderência aos padrões
+- Distâncias **geodésicas** (`ST_DistanceSpheroid`) medidas sobre os pontos **WGS84 originais**, antes de projetar; só o polígono persistido vai para 3857.
+- Reúso de utils (`zero_pad_code`, `to_coordinate`, `filter_valid_coordinates`, `add_point_geometry`, `attach_h3_index`, `join_no_fanout`), passos como funções puras `DataFrame→DataFrame`, schema e caminhos lidos do `metadata.toml`, ausência como `NULL` (nunca zero — `avg_enrollment`/distâncias usam a semântica de `avg` que ignora nulos).
+
+### Validações executadas
+- `sum(n_schools) = 660` (bate exatamente com as federais ativas georreferenciadas); `total_enrollment` total = 365.835.
+- `n_federal_neighbors ≥ n_schools−1` em **todas** as células (0 violações) — vizinhos incluem corretamente as demais da própria célula.
+- `avg_dist_neighbors_km` é NULL exatamente nas 381 células isoladas (sem vizinhas).
+- O nº de vizinhas é **uniforme entre as escolas de cada célula** (0 células multi-escola com valor não uniforme) — confirmando o requisito "a mesma para toda a célula".
+- Nenhum auto-emparelhamento na distância à mais próxima (mínimo 0,37 km > 0).
+
+Observação: a coluna `geometry_bbox` que aparece no schema de saída é a *bbox covering* padrão que o writer GeoParquet adiciona automaticamente (idêntico aos jobs gold de referência `ana`/`anac`), não uma coluna extra do meu código.

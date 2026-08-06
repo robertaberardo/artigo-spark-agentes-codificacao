@@ -1,0 +1,8 @@
+checklist.tsv escrito: D:\rob\mba\repos\spark-pipelines-automation\evaluation\analysis\rescore\C5-final-20260801-122257-r01\checklist.tsv
+M1 (corre��o bin�ria): CORRETA (8/8)
+  gate schema_contrato: PASS  [oracle_educacao_escola_matricula_h3_grid.txt] faltando=� extras=�
+  var crs: EPSG:3857
+  var casas: avg_dist_nearest_km=15;avg_dist_neighbors_km=15;avg_enrollment=13
+  var dedupe: nao_usado
+M2-r (ader�ncia): 29/33  [esquema 2/2 � re�so 9/10 � estilo 13/16 � conven��o 5/5]
+gate de completude: 41/41 pontuados + 3/3 vari�veis.

@@ -1,0 +1,17 @@
+I analyzed the codebase and created `CLAUDE.md`. There was no existing one. Here's what I found and captured:
+
+**What this repo is:** A PySpark 3.5.4 + Apache Sedona 1.9.0 + GDAL geospatial pipeline suite over 12 Brazilian public-data sources, run as a Dockerized "validation environment" writing to an S3A/MinIO data lake.
+
+**Key architecture I documented** (the non-obvious, multi-file picture):
+- **Medallion lake with a uniform per-app shape** — each `apps/<app>/` has `metadata.toml` + `jobs/{bronze,silver,gold}/*.py` + a domain-specific `utils/`. Data flows raw → bronze → silver → gold; one job file = one output table, always persisted.
+- **`metadata.toml` is the schema/path contract** — jobs resolve locations via `utils.metadata.table_location(...)` (which fails early on undeclared tables/layers), never hard-coding S3 paths.
+- **The shared-vs-domain transform split** — generic `Column→Column` / `DataFrame→DataFrame` functions live in top-level `utils/` and must be checked before writing new ones; domain-specific ones stay under the app.
+- **Bronze uses plain `SparkSession` + explicit-schema CSV → parquet; spatial silver/gold use `SedonaContext` → geoparquet** (Sedona `ST_*` requires an active context).
+
+**Commands:** the container mounts the project and stays alive, so jobs run via `docker compose exec spark spark-submit apps/<app>/jobs/<layer>/<job>.py`. Noted there's no test suite — validation is running jobs and checking printed row counts.
+
+**Conventions:** I pointed to `CODING_STANDARDS.md` as authoritative and distilled its load-bearing rules — the English-code/Portuguese-comments split, snake_case from bronze on, pure-function transforms, no UDFs/`F.expr`, "absence is never zero", fan-out-safe joins, explicit window frames, and the geodesic-distance-before-projecting geospatial rule.
+
+I left out the referenced-but-absent `validate_setup.py`/`exploration/` (mentioned in `start.sh` but not in the repo) rather than invent details, and skipped generic advice and easily-discoverable file listings per the init guidance.
+
+One note: this is internal technical documentation for Claude Code, so the outward-facing text skills (tom-e-regras/humanizer) don't apply here — let me know if you'd like any section expanded or trimmed.

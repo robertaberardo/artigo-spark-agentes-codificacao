@@ -1,0 +1,24 @@
+# Ferramental do HARNESS do experimento (fica na RAIZ do repo, fora de
+# `repo-baseline/`). O que o agente vê é `repo-baseline/`, copiado para o workdir
+# de cada execução, então nada aqui vaza para as runs — este arquivo NÃO deve ser
+# copiado para dentro de `repo-baseline/`.
+[project]
+name = "spark-pipelines-experiment"
+version = "0.1.0"
+description = "Harness do experimento de condicionamento de contexto (TCC)"
+requires-python = ">=3.11"
+
+[project.optional-dependencies]
+# Só o que o harness/metrics precisam. Spark/Sedona rodam nos containers, não aqui.
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+# Testes de instrumentação (Python puro: ast/tomllib — sem Spark).
+testpaths = ["evaluation/metrics/tests"]
+addopts = "-q"
+
+[tool.ruff]
+# Alinhado ao CODING_STANDARDS (referência de estilo do repo); usado só no
+# ferramental — o style_check do experimento é próprio (AST, 16 regras).
+line-length = 100
+target-version = "py311"

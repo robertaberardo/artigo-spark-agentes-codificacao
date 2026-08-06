@@ -1,0 +1,17 @@
+I've created `CLAUDE.md`. Here's what I captured and why:
+
+**Big-picture architecture** (the parts that need reading several files to grasp):
+- The **medallion flow** (raw → bronze → silver → gold) and what each layer's jobs actually do — explicit-schema CSV reads, snake_case aliasing at bronze, Sedona/geo at silver, aggregations at gold.
+- The **per-app layout** and the split between app-local `utils/column_transforms.py` and the shared `utils/` (`column_transforms`, `dataframe_transforms`, `metadata`), with the "check utils before writing a generic transform" rule.
+- **`metadata.toml` as the table registry** and how `table_location()` turns it into S3A paths — including the `S3_BUCKET` override and its fail-fast errors.
+- The **Sedona context vs plain SparkSession** distinction and the geodesic-distance-before-projection rule, since those aren't obvious from any single file.
+
+**Commands**: how to build/start the container and run a job via `docker compose exec spark spark-submit ...`, plus the S3A/env/network wiring and UI ports.
+
+**Things I flagged from reading the code** rather than assuming:
+- `CODING_STANDARDS.md` is the authoritative style guide — pointed to it strongly instead of duplicating it.
+- The language convention (English code, Portuguese docs).
+- No test suite / `validate_setup.py` / `exploration/` exists despite the startup banner referencing them — so verification is "run the job, check the count."
+- Some jobs hardcode `s3a://` paths while the standard says use `table_location()` — noted the preference for new code.
+
+I kept it to the non-obvious essentials and avoided enumerating every app/file or generic advice. Note: a couple of files reference `apps/<app>/utils/dataframe_transforms.py` at the app level, but only shared `utils/dataframe_transforms.py` exists — the app-local `dataframe_transforms` some jobs may import doesn't; I described the shared module as the source of DataFrame transforms, which matches what's actually present.

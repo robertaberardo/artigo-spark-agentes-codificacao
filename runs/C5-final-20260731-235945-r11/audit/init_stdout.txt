@@ -1,0 +1,18 @@
+I've analyzed the codebase and created `CLAUDE.md`. Here's what I found and captured:
+
+## What this repository is
+A monorepo of **PySpark + Apache Sedona geospatial pipelines** over Brazilian public datasets (12 sources: ANA, ANAC, BCB, CAGED, CVM, DATASUS, DNIT, educação, IBGE, INMET, SNIS, TSE), organized as a **medallion lake** (raw → bronze → silver → gold) on S3/MinIO, running entirely inside Docker.
+
+## Key architectural points I documented
+- **`CODING_STANDARDS.md` is the mandatory style bible** (Palantir-adapted PySpark rules — no UDFs, native `F.*` over `F.expr`, `F.lit(None)` for absence, explicit joins/window frames). I pointed to it rather than duplicating it.
+- **Language split**: code/identifiers in English, docstrings/comments in Portuguese, columns `snake_case` from bronze onward — a non-obvious convention to preserve when editing.
+- **`metadata.toml` is the single source of truth** for table paths, layers, keys, and per-level schemas. Jobs never hardcode paths — they call `utils.metadata.table_location()`, which fails early on undeclared tables/levels. New tables must be declared there first.
+- **Layer conventions**: bronze reads CSV with explicit `StructType` + `sep=";"` → parquet; geo silver/gold use `SedonaContext` → geoparquet.
+- **Transform reuse hierarchy**: shared `utils/column_transforms.py` + `dataframe_transforms.py` vs. app-specific `apps/<app>/utils/` — check before writing new generic transforms.
+- **Sedona geodesic rule**: measure distance on original WGS84 before projecting to EPSG:3857 (never round-trip).
+- **Run commands**: `docker compose build/up` then `spark-submit apps/<app>/jobs/<layer>/<job>.py`, noting the external `external-net` network and `s3:9000` dependency.
+
+## Things I deliberately did *not* invent
+There's no automated test suite, linter, or the `validate_setup.py`/`exploration/` referenced in `docker/resources/start.sh` (those files don't exist in the tree). Rather than fabricate a test command, I described the actual verification approach (run the job, check row count/schema against metadata).
+
+One minor inconsistency worth noting: most jobs use an `if __name__ == "__main__"` guard, but a few gold jobs (e.g. `apps/ana/jobs/gold/ana_estacoes_hexbin.py`) call `main()` at module top level. I left that undocumented since it's a small style deviation, not architecture — let me know if you'd like it flagged.

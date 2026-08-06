@@ -1,0 +1,17 @@
+I've analyzed the codebase and created `CLAUDE.md`. Here's what I found and captured:
+
+**What this repo is:** PySpark + Apache Sedona + GDAL pipelines that ingest Brazilian public-data sources (12 apps: ANAC, DATASUS, IBGE, TSE, BCB, CAGED, CVM, DNIT, INMET, SNIS, ANA, educação) into a medallion (bronze→silver→gold) data lake on S3-compatible storage (MinIO via S3A).
+
+**Key things a future instance needs to know that require reading multiple files:**
+
+1. **`CODING_STANDARDS.md` is authoritative** — a detailed Palantir-derived PySpark style guide (English code / Portuguese docstrings, pure transform functions, no UDFs, native `F.*` over `F.expr`, geodesic distances, etc.). I pointed to it rather than duplicating it.
+
+2. **Metadata-driven paths** — `metadata.toml` per app declares tables/levels/schemas, and `utils/metadata.py::table_location()` resolves S3A paths. I noted the real inconsistency I found: many jobs (e.g. `anac_voo_consolidado.py`, the datasus/dnit jobs) still **hardcode** `s3a://...` paths while the standards and `anac_aerodromo.py` use `table_location` — so I flagged the metadata-driven form as the target pattern for new/edited jobs.
+
+3. **The two shared `utils/` modules** — `column_transforms` (Column→Column) and `dataframe_transforms` (DataFrame→DataFrame), plus per-app util modules — and the rule to reuse them before writing new generic transforms.
+
+4. **How to run** — everything runs inside the Docker `spark` service via `spark-submit`; it depends on an **external** `external-net` network + external MinIO, which isn't obvious from any single file.
+
+5. **Testing** — there's no automated test suite; the standard is to run jobs and verify output data.
+
+A couple of notes on things I deliberately did *not* invent: `start.sh` references a `validate_setup.py` and an `exploration/` directory that don't currently exist in the tree, so I didn't cite them as commands.

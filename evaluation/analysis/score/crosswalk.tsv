@@ -1,0 +1,6 @@
+diferenca	efeito_denominador	efeito_observado
+fusão dos equivalentes de reprojeção em uma classe (2 itens -> 1)	-1 item	reúso mediano 9/10; deixa de punir escolha entre equivalentes
+deduplicação fora do denominador	-1 item	vira variável registrada; uso observado reportado à parte
+novo item de medallion 2.4.5	+1 item	4 de 34 execuções reprovam nele
+corpo de análise estendido ao utils/ promovido	sem mudança	7 execuções promoveram código e passam a ser avaliadas por ele
+EFEITO LÍQUIDO por execução	34 -> 33	delta mediano +1; faixa [+0; +2]

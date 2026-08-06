@@ -1,0 +1,23 @@
+The job runs successfully and the output is correct.
+
+## O que foi feito
+
+**1. Declarei a tabela no `metadata.toml`** (fonte de verdade dos caminhos/schemas) — `apps/educacao/metadata.toml`, entrada `tables.escola_matricula_h3_grid` (name `educacao_escola_matricula_h3_grid`, level `gold`, key `h3_cell`) com as 8 colunas do contrato.
+
+**2. Escrevi o job** `apps/educacao/jobs/gold/educacao_escola_matricula_h3_grid.py`, estruturado em funções `DataFrame → DataFrame` puras, reusando os utilitários compartilhados (`filter_valid_coordinates`, `add_point_geometry`, `attach_h3_index`, `join_no_fanout`) e seguindo os padrões do repo (schema explícito do metadata, `sep=";"`, header; sem UDF; API Python do Sedona).
+
+A lógica:
+- **Filtro:** setor federal (`SETOR=1`) + em atividade (`SITUACAO=1`) + coordenada válida dentro do Brasil.
+- **Matrículas:** join `left` sem fan-out; `total_enrollment` = `MAT_BASICA` (educação básica).
+- **Célula:** H3 nível 5 via `ST_H3CellIDs`.
+- **Vizinhas:** disco H3 `k=1` (`ST_H3KRing(cell,1,false)` = própria célula + 6 adjacentes); pares medidos com `ST_DistanceSpheroid` **sobre as coordenadas WGS84 originais** (distância geodésica, conforme o padrão).
+- **Federal mais próxima:** cross-join (660 escolas → trivial) com `min` da distância geodésica, sem restrição de célula.
+- **Agregação por célula:** `n_schools`, `total_enrollment`, `avg_enrollment`, `n_federal_neighbors` (= universo−1, constante na célula), `avg_dist_neighbors_km`, `avg_dist_nearest_km`, e `geometry` da célula via `ST_H3ToGeom`.
+
+**3. Executei e validei** — rodou de primeira: **555 células**. Confirmei: `sum(n_schools)=660` (= total de federais ativas com coordenada), invariante de vizinhança constante por célula (0 violações), `avg_dist_neighbors_km` nula ⟺ zero vizinhas (0 divergências), e `n_federal_neighbors = universo−1` conferido manualmente.
+
+Saída em `s3a://datalake/educacao/educacao_escola_matricula_h3_grid/gold` (geoparquet).
+
+Duas notas de decisão que vale registrar:
+- **Escrevi um único job gold que lê o raw diretamente**, já que a educacao ainda não tem camadas bronze/silver e o pedido era uma tabela específica. Se preferir seguir o medalhão à risca (bronze `escola`/`matricula` → silver `escola_geo` → gold), posso quebrar em 3–4 jobs.
+- **Geometria gravada em EPSG:4326** (saída direta do `ST_H3ToGeom`), para casar com os demais jobs `*_hexbin` gold do repo. O `CODING_STANDARDS.md` menciona 3857 como convenção de saída, mas nenhum hexbin gold existente reprojeta — mantive a consistência com os irmãos. Fácil trocar se quiser padronizar em 3857.

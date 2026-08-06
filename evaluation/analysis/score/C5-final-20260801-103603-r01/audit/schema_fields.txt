@@ -1,0 +1,4 @@
+# corpo: _all_jobs.py, _promovido_utils.py
+2.1.1 escola PASS  _all_jobs.py: lidos=[] alucinados=[]
+2.1.2 matricula PASS  _all_jobs.py: lidos=[] alucinados=[]
+RATIO 2.1 = 2/2

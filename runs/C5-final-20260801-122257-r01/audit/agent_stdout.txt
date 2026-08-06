@@ -1,0 +1,29 @@
+The table `educacao_escola_matricula_h3_grid` was produced and the job ran successfully. Here's what I built and the result.
+
+## What was done
+
+The `educacao` app had only raw data, so I built the full medallion chain (raw → bronze → silver → gold), declaring every new table/layer in `apps/educacao/metadata.toml` (with per-layer schemas) and resolving all paths via `table_location`:
+
+1. **`jobs/bronze/educacao_escola.py`** — types/cleans raw escola CSV → snake_case parquet (214,192 rows).
+2. **`jobs/bronze/educacao_matricula.py`** — types raw matrícula counts → parquet (178,766 rows).
+3. **`jobs/silver/educacao_escola_matricula.py`** — filters to **federal (`setor=1`) + em atividade (`situacao=1`)**, joins matrícula, keeps original WGS84 lat/lon *and* the EPSG:3857 point (**660 schools**).
+4. **`jobs/gold/educacao_escola_matricula_h3_grid.py`** — the requested table (**555 H3 res-5 cells**).
+
+## Key design choices
+
+- **H3 & distances measured correctly:** H3 res-5 cells indexed on the original WGS84 point (not the 3857 geometry), and distances via `ST_DistanceSpheroid` (geodesic) on the original coordinates — per the coding standard. Output cell geometry is EPSG:3857 polygon.
+- **Neighbors** = other federal-active schools in the cell **or its adjacent cells**, via `ST_H3KRing(cell, 1, exact_ring=False)` self-join. `n_federal_neighbors` is cell-level (`k-ring population − 1`), verified identical for every school in a cell.
+- **Nearest federal** = min geodesic distance to any other federal-active school (no cell restriction), via cross join (660×660 is trivial).
+
+## Verification (all passed)
+- `sum(n_schools)` = **660** — every school lands in exactly one cell.
+- `avg_enrollment == total_enrollment / n_schools` — 0 mismatches.
+- `n_federal_neighbors` identical across schools within each cell — 0 violations; `n_federal_neighbors ≥ n_schools−1` — 0 violations.
+- 381 isolated cells (single school, no neighbors) correctly have `n_federal_neighbors = 0` and `avg_dist_neighbors_km = NULL`; `avg_dist_nearest_km` is never null.
+- Final columns exactly, in order: `h3_cell, n_schools, total_enrollment, avg_enrollment, n_federal_neighbors, avg_dist_neighbors_km, avg_dist_nearest_km, geometry`.
+
+**One note:** the geoparquet writer (Sedona) auto-adds a `geometry_bbox` helper struct column alongside `geometry` — it's standard for this repo's geoparquet outputs (used for spatial pushdown) and doesn't affect the requested schema, which is present and correctly ordered.
+
+A couple of judgment calls worth surfacing, in case your intent differs:
+- **`total_enrollment`** uses `MAT_BASICA` (total educação básica). If you meant the sum of the sub-levels instead, I can switch it.
+- **"federal mais próxima (qualquer)"** I scoped to the federal-*active* universe (consistent with the rest of the table). If "qualquer federal" should include paralisadas/extintas, that changes the silver filter for the nearest-school computation.

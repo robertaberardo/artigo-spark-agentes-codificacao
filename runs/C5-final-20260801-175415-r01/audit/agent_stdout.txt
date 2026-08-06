@@ -1,0 +1,27 @@
+All cross-checks pass. The pipeline is complete and the output is verified correct.
+
+## Resumo
+
+Produzi a tabela `educacao_escola_matricula_h3_grid` construindo o pipeline medallion completo para a app `educacao` e executei todos os jobs com sucesso.
+
+**Jobs criados e executados (em ordem):**
+
+| Job | Camada | Saída |
+|-----|--------|-------|
+| `bronze/educacao_escola.py` | bronze | 214.192 escolas (tipadas, `snake_case`) |
+| `bronze/educacao_matricula.py` | bronze | 178.766 registros de matrícula |
+| `silver/educacao_escola_federal_geo.py` | silver | 660 escolas federais em atividade, georreferenciadas (GeoParquet, EPSG:3857) |
+| `gold/educacao_escola_matricula_h3_grid.py` | gold | **555 células H3 nível 5** |
+
+**Decisões de modelagem (todas seguindo `CLAUDE.md`/`CODING_STANDARDS.md`):**
+- **Filtro** `SETOR=1` (federal) + `SITUACAO=1` (em atividade) via helpers de domínio novos (`apps/educacao/utils/column_transforms.py`).
+- **Distâncias geodésicas** medidas com `ST_DistanceSpheroid` sobre as coordenadas **WGS84 originais** (o silver carrega `latitude`/`longitude` além da geometria 3857, justamente para isso) — nunca a partir do 3857.
+- **Vizinhas** = escolas federais em atividade na própria célula ou nas adjacentes (k-ring 1 do H3). `n_federal_neighbors = |vizinhança| − 1`, idêntico para toda a célula (verificado: célula com 13 escolas → pool 31 → 30 vizinhos).
+- **Ausência ≠ zero:** célula isolada tem `n_federal_neighbors = 0` e `avg_dist_neighbors_km = NULL` (381 células). `avg_dist_nearest_km` (federal mais próxima, sem restrição de célula, via cross-join dos 660 pontos) nunca é nulo.
+- Adicionei 3 transforms **genéricos e reutilizáveis** a `utils/dataframe_transforms.py` (`count_h3_kring_members`, `h3_kring_neighbor_distances`, `nearest_neighbor_distance`) e declarei todas as tabelas/schemas novos em `metadata.toml`.
+
+**Colunas finais:** `h3_cell, n_schools, total_enrollment, avg_enrollment, n_federal_neighbors, avg_dist_neighbors_km, avg_dist_nearest_km, geometry` (polígono da célula em EPSG:3857).
+
+Validações independentes confirmaram: `Σ n_schools = 660` (todas as escolas contabilizadas), contagem de vizinhos batendo com recomputação manual, e todas as 660 escolas com matrícula não-nula (logo `avg_enrollment = total/n_schools`).
+
+Uma observação: o writer GeoParquet do Sedona adiciona automaticamente uma coluna auxiliar `geometry_bbox` (metadado de bounding box do padrão GeoParquet), como acontece nas demais tabelas geo do lake — não faz parte do schema lógico declarado.

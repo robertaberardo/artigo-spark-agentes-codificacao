@@ -1,0 +1,31 @@
+O job foi executado com sucesso, do zero até a tabela final. Resumo do que foi feito.
+
+## O que foi entregue
+
+A app `educacao` estava vazia (só o esqueleto). Montei o pipeline completo em camadas medalhão, seguindo o `CODING_STANDARDS.md` e reusando os `utils/`:
+
+**Bronze** (tipagem do CSV cru, nomes originais no schema, `alias` para `snake_case`)
+- `educacao_escola.py` → 214.192 escolas
+- `educacao_matricula.py` → 178.766 matrículas
+
+**Silver**
+- `educacao_escola_geo.py` → 156.814 escolas georreferenciadas, com matrículas juntadas (join sem fan-out validado) e geometria em EPSG:3857. Mantém `latitude/longitude` em WGS84 para os cálculos geodésicos do gold.
+
+**Gold (a tabela pedida)**
+- `educacao_escola_matricula_h3_grid.py` → **555 células** com as 8 colunas exatas: `h3_cell, n_schools, total_enrollment, avg_enrollment, n_federal_neighbors, avg_dist_neighbors_km, avg_dist_nearest_km, geometry`.
+
+Também adicionei dois helpers genéricos em `utils/dataframe_transforms.py` (`add_h3_kring`, `add_nearest_neighbor_distance`) e um `is_valid_school_id` em `apps/educacao/utils/`, além de declarar todas as tabelas/schemas no `metadata.toml`.
+
+## Decisões de modelagem
+- **Federal em atividade**: `setor == 1` e `situacao == 1` (códigos do Censo Escolar).
+- **Vizinhas**: universo = escolas federais em atividade na própria célula H3 res-5 + nas 6 adjacentes (`ST_H3KRing` raio 1). `n_federal_neighbors = |universo| − 1`, igual para toda a célula.
+- **Distâncias geodésicas** (`ST_DistanceSpheroid`) medidas sobre as coordenadas WGS84 originais, antes de projetar — conforme o padrão. Convertidas para km.
+- `avg_dist_nearest_km`: para cada escola, a federal mais próxima entre **todas** as 660 (sem restrição de célula), depois média por célula.
+- **Ausência ≠ zero**: células isoladas (sem vizinhas) recebem `avg_dist_neighbors_km` nulo, não 0.
+
+## Validação
+- `sum(n_schools) = 660` = exatamente as escolas federais ativas com coordenadas válidas.
+- Invariantes conferidas: `avg_dist_neighbors_km IS NULL ⟺ n_federal_neighbors == 0` (381↔381, 0 inconsistências); `avg_dist_nearest_km` nunca nulo; `n_federal_neighbors ≥ n_schools − 1` sempre.
+- Geometria: `ST_Polygon` em SRID 3857.
+
+Não houve erros de execução a corrigir — os quatro jobs rodaram na primeira tentativa. Observação: o `geometry_bbox` que aparece no schema físico é uma coluna de cobertura que o writer GeoParquet do Sedona adiciona sozinho; o `select` lógico emite só as 8 colunas pedidas.

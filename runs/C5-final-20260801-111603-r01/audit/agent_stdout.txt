@@ -1,0 +1,28 @@
+Pronto. A tabela `educacao_escola_matricula_h3_grid` foi produzida e o pipeline rodou com sucesso.
+
+## O que foi feito
+
+A app `educacao` só tinha os dados `raw` — não havia nenhum job. Construí o fluxo medallion completo (`raw → bronze → silver → gold`), seguindo `CODING_STANDARDS.md` e os padrões dos outros apps:
+
+**`metadata.toml`** — declarei os níveis/schemas novos: `bronze` para `escola` e `matricula`, a silver `escola_geo` e a gold `escola_matricula_h3_grid`.
+
+**Jobs criados:**
+1. `bronze/educacao_escola.py` — tipa as colunas do raw (coords→`double`, indicadores/setor/situação→`int`), descarta a coluna extra `ano` por schema posicional. → **214.192 registros**
+2. `bronze/educacao_matricula.py` — tipa as matrículas. → **178.766 registros**
+3. `silver/educacao_escola_geo.py` — filtra federais (`setor=1`) em atividade (`situacao=1`), coords válidas, anexa `mat_basica` e a geometria de ponto (3857). → **660 escolas**
+4. `gold/educacao_escola_matricula_h3_grid.py` — a agregação pedida. → **555 células**
+5. `apps/educacao/utils/column_transforms.py` — `is_valid_unidade_code` (código de 8 dígitos), no padrão da ANA/DATASUS.
+
+## Verificação (output relido)
+
+- Schema com exatamente as 8 colunas pedidas (`geometry` = `ST_Polygon` da célula H3; `geometry_bbox` é metadado que o writer geoparquet acrescenta em todas as tabelas geo do repo).
+- `sum(n_schools) = 660` — todas as escolas alocadas.
+- Célula com mais escolas (13) → `n_federal_neighbors=30` (disco = célula + 6 adjacentes) e `avg_dist_nearest_km=0,412` (campus concentrado).
+- Células isoladas → `n_federal_neighbors=0` e `avg_dist_neighbors_km=NULL` (ausência ≠ zero); `avg_dist_nearest_km` sempre presente (mais próxima é global).
+- Invariante `n_federal_neighbors ≥ n_schools−1` sempre válida.
+
+## Decisão técnica que vale registrar
+
+`ST_H3CellIDs` do Sedona é sensível ao CRS: se receber a geometria em 3857 (como a silver persiste), atribui **células erradas** — confirmei empiricamente. Por isso a silver preserva `latitude`/`longitude` em WGS84, e a gold reconstrói o ponto `ST_Point(lon,lat)` para indexar H3 e medir distâncias geodésicas (`ST_DistanceSpheroid`), evitando também o round-trip 4326→3857→4326 que o guia de estilo proíbe. Guardei isso na memória do projeto para trabalhos futuros — os jobs `*_hexbin` existentes têm esse mesmo problema latente.
+
+Observação: subi o serviço `spark` via `docker compose` (container `workdir-spark-1`) para rodar os jobs; deixei-o de pé.

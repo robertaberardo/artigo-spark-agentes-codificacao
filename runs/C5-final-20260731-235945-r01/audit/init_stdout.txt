@@ -1,0 +1,18 @@
+I've created `CLAUDE.md`. Here's what it captures and why:
+
+**Big-picture architecture** (the parts that need reading several files to grasp):
+- The **medallion raw→bronze→silver→gold** flow, and that layers form a strict dependency chain that must run in order.
+- The **identical per-app shape** — 12 apps, each with `metadata.toml` + `utils/column_transforms.py` + `jobs/{bronze,silver,gold}/`.
+- **`metadata.toml` as the schema/location contract** and **`table_location()` as the single source of S3 paths** — jobs never build paths by hand.
+- The **root `utils/` vs. app-level `utils/`** split (generic `Column→Column` / `DataFrame→DataFrame` helpers vs. domain-specific), with the "check utils before writing a new transform" rule.
+- The **geo vs. non-geo Spark session** distinction (`SedonaContext.create` required for `st_` functions) and the **parquet vs. geoparquet** output convention.
+
+**Commands** — the Docker-based build/run flow, single-job `spark-submit`, running a layer in order, and where S3 config comes from.
+
+**Key pointers I flagged prominently:**
+- `CODING_STANDARDS.md` is authoritative and must be read first — I distilled the highest-impact rules (bilingual convention, no UDFs, absence≠zero, geodesic-before-projection).
+- **There is no linter/formatter config and no automated test suite** — verification is running the job / manual checks. (The container's startup message references `validate_setup.py` and `exploration/`, but neither exists in the repo, so I deliberately did not document them as commands.)
+
+A note on the two things I intentionally left out per the `/init` guidance: I didn't enumerate every app or file (easily discoverable), and I didn't invent "Tips"/"Support" sections.
+
+One observation you may want to know: the container entrypoint (`docker/resources/start.sh`) points users at `spark-submit $PROJECT_PATH/validate_setup.py` and `exploration/start_jupyter.sh`, but neither file is present in the repo — those references appear stale.

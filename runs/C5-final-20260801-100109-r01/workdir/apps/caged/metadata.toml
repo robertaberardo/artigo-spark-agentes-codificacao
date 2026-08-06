@@ -1,0 +1,407 @@
+[data_lake]
+db  = "datalake"
+app = "caged"
+
+# ---------------------------------------------------------------------------
+# caged_admissao — admissões no emprego formal
+# ---------------------------------------------------------------------------
+[tables.admissao]
+name   = "caged_admissao"
+levels = ["raw", "bronze"]
+key    = "id"
+
+[[tables.admissao.raw.schema]]
+name = "id"
+type = "string"
+description = "identificador da movimentação (chave)"
+
+[[tables.admissao.raw.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município (texto)"
+
+[[tables.admissao.raw.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.admissao.raw.schema]]
+name = "cbo"
+type = "string"
+description = "código CBO da ocupação (texto)"
+
+[[tables.admissao.raw.schema]]
+name = "cnae"
+type = "string"
+description = "código CNAE da atividade econômica (texto)"
+
+[[tables.admissao.raw.schema]]
+name = "data"
+type = "string"
+description = "data da admissão (dd/MM/yyyy, texto)"
+
+[[tables.admissao.raw.schema]]
+name = "salario"
+type = "string"
+description = "salário de admissão (R$ 1.234,56, texto)"
+
+[[tables.admissao.raw.schema]]
+name = "sexo"
+type = "string"
+description = "sexo do trabalhador"
+
+[[tables.admissao.bronze.schema]]
+name = "id"
+type = "string"
+description = "identificador da movimentação (chave)"
+
+[[tables.admissao.bronze.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município (7 dígitos)"
+
+[[tables.admissao.bronze.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.admissao.bronze.schema]]
+name = "cbo"
+type = "string"
+description = "código CBO da ocupação (6 dígitos)"
+
+[[tables.admissao.bronze.schema]]
+name = "cnae"
+type = "string"
+description = "código CNAE da atividade econômica (7 dígitos)"
+
+[[tables.admissao.bronze.schema]]
+name = "data"
+type = "date"
+description = "data da admissão"
+
+[[tables.admissao.bronze.schema]]
+name = "salario"
+type = "double"
+description = "salário de admissão em reais"
+
+[[tables.admissao.bronze.schema]]
+name = "sexo"
+type = "string"
+description = "sexo do trabalhador"
+
+# ---------------------------------------------------------------------------
+# caged_desligamento — desligamentos do emprego formal
+# ---------------------------------------------------------------------------
+[tables.desligamento]
+name   = "caged_desligamento"
+levels = ["raw", "bronze"]
+key    = "id"
+
+[[tables.desligamento.raw.schema]]
+name = "id"
+type = "string"
+description = "identificador da movimentação (chave)"
+
+[[tables.desligamento.raw.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município (texto)"
+
+[[tables.desligamento.raw.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.desligamento.raw.schema]]
+name = "cbo"
+type = "string"
+description = "código CBO da ocupação (texto)"
+
+[[tables.desligamento.raw.schema]]
+name = "cnae"
+type = "string"
+description = "código CNAE da atividade econômica (texto)"
+
+[[tables.desligamento.raw.schema]]
+name = "data"
+type = "string"
+description = "data do desligamento (dd/MM/yyyy, texto)"
+
+[[tables.desligamento.raw.schema]]
+name = "salario"
+type = "string"
+description = "último salário (R$ 1.234,56, texto)"
+
+[[tables.desligamento.raw.schema]]
+name = "motivo"
+type = "string"
+description = "motivo do desligamento"
+
+[[tables.desligamento.bronze.schema]]
+name = "id"
+type = "string"
+description = "identificador da movimentação (chave)"
+
+[[tables.desligamento.bronze.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município (7 dígitos)"
+
+[[tables.desligamento.bronze.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.desligamento.bronze.schema]]
+name = "cbo"
+type = "string"
+description = "código CBO da ocupação (6 dígitos)"
+
+[[tables.desligamento.bronze.schema]]
+name = "cnae"
+type = "string"
+description = "código CNAE da atividade econômica (7 dígitos)"
+
+[[tables.desligamento.bronze.schema]]
+name = "data"
+type = "date"
+description = "data do desligamento"
+
+[[tables.desligamento.bronze.schema]]
+name = "salario"
+type = "double"
+description = "último salário em reais"
+
+[[tables.desligamento.bronze.schema]]
+name = "motivo"
+type = "string"
+description = "motivo do desligamento"
+
+# ---------------------------------------------------------------------------
+# caged_estabelecimento — cadastro de estabelecimentos
+# ---------------------------------------------------------------------------
+[tables.estabelecimento]
+name   = "caged_estabelecimento"
+levels = ["raw", "bronze"]
+key    = "cnpj"
+
+[[tables.estabelecimento.raw.schema]]
+name = "cnpj"
+type = "string"
+description = "CNPJ do estabelecimento (chave, texto)"
+
+[[tables.estabelecimento.raw.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.estabelecimento.raw.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município (texto)"
+
+[[tables.estabelecimento.raw.schema]]
+name = "cnae"
+type = "string"
+description = "código CNAE da atividade principal (texto)"
+
+[[tables.estabelecimento.raw.schema]]
+name = "porte"
+type = "string"
+description = "porte do estabelecimento"
+
+[[tables.estabelecimento.bronze.schema]]
+name = "cnpj"
+type = "string"
+description = "CNPJ do estabelecimento (14 dígitos, chave)"
+
+[[tables.estabelecimento.bronze.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.estabelecimento.bronze.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município (7 dígitos)"
+
+[[tables.estabelecimento.bronze.schema]]
+name = "cnae"
+type = "string"
+description = "código CNAE da atividade principal (7 dígitos)"
+
+[[tables.estabelecimento.bronze.schema]]
+name = "porte"
+type = "string"
+description = "porte do estabelecimento (padronizado)"
+
+# ---------------------------------------------------------------------------
+# caged_cbo — tabela de ocupações CBO
+# ---------------------------------------------------------------------------
+[tables.cbo]
+name   = "caged_cbo"
+levels = ["raw", "bronze"]
+key    = "codigo"
+
+[[tables.cbo.raw.schema]]
+name = "codigo"
+type = "string"
+description = "código CBO da ocupação (chave, texto)"
+
+[[tables.cbo.raw.schema]]
+name = "descricao"
+type = "string"
+description = "descrição da ocupação"
+
+[[tables.cbo.raw.schema]]
+name = "familia"
+type = "string"
+description = "família ocupacional"
+
+[[tables.cbo.bronze.schema]]
+name = "codigo"
+type = "string"
+description = "código CBO da ocupação (6 dígitos, chave)"
+
+[[tables.cbo.bronze.schema]]
+name = "descricao"
+type = "string"
+description = "descrição da ocupação (espaçamento padronizado)"
+
+[[tables.cbo.bronze.schema]]
+name = "familia"
+type = "string"
+description = "família ocupacional (espaçamento padronizado)"
+
+# ---------------------------------------------------------------------------
+# caged_saldo_municipal — saldo de empregos por município (silver)
+# ---------------------------------------------------------------------------
+[tables.saldo_municipal]
+name   = "caged_saldo_municipal"
+levels = ["silver"]
+key    = "municipio_ibge"
+
+[[tables.saldo_municipal.silver.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município (chave)"
+
+[[tables.saldo_municipal.silver.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.saldo_municipal.silver.schema]]
+name = "admissions"
+type = "long"
+description = "total de admissões no município"
+
+[[tables.saldo_municipal.silver.schema]]
+name = "terminations"
+type = "long"
+description = "total de desligamentos no município"
+
+[[tables.saldo_municipal.silver.schema]]
+name = "net_balance"
+type = "long"
+description = "saldo (admissões menos desligamentos)"
+
+# ---------------------------------------------------------------------------
+# caged_movimentacao_consolidada — admissões e desligamentos unidos (silver)
+# ---------------------------------------------------------------------------
+[tables.movimentacao_consolidada]
+name   = "caged_movimentacao_consolidada"
+levels = ["silver"]
+key    = "id"
+
+[[tables.movimentacao_consolidada.silver.schema]]
+name = "id"
+type = "string"
+description = "identificador da movimentação (chave)"
+
+[[tables.movimentacao_consolidada.silver.schema]]
+name = "movement_type"
+type = "string"
+description = "tipo da movimentação (admissao ou desligamento)"
+
+[[tables.movimentacao_consolidada.silver.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município"
+
+[[tables.movimentacao_consolidada.silver.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.movimentacao_consolidada.silver.schema]]
+name = "cbo"
+type = "string"
+description = "código CBO da ocupação"
+
+[[tables.movimentacao_consolidada.silver.schema]]
+name = "cnae"
+type = "string"
+description = "código CNAE da atividade econômica"
+
+[[tables.movimentacao_consolidada.silver.schema]]
+name = "data"
+type = "date"
+description = "data da movimentação"
+
+[[tables.movimentacao_consolidada.silver.schema]]
+name = "salario"
+type = "double"
+description = "salário associado à movimentação"
+
+# ---------------------------------------------------------------------------
+# caged_saldo_por_uf — saldo de empregos por UF (gold)
+# ---------------------------------------------------------------------------
+[tables.saldo_por_uf]
+name   = "caged_saldo_por_uf"
+levels = ["gold"]
+key    = "uf"
+
+[[tables.saldo_por_uf.gold.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF (chave)"
+
+[[tables.saldo_por_uf.gold.schema]]
+name = "admissions"
+type = "long"
+description = "total de admissões na UF"
+
+[[tables.saldo_por_uf.gold.schema]]
+name = "terminations"
+type = "long"
+description = "total de desligamentos na UF"
+
+[[tables.saldo_por_uf.gold.schema]]
+name = "net_balance"
+type = "long"
+description = "saldo (admissões menos desligamentos)"
+
+# ---------------------------------------------------------------------------
+# caged_ranking_setores — ranking de setores por movimentação (gold)
+# ---------------------------------------------------------------------------
+[tables.ranking_setores]
+name   = "caged_ranking_setores"
+levels = ["gold"]
+key    = "cnae"
+
+[[tables.ranking_setores.gold.schema]]
+name = "cnae"
+type = "string"
+description = "código CNAE da atividade econômica (chave)"
+
+[[tables.ranking_setores.gold.schema]]
+name = "total_movimentacoes"
+type = "long"
+description = "total de movimentações do setor"
+
+[[tables.ranking_setores.gold.schema]]
+name = "rank"
+type = "int"
+description = "posição por movimentação (1 = maior)"

@@ -1,0 +1,29 @@
+The pipeline is complete and the job ran successfully. Here's a summary.
+
+## O que foi feito
+
+A app `educacao` só tinha dados `raw` (nenhum job existia), então construí a cadeia medallion completa até a tabela gold pedida. Todos os caminhos vêm do `metadata.toml` (nada hardcoded), e as transformações reaproveitam `utils/`.
+
+**Jobs criados e executados em ordem de dependência:**
+
+| Camada | Job | Resultado |
+|---|---|---|
+| bronze | `educacao_escola.py` | 214.192 registros — tipagem, lat/long → `double` |
+| bronze | `educacao_matricula.py` | 178.766 registros — contagens → `int` (ausência = `NULL`) |
+| silver | `educacao_escola_geo.py` | 156.814 escolas georreferenciadas + matrículas, ponto em EPSG:3857 |
+| gold | `educacao_escola_matricula_h3_grid.py` | **555 células H3 (nível 5), 660 escolas federais ativas** |
+
+**Também atualizei `apps/educacao/metadata.toml`:** adicionei o nível `bronze` (com schema) a `escola` e `matricula`, e declarei as tabelas novas `escola_geo` (silver) e `escola_matricula_h3_grid` (gold) com schema por camada.
+
+## Decisões de modelagem
+
+- **População:** só escolas com `setor = "1"` (federal) e `situacao = "1"` (em atividade), georreferenciadas.
+- **Vizinhas:** outra federal ativa na mesma célula ou adjacente = distância de grade H3 ≤ 1 (`ST_H3CellDistance`). Como são poucas federais, um produto cartesiano com `broadcast` resolve tudo (vizinhança e federal mais próxima).
+- **`n_federal_neighbors`:** número de vizinhas por escola — que é constante dentro da célula (todas compartilham a mesma vizinhança de células). **Verifiquei empiricamente:** 0 células com valor divergente nas 555.
+- **Distâncias:** geodésicas (`ST_DistanceSpheroid`) sobre as coordenadas **WGS84 originais** (não sobre a geometria em 3857), conforme o CODING_STANDARDS; convertidas para km no final.
+- **Ausência ≠ zero:** `avg_enrollment`/distâncias usam `F.avg` (ignora nulos). As 381 células com uma única federal isolada ficam com `avg_dist_neighbors_km = NULL` (sem vizinhas), mas mantêm `avg_dist_nearest_km`.
+- **Geometria:** polígono da célula reprojetado para **EPSG:3857**, coerente com a convenção declarada no metadata.
+
+Colunas finais, exatamente como pedido: `h3_cell, n_schools, total_enrollment, avg_enrollment, n_federal_neighbors, avg_dist_neighbors_km, avg_dist_nearest_km, geometry`.
+
+Uma observação: o writer de geoparquet do Sedona adiciona automaticamente uma coluna auxiliar `geometry_bbox` (metadado padrão do formato GeoParquet 1.1) — o mesmo acontece nos hexbins de `datasus`/`inmet`, então está dentro do padrão do repo.

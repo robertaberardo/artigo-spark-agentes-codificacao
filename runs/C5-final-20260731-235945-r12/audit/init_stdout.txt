@@ -1,0 +1,16 @@
+I've created `CLAUDE.md`. Here's what I found and captured:
+
+**What this repo is:** A set of PySpark batch pipelines ingesting Brazilian public-data sources (ANAC, DATASUS, IBGE, DNIT, TSE, BCB, and more — 12 apps) into a medallion-layered S3/MinIO data lake, with Apache Sedona + GDAL for geospatial work.
+
+**Key architecture points I documented (the things that need reading multiple files to grasp):**
+- **Per-source app layout** — each `apps/<app>/` bundles a `metadata.toml` (the source of truth for table names, levels, keys, and per-level schemas), `jobs/{bronze,silver,gold}/` scripts, and app-specific column transforms.
+- **The shared `utils/` library** — `metadata.py` (`table_location` derives S3A paths and fails early), plus large `column_transforms.py` and `dataframe_transforms.py` toolboxes. I flagged the "check utils/ before writing a transform" rule prominently since it's large and easy to miss.
+- **Medallion flow** raw→bronze→silver→gold, Parquet vs GeoParquet (EPSG:3857) for geo output, and that connection config lives in `conf/`, never in jobs.
+- **The non-obvious gotchas** distilled from `CODING_STANDARDS.md` (no UDFs, absence≠zero, geodesic distance measured before projecting, native functions over `F.expr`).
+- **Commands** — the Docker-based dev loop, including the easy-to-miss `external-net` network prerequisite, and that there's **no test suite** (validation is running the job and checking counts).
+
+A few things worth noting:
+- I pointed to `CODING_STANDARDS.md` as the authority rather than duplicating its ~230 lines.
+- There is **no README** and no existing CLAUDE.md, so this is a fresh file.
+- The container's `start.sh` references `validate_setup.py` and `exploration/start_jupyter.sh`, but **neither exists** in the repo — I deliberately did not document them as working commands to avoid inventing capabilities.
+- Language convention (English code / Portuguese comments) is captured so future edits match the codebase.

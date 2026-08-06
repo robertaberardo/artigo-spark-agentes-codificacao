@@ -1,0 +1,17 @@
+I've created `CLAUDE.md`. Here's what I found and captured:
+
+## What this codebase is
+A **PySpark + Apache Sedona + GDAL** geospatial pipeline project (a "validation environment") processing 12 Brazilian public-data sources. It has **94 jobs** across the medallion layers (43 bronze, 24 silver, 27 gold).
+
+## Key architecture I documented
+1. **Medallion layers** (raw→bronze→silver→gold) — each `apps/<app>/jobs/<layer>/*.py` is a standalone `spark-submit` script; bronze writes parquet, geo silver/gold write geoparquet; data lives in S3A/MinIO at `s3a://{bucket}/{app}/{table}/{level}`.
+2. **`metadata.toml` as schema contract** — the source of truth for table locations and per-layer schemas, resolved via `utils.metadata.table_location()`. Jobs must not hand-build paths (noted that 15 older gold jobs deviate by hardcoding `s3a://` strings, vs. 79 that use `table_location`).
+3. **Reusable transform library** — `utils/column_transforms.py` (Column→Column) and `utils/dataframe_transforms.py` (DataFrame→DataFrame), chained with `.transform()`, plus per-app `apps/<app>/utils/`. Reuse before writing new.
+4. **The load-bearing `CODING_STANDARDS.md` rules** — no UDFs, native `F.*` over `F.expr`, `F.lit(None)` for absence, explicit joins/window frames, and the geodesic-distance-on-original-WGS84 rule.
+5. **Run commands** — Docker-based; the `external-net` external network prerequisite, `docker compose up -d --build`, and `docker compose exec spark spark-submit …`.
+
+## Notes
+- I flagged two honest gaps: there's **no automated test suite** (validation is by running jobs and checking counts), and `start.sh` references `validate_setup.py` and an `exploration/` Jupyter launcher that **don't exist in the tree yet** — so future instances won't waste time hunting for them.
+- The org instructions about the tom-e-regras/humanizer skills didn't apply here — CLAUDE.md is internal tooling guidance, not third-party-facing text.
+
+There was no pre-existing CLAUDE.md, so this is the initial version rather than a set of suggested improvements.

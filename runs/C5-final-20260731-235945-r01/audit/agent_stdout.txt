@@ -1,0 +1,31 @@
+Pronto. A tabela `educacao_escola_matricula_h3_grid` foi produzida e o pipeline rodou com sucesso de ponta a ponta.
+
+## O que foi construído
+
+Seguindo a arquitetura medalhão do repositório (a app `educacao` só tinha `raw`), criei toda a cadeia de dependência:
+
+| Arquivo | Camada | Resultado |
+|---|---|---|
+| `apps/educacao/jobs/bronze/educacao_escola.py` | bronze | 214.192 escolas tipadas |
+| `apps/educacao/jobs/bronze/educacao_matricula.py` | bronze | 178.766 matrículas tipadas |
+| `apps/educacao/jobs/silver/educacao_escola_matricula_geo.py` | silver | 660 escolas **federais em atividade** (setor=1, situação=1), com matrícula e ponto georreferenciado |
+| `apps/educacao/jobs/gold/educacao_escola_matricula_h3_grid.py` | gold | **555 células H3 nível 5** |
+
+Também declarei todos os níveis/tabelas novos em `apps/educacao/metadata.toml` (contrato de schema).
+
+## Colunas da tabela final (todas presentes e validadas)
+`h3_cell`, `n_schools`, `total_enrollment`, `avg_enrollment`, `n_federal_neighbors`, `avg_dist_neighbors_km`, `avg_dist_nearest_km`, `geometry` (polígono H3 em EPSG:3857).
+
+## Decisões de modelagem
+- **Vizinhança** via `ST_H3KRing(cell, 1, false)` — própria célula + adjacentes. `n_federal_neighbors` é a contagem do pool (própria + adjacentes, incluindo a própria), **igual para toda a célula**.
+- **Distâncias geodésicas** (`ST_DistanceSpheroid`) medidas sobre as **coordenadas WGS84 originais** — carreguei `latitude`/`longitude` até o gold e reconstruí o ponto lá, sem round-trip 4326→3857→4326 (regra do `CODING_STANDARDS.md`).
+- **Mais próxima "qualquer"**: par-a-par sobre as 660 federais (conjunto pequeno, broadcast nested-loop).
+- **Ausência ≠ zero**: `avg_enrollment` usa `F.avg` (ignora escolas sem matrícula); `avg_dist_neighbors_km` fica **NULL** para células isoladas.
+
+## Verificações que passaram
+- `sum(n_schools) = 660` (todas as escolas caíram numa célula).
+- `n_federal_neighbors ≥ n_schools` em 100% das células (0 violações).
+- `avg_dist_neighbors_km` é NULL **exatamente** quando o pool é só a própria escola (`n_federal_neighbors == 1`) — invariante confirmada nos dois sentidos (0 discrepâncias).
+- `geometry` = `ST_Polygon`, SRID 3857. `avg_dist_nearest_km` sem nulos (0,36 km a 339,6 km — federais remotas têm vizinha federal distante).
+
+Observação de ambiente: o container que estava de pé (`place-etl-spark-1`) aponta para AWS real e não alcança o MinIO; rodei com o compose do próprio workdir (`workdir-spark-1`, imagem `spark-pipelines:local` já pronta), que está no `external-net` junto do MinIO.

@@ -1,0 +1,382 @@
+[data_lake]
+db  = "datalake"
+app = "snis"
+
+# ---------------------------------------------------------------------------
+# snis_municipio — municípios atendidos (população de referência)
+# ---------------------------------------------------------------------------
+[tables.municipio]
+name   = "snis_municipio"
+levels = ["raw", "bronze"]
+key    = "municipio_ibge"
+
+[[tables.municipio.raw.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município (chave)"
+
+[[tables.municipio.raw.schema]]
+name = "nome"
+type = "string"
+description = "nome do município"
+
+[[tables.municipio.raw.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.municipio.raw.schema]]
+name = "populacao"
+type = "string"
+description = "população residente (texto)"
+
+[[tables.municipio.bronze.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município, com sete dígitos (chave)"
+
+[[tables.municipio.bronze.schema]]
+name = "nome"
+type = "string"
+description = "nome do município (espaçamento padronizado)"
+
+[[tables.municipio.bronze.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.municipio.bronze.schema]]
+name = "populacao"
+type = "long"
+description = "população residente"
+
+# ---------------------------------------------------------------------------
+# snis_prestador — prestadores de serviço de saneamento
+# ---------------------------------------------------------------------------
+[tables.prestador]
+name   = "snis_prestador"
+levels = ["raw", "bronze"]
+key    = "codigo"
+
+[[tables.prestador.raw.schema]]
+name = "codigo"
+type = "string"
+description = "código do prestador (chave)"
+
+[[tables.prestador.raw.schema]]
+name = "nome"
+type = "string"
+description = "nome do prestador"
+
+[[tables.prestador.raw.schema]]
+name = "uf"
+type = "string"
+description = "UF da sede"
+
+[[tables.prestador.raw.schema]]
+name = "natureza_juridica"
+type = "string"
+description = "natureza jurídica do prestador"
+
+[[tables.prestador.raw.schema]]
+name = "abrangencia"
+type = "string"
+description = "abrangência de atuação (municipal, microrregional, regional)"
+
+[[tables.prestador.bronze.schema]]
+name = "codigo"
+type = "string"
+description = "código do prestador (chave)"
+
+[[tables.prestador.bronze.schema]]
+name = "nome"
+type = "string"
+description = "nome do prestador (espaçamento padronizado)"
+
+[[tables.prestador.bronze.schema]]
+name = "uf"
+type = "string"
+description = "UF da sede"
+
+[[tables.prestador.bronze.schema]]
+name = "natureza_juridica"
+type = "string"
+description = "natureza jurídica do prestador"
+
+[[tables.prestador.bronze.schema]]
+name = "abrangencia"
+type = "string"
+description = "abrangência de atuação"
+
+# ---------------------------------------------------------------------------
+# snis_indicador_agua — indicadores municipais de água
+# ---------------------------------------------------------------------------
+[tables.indicador_agua]
+name   = "snis_indicador_agua"
+levels = ["raw", "bronze"]
+key    = "municipio_ibge"
+
+[[tables.indicador_agua.raw.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município (chave)"
+
+[[tables.indicador_agua.raw.schema]]
+name = "ano"
+type = "string"
+description = "ano de referência (texto)"
+
+[[tables.indicador_agua.raw.schema]]
+name = "indice_atendimento_agua_pct"
+type = "string"
+description = "índice de atendimento de água em percentual (texto)"
+
+[[tables.indicador_agua.raw.schema]]
+name = "consumo_medio_l_hab_dia"
+type = "string"
+description = "consumo médio per capita em litros/hab.dia (texto)"
+
+[[tables.indicador_agua.raw.schema]]
+name = "perda_faturamento_pct"
+type = "string"
+description = "índice de perda de faturamento em percentual (texto)"
+
+[[tables.indicador_agua.bronze.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município, com sete dígitos (chave)"
+
+[[tables.indicador_agua.bronze.schema]]
+name = "ano"
+type = "int"
+description = "ano de referência"
+
+[[tables.indicador_agua.bronze.schema]]
+name = "indice_atendimento_agua_pct"
+type = "double"
+description = "índice de atendimento de água em fração (0..1)"
+
+[[tables.indicador_agua.bronze.schema]]
+name = "consumo_medio_l_hab_dia"
+type = "double"
+description = "consumo médio per capita em litros/hab.dia"
+
+[[tables.indicador_agua.bronze.schema]]
+name = "perda_faturamento_pct"
+type = "double"
+description = "índice de perda de faturamento em fração (0..1)"
+
+# ---------------------------------------------------------------------------
+# snis_indicador_esgoto — indicadores municipais de esgoto
+# ---------------------------------------------------------------------------
+[tables.indicador_esgoto]
+name   = "snis_indicador_esgoto"
+levels = ["raw", "bronze"]
+key    = "municipio_ibge"
+
+[[tables.indicador_esgoto.raw.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município (chave)"
+
+[[tables.indicador_esgoto.raw.schema]]
+name = "ano"
+type = "string"
+description = "ano de referência (texto)"
+
+[[tables.indicador_esgoto.raw.schema]]
+name = "indice_coleta_esgoto_pct"
+type = "string"
+description = "índice de coleta de esgoto em percentual (texto)"
+
+[[tables.indicador_esgoto.raw.schema]]
+name = "indice_tratamento_esgoto_pct"
+type = "string"
+description = "índice de tratamento de esgoto em percentual (texto)"
+
+[[tables.indicador_esgoto.bronze.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município, com sete dígitos (chave)"
+
+[[tables.indicador_esgoto.bronze.schema]]
+name = "ano"
+type = "int"
+description = "ano de referência"
+
+[[tables.indicador_esgoto.bronze.schema]]
+name = "indice_coleta_esgoto_pct"
+type = "double"
+description = "índice de coleta de esgoto em fração (0..1)"
+
+[[tables.indicador_esgoto.bronze.schema]]
+name = "indice_tratamento_esgoto_pct"
+type = "double"
+description = "índice de tratamento de esgoto em fração (0..1)"
+
+# ---------------------------------------------------------------------------
+# snis_atendimento_municipal — água e esgoto integrados por município (silver)
+# ---------------------------------------------------------------------------
+[tables.atendimento_municipal]
+name   = "snis_atendimento_municipal"
+levels = ["silver"]
+key    = "municipio_ibge"
+
+[[tables.atendimento_municipal.silver.schema]]
+name = "municipio_ibge"
+type = "string"
+description = "código IBGE do município (chave)"
+
+[[tables.atendimento_municipal.silver.schema]]
+name = "ano"
+type = "int"
+description = "ano de referência"
+
+[[tables.atendimento_municipal.silver.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.atendimento_municipal.silver.schema]]
+name = "populacao"
+type = "long"
+description = "população residente"
+
+[[tables.atendimento_municipal.silver.schema]]
+name = "indice_atendimento_agua_pct"
+type = "double"
+description = "índice de atendimento de água em fração (0..1)"
+
+[[tables.atendimento_municipal.silver.schema]]
+name = "indice_coleta_esgoto_pct"
+type = "double"
+description = "índice de coleta de esgoto em fração (0..1)"
+
+[[tables.atendimento_municipal.silver.schema]]
+name = "indice_tratamento_esgoto_pct"
+type = "double"
+description = "índice de tratamento de esgoto em fração (0..1)"
+
+[[tables.atendimento_municipal.silver.schema]]
+name = "consumo_medio_l_hab_dia"
+type = "double"
+description = "consumo médio per capita em litros/hab.dia"
+
+[[tables.atendimento_municipal.silver.schema]]
+name = "perda_faturamento_pct"
+type = "double"
+description = "índice de perda de faturamento em fração (0..1)"
+
+[[tables.atendimento_municipal.silver.schema]]
+name = "classe_atendimento"
+type = "string"
+description = "classe de atendimento de água (baixo/medio/alto)"
+
+# ---------------------------------------------------------------------------
+# snis_prestador_consolidado — prestadores deduplicados e padronizados (silver)
+# ---------------------------------------------------------------------------
+[tables.prestador_consolidado]
+name   = "snis_prestador_consolidado"
+levels = ["silver"]
+key    = "codigo"
+
+[[tables.prestador_consolidado.silver.schema]]
+name = "codigo"
+type = "string"
+description = "código do prestador (chave)"
+
+[[tables.prestador_consolidado.silver.schema]]
+name = "nome"
+type = "string"
+description = "nome do prestador (padronizado)"
+
+[[tables.prestador_consolidado.silver.schema]]
+name = "uf"
+type = "string"
+description = "UF da sede"
+
+[[tables.prestador_consolidado.silver.schema]]
+name = "natureza_juridica"
+type = "string"
+description = "natureza jurídica do prestador"
+
+[[tables.prestador_consolidado.silver.schema]]
+name = "abrangencia"
+type = "string"
+description = "abrangência de atuação"
+
+# ---------------------------------------------------------------------------
+# snis_cobertura_por_uf — cobertura estadual ponderada por população (gold)
+# ---------------------------------------------------------------------------
+[tables.cobertura_por_uf]
+name   = "snis_cobertura_por_uf"
+levels = ["gold"]
+key    = "uf"
+
+[[tables.cobertura_por_uf.gold.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF (chave)"
+
+[[tables.cobertura_por_uf.gold.schema]]
+name = "municipios"
+type = "long"
+description = "municípios considerados na UF"
+
+[[tables.cobertura_por_uf.gold.schema]]
+name = "populacao_total"
+type = "long"
+description = "população total da UF"
+
+[[tables.cobertura_por_uf.gold.schema]]
+name = "cobertura_agua_media"
+type = "double"
+description = "cobertura média de água ponderada por população (4 casas)"
+
+[[tables.cobertura_por_uf.gold.schema]]
+name = "cobertura_esgoto_media"
+type = "double"
+description = "cobertura média de esgoto ponderada por população (4 casas)"
+
+# ---------------------------------------------------------------------------
+# snis_ranking_prestadores — ranking de prestadores por UF (gold)
+# ---------------------------------------------------------------------------
+[tables.ranking_prestadores]
+name   = "snis_ranking_prestadores"
+levels = ["gold"]
+key    = "codigo"
+
+[[tables.ranking_prestadores.gold.schema]]
+name = "codigo"
+type = "string"
+description = "código do prestador (chave)"
+
+[[tables.ranking_prestadores.gold.schema]]
+name = "nome"
+type = "string"
+description = "nome do prestador"
+
+[[tables.ranking_prestadores.gold.schema]]
+name = "uf"
+type = "string"
+description = "UF da sede"
+
+[[tables.ranking_prestadores.gold.schema]]
+name = "natureza_juridica"
+type = "string"
+description = "natureza jurídica do prestador"
+
+[[tables.ranking_prestadores.gold.schema]]
+name = "abrangencia"
+type = "string"
+description = "abrangência de atuação"
+
+[[tables.ranking_prestadores.gold.schema]]
+name = "peso_abrangencia"
+type = "int"
+description = "peso numérico da abrangência (maior = mais amplo)"
+
+[[tables.ranking_prestadores.gold.schema]]
+name = "rank"
+type = "int"
+description = "posição do prestador dentro da UF (1 = mais amplo)"

@@ -1,0 +1,20 @@
+I've created `CLAUDE.md` at the repo root. Here's what it captures and why:
+
+**Big-picture architecture** (the part that needs reading multiple files to grasp):
+- **What it is** — PySpark + Sedona + GDAL batch pipelines ingesting Brazilian open data into an S3-backed medallion lake.
+- **Medallion flow** (raw → bronze → silver → gold): what each layer does, that jobs are independent `main()` scripts chained by run order (no in-repo orchestrator), and the Parquet-vs-GeoParquet output split.
+- **App layout** — the 12 `apps/<app>/` sources, each with `jobs/{bronze,silver,gold}/`, a domain-specific `utils/`, and a `metadata.toml`.
+- **`metadata.toml` as source of truth** for table paths/schemas via `table_location()` — plus the honest caveat that some existing jobs still hardcode `s3a://` paths, with the metadata approach flagged as the intended one.
+- **Shared `utils/`** split between column- and dataframe-transforms, and the "check here first" rule.
+- **Sedona/geospatial gotchas** — needs `SedonaContext`, `ST_Point(x=lon, y=lat)`, geodesic distance measured before reprojection, EPSG:3857 as output convention.
+
+**Commands** — the Docker-only workflow (`docker compose up -d --build`, then `docker compose exec spark spark-submit apps/<app>/jobs/<layer>/<job>.py`), the `external-net` + S3 prerequisites, and env/config wiring.
+
+**Conventions that bite** — distilled the load-bearing rules from `CODING_STANDARDS.md` (English code / Portuguese docstrings, no UDFs, `F.func` over `F.expr`, `lit(None)` for absence, `select` as schema contract, explicit joins, explicit window frames).
+
+A few deliberate choices worth flagging:
+- I pointed to `CODING_STANDARDS.md` as authoritative rather than duplicating all 237 lines.
+- I did **not** invent a test/lint section — there's no runner configured, so I said so plainly (testing = run the job, check the printed count / Jupyter).
+- `start.sh` references `validate_setup.py` and `exploration/start_jupyter.sh`, but **neither exists in the repo** — so I left those out rather than document commands that would fail.
+
+There was no pre-existing CLAUDE.md, and no Cursor/Copilot rules or README to fold in.

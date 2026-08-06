@@ -1,0 +1,31 @@
+Tudo funcionando e verificado. A tabela foi produzida com sucesso.
+
+## Resultado
+
+O job `educacao_escola_matricula_h3_grid` rodou e gravou **555 células** cobrindo as **660 escolas federais em atividade georreferenciadas**. Verifiquei a saída: a soma de `n_schools` = 660 (bate com o silver), e as colunas são exatamente as pedidas — `h3_cell, n_schools, total_enrollment, avg_enrollment, n_federal_neighbors, avg_dist_neighbors_km, avg_dist_nearest_km, geometry`.
+
+## O que construí
+
+Como o `educacao` era só um scaffold (`metadata.toml` vazio), montei a cadeia medalhão completa que a arquitetura do repo exige, seguindo os idiomas da app ANA (a mais parecida, com geo + H3):
+
+| Camada | Job | Saída |
+|---|---|---|
+| bronze | `educacao_escola.py` | 214.192 escolas saneadas |
+| bronze | `educacao_matricula.py` | 178.766 matrículas tipadas |
+| silver | `educacao_escola_matricula_geo.py` | 660 federais ativas + geometria 3857 + total de matrículas |
+| gold | `educacao_escola_matricula_h3_grid.py` | 555 células H3 nível 5 |
+
+Também declarei as quatro tabelas (com schema por nível) no `metadata.toml`, que estava vazio.
+
+## Decisões de interpretação (para você validar)
+
+- **Federal / em atividade**: descobri pelos dados que `SETOR=1` = federal (728 escolas — os Institutos Federais, ex.: "IFRO - CAMPUS...") e `SITUACAO=1` = em atividade. Documentei os códigos em `apps/educacao/utils/column_transforms.py` e no metadata.
+- **Total de matrículas**: usei `MAT_BASICA` (total da educação básica). Escolas sem registro de matrícula ficam com 0.
+- **Geometria/distâncias**: só entram as 660 federais ativas **com coordenadas** (56 das 716 não têm lat/long). Distâncias são geodésicas (`ST_DistanceSpheroid` sobre o ponto WGS84 original), convertidas para km.
+- **Vizinhas**: outra federal ativa na própria célula ou numa das 6 adjacentes (H3 k-ring 1). `n_federal_neighbors` é o nº de vizinhas de cada escola da célula (= escolas na região − a própria), que é idêntico para toda a célula, como pedido.
+- **`avg_dist_nearest_km`**: média da distância de cada escola à federal ativa mais próxima em qualquer lugar (sem restrição de célula).
+- Células com uma escola isolada (sem vizinha) têm `n_federal_neighbors=0` e `avg_dist_neighbors_km=NULL` — 381 células nesse caso, coerente com a dispersão da rede federal.
+
+Uma observação: o writer GeoParquet acrescenta automaticamente uma coluna física `geometry_bbox` (covering column do padrão GeoParquet), como acontece em todas as tabelas geo do repo — não faz parte do contrato de 8 colunas, é só artefato de armazenamento.
+
+Detalhe do maior aglomerado (área urbana densa): 13 escolas, 30 vizinhas, federal mais próxima a ~0,4 km em média — consistente.

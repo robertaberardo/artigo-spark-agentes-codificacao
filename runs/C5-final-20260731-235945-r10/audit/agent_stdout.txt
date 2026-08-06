@@ -1,0 +1,25 @@
+Pronto. A tabela `educacao_escola_matricula_h3_grid` foi produzida e o job rodou com sucesso.
+
+## O que foi feito
+
+Como `educacao` era só um scaffold (só tinha a camada `raw`), construí a cadeia medallion completa até o gold, declarando cada tabela/camada no `metadata.toml` **antes** de escrever os jobs (conforme a regra do repo):
+
+1. **`metadata.toml`** — adicionei os schemas `bronze` de `escola` e `matricula`, mais as novas tabelas `escola_matricula` (silver) e `escola_matricula_h3_grid` (gold).
+2. **bronze** — `educacao_escola` (214.192 linhas) e `educacao_matricula` (178.766) tipadas/limpas em `snake_case`.
+3. **silver** — `educacao_escola_matricula`: junção `escola ⋈ matricula` por `id_unidade` (com `join_no_fanout`), filtrada por coordenada válida, ponto persistido em EPSG:3857, guardando `latitude`/`longitude`/`setor`/`situacao`/`total_enrollment` (156.814 escolas).
+4. **gold** — `educacao_escola_matricula_h3_grid`: **555 células** H3 nível 5, só escolas federais em atividade.
+
+## Decisões-chave
+
+- **Vizinhas** = disco `ST_H3KRing(cell, 1)` (célula + 6 adjacentes). Como cada escola da célula enxerga o mesmo disco e só se exclui, `n_federal_neighbors = (escolas no disco) − 1` é **idêntico para toda a célula** — exatamente o que o enunciado pede.
+- **Distâncias geodésicas** com `ST_DistanceSpheroid` sobre o ponto WGS84 original (nunca reprojetando o 3857 de volta), em km.
+- **`avg_dist_neighbors_km`** = média das médias por escola; **`avg_dist_nearest_km`** = nearest federal global (cross join das 660 federais, viável nesse volume).
+- **Ausência ≠ zero**: 381 células isoladas ficam com `n_federal_neighbors = 0` e `avg_dist_neighbors_km = NULL`.
+
+## Verificação
+- `sum(n_schools) = 660` = federais em atividade com coordenada válida (nenhuma perdida/duplicada).
+- Invariante `n_federal_neighbors ≥ n_schools − 1`: **0 violações**.
+- Nenhuma célula com distância de vizinhas nula tendo vizinhas > 0.
+- 8 colunas pedidas presentes com os tipos corretos (`geometry_bbox` é metadado de covering que o writer geoparquet do Sedona adiciona em toda tabela geoparquet do repo).
+
+Nota: os textos gerados aqui (comentários/docstrings) são internos ao código, então não apliquei as skills de tom/humanizer — se algum desses jobs for virar documentação externa à OSPA, me avise.

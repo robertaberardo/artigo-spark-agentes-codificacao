@@ -1,0 +1,16 @@
+I've created `CLAUDE.md`. Here's what it captures about this codebase:
+
+**What it is** — PySpark + Apache Sedona geospatial pipelines over 12 Brazilian public-data sources, organized as one "app" per source, writing to a MinIO/S3 data lake as Parquet/GeoParquet.
+
+**The high-value, non-obvious things I focused on** (things that require reading multiple files to piece together):
+
+1. **Language split** — code/names/columns in English, docstrings/comments in Portuguese. Easy to accidentally violate.
+2. **`CODING_STANDARDS.md` is authoritative and enforced** — I distilled the highest-leverage rules (pure `transform` functions, no UDFs, native functions over `F.expr`, `F.lit(None)` for absence, geodesic distance measured before projecting, explicit schemas/joins/window frames).
+3. **Medallion layer flow** (bronze→silver→gold) and the conventions each layer follows, including the `SedonaContext.create(...)` + geoparquet pattern for geospatial jobs.
+4. **`metadata.toml` + `table_location()` as the path contract** — the key architectural pattern connecting `utils/metadata.py`, per-app metadata, and the `S3_BUCKET` override. I flagged that `apps/anac/` still hardcodes paths, so future work knows the preferred direction.
+5. **Three-tier transform organization** — root `utils/` (generic column vs. dataframe modules) vs. `apps/<app>/utils/` (domain-specific), plus the import aliases and why `PYTHONPATH` makes them resolve.
+6. **How to actually run a job** — the exact `docker compose exec spark spark-submit ...` invocation, layer ordering, and the S3/MinIO + `external-net` prerequisites.
+
+I also noted honestly that **there's no test suite or linter**, and that `start.sh` references a `validate_setup.py` and `exploration/` that **don't exist in the repo** — so a future instance doesn't chase phantom commands.
+
+There was no existing `CLAUDE.md`, README, or Cursor/Copilot rules to merge in.

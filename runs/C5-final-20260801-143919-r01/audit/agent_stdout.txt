@@ -1,0 +1,27 @@
+Pronto. A tabela `educacao_escola_matricula_h3_grid` foi produzida e o pipeline rodou com sucesso de ponta a ponta.
+
+## O que foi construído
+
+Como os dados brutos estavam só na camada `raw` do lake, montei a cadeia medalhão completa em `apps/educacao/`:
+
+1. **bronze** — `educacao_escola.py` e `educacao_matricula.py`: leem o CSV cru com schema explícito (`;`, sem `inferSchema`), tipam os campos e padronizam a chave `id_unidade` para 8 dígitos.
+2. **silver** — `educacao_escola_geo.py`: filtra **federais** (`setor=1`) **em atividade** (`situacao=1`), valida coordenadas, junta o total de matrículas (`mat_basica`, via `join_no_fanout`, `left`) e gera o ponto em EPSG:3857 — guardando lat/long WGS84 originais. → **660 escolas**.
+3. **gold** — `educacao_escola_matricula_h3_grid.py`: agrega na grade **H3 nível 5**. → **555 células**.
+
+Declarei todas as camadas/tabelas novas no `metadata.toml` antes de referenciá-las (o `table_location` falha cedo caso contrário).
+
+## Decisões que valem destaque
+
+- **Vizinhança** = disco H3 de raio 1 (`ST_H3KRing(cell, 1, exact=False)`): a própria célula + as adjacentes. `n_federal_neighbors` é constante para toda a célula (= tamanho do pool − 1) — **verifiquei que a contagem por escola nunca varia dentro da célula**, então o `F.max` é exato.
+- **Distâncias geodésicas** (`ST_DistanceSpheroid`) medidas sobre as coordenadas **WGS84 originais**, antes de qualquer projeção, como manda o `CODING_STANDARDS.md`. A geometria de saída é o polígono da célula em EPSG:3857.
+- **`avg_dist_nearest_km`** usa produto cartesiano sobre as ~660 escolas (barato) — sem restrição de célula.
+- **Ausência ≠ zero**: células isoladas (381 delas) ficam com `n_federal_neighbors=0` (contagem real) e `avg_dist_neighbors_km=NULL` (distância indefinida).
+
+## Validação
+
+- Schema final bate com as 8 colunas pedidas (`geometry_bbox` extra é metadado padrão do geoparquet do Sedona).
+- `sum(n_schools) = 660` — as escolas particionam corretamente entre as células.
+- Nenhuma distância negativa; todas as células têm `avg_dist_nearest_km`.
+- **Recontagem independente** dos vizinhos: **0 divergências** nas 555 células.
+
+Não houve erros de execução a corrigir — os quatro jobs rodaram na primeira tentativa. O container Spark ficou de pé (`docker compose up -d`); se quiser derrubá-lo é só `docker compose down`.

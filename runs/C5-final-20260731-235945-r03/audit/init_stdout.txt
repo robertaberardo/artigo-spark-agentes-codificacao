@@ -1,0 +1,20 @@
+I've created `CLAUDE.md` at the repository root. Here's what I found and captured.
+
+## Codebase summary
+
+This is a **PySpark + Apache Sedona geospatial ETL** project processing Brazilian public-data sources through a **medallion architecture** (`raw → bronze → silver → gold`), running entirely inside a Fedora/Java 11 Docker container against an S3-compatible store (MinIO).
+
+Key architectural points I documented:
+
+- **Self-similar per-app layout** — 12 apps (`ana`, `anac`, `bcb`, `caged`, `cvm`, `datasus`, `dnit`, `ibge`, `inmet`, `snis`, `tse`, plus the scaffold `educacao`), each with a `metadata.toml`, `jobs/{bronze,silver,gold}/` entrypoints, and app-specific `utils/`.
+- **Metadata-driven paths** — `utils/metadata.py::table_location()` resolves every S3A path from `metadata.toml`, which is the schema source of truth. (I noted that a few older gold jobs still hardcode `s3a://` paths, so new code should prefer the metadata pattern.)
+- **Shared vs app-specific transforms** — the two big `utils/` modules (`column_transforms.py`, `dataframe_transforms.py`) and the "reuse before writing new" rule.
+- **The repeating job structure** and the Sedona-context requirement.
+- **How to run** — docker compose build/up/exec + `spark-submit`, ports, `.env`, `conf/spark-defaults.conf`.
+- **Conventions** distilled from `CODING_STANDARDS.md` (no UDFs, absence-is-null, `select` as schema contract, geodesic distance before projecting, join rules, explicit window frames).
+
+Two things worth flagging that I called out in the file:
+- **Bilingual convention**: code/identifiers in English, docstrings/comments in Portuguese — important so future edits match.
+- **`start.sh` advertises `validate_setup.py` and an `exploration/` Jupyter launcher that don't actually exist** in the repo yet, and there's **no automated test suite** (verification is manual, by running jobs).
+
+Since there was no existing `CLAUDE.md`, I created a fresh one rather than suggesting improvements to one.

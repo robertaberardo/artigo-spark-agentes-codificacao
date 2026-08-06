@@ -1,0 +1,29 @@
+Pronto. A tabela `educacao_escola_matricula_h3_grid` foi produzida e o job roda com sucesso.
+
+## O que foi construído
+
+O app `educacao` não tinha nenhum job — só os dados brutos. Como a arquitetura medalhão exige bronze → silver → gold, criei a cadeia completa:
+
+| Camada | Job | Saída |
+|---|---|---|
+| bronze | `educacao_escola.py` | `educacao_escola` — 214.192 escolas tipadas |
+| bronze | `educacao_matricula.py` | `educacao_matricula` — 178.766 registros |
+| silver | `educacao_escola_geo.py` | `educacao_escola_geo` — 156.814 escolas georreferenciadas (com matrículas, ponto em 3857 **e lat/long WGS84 preservadas**) |
+| gold | `educacao_escola_matricula_h3_grid.py` | **`educacao_escola_matricula_h3_grid` — 555 células** |
+
+Declarei as tabelas/camadas novas no `metadata.toml` (com schema por camada), como manda o repo.
+
+## Resultado (verificado)
+
+Schema final exatamente com as colunas pedidas: `h3_cell, n_schools, total_enrollment, avg_enrollment, n_federal_neighbors, avg_dist_neighbors_km, avg_dist_nearest_km, geometry`. Só há `660` escolas federais em atividade georreferenciadas → 555 células; `sum(n_schools) = 660` bate. Invariantes checados: `n_federal_neighbors ≥ n_schools` em todas as células, nenhuma distância negativa.
+
+## Decisões de interpretação que vale conferir
+
+- **Vizinhas** = demais federais em atividade na própria célula **ou** nas adjacentes → `ST_H3KRing(cell, 1, False)` (anel-1 inclusivo). `n_federal_neighbors` é o tamanho desse pool (mesmo valor para toda a célula).
+- **Distâncias geodésicas** (`ST_DistanceSpheroid`) medidas sobre o ponto **WGS84 original** (reconstruído no gold das lat/long que o silver preserva de propósito), nunca sobre a geometria 3857 — como o `CODING_STANDARDS.md` exige. O índice H3 também usa esse ponto WGS84.
+- `avg_enrollment` usa `F.avg` (ignora nulos — ausência não é zero).
+- 381 células são "isoladas" (uma federal sem nenhuma federal no anel-1) e ficam com `avg_dist_neighbors_km = NULL` — comportamento esperado.
+
+Dois detalhes que notei: (1) a geometria de saída é o polígono H3 em EPSG:4326 (via `ST_H3ToGeom`), seguindo o padrão dos golds hexbin irmãos; (2) o GeoParquet adiciona automaticamente a coluna `geometry_bbox` (índice espacial do formato) — é artefato de todo `.format("geoparquet")` do lake, não uma coluna de dado. Registrei essas escolhas na memória do projeto.
+
+Um ponto que encontrei de passagem: os golds hexbin irmãos (ex.: `datasus_estabelecimento_hexbin`) chamam `ST_H3CellIDs` sobre a geometria em 3857, o que é geograficamente incorreto para o H3 (espera graus). Este job evita isso indexando sobre o ponto WGS84 — não mexi nos jobs alheios, mas fica o registro caso queira revisá-los.

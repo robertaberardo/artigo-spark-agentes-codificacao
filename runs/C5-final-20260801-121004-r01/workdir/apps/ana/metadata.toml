@@ -1,0 +1,453 @@
+[data_lake]
+db  = "datalake"
+app = "ana"
+
+# ---------------------------------------------------------------------------
+# ana_estacao — cadastro das estações fluviométricas
+# ---------------------------------------------------------------------------
+[tables.estacao]
+name   = "ana_estacao"
+levels = ["raw", "bronze"]
+key    = "codigo"
+
+[[tables.estacao.raw.schema]]
+name = "codigo"
+type = "string"
+description = "código da estação (chave)"
+
+[[tables.estacao.raw.schema]]
+name = "nome"
+type = "string"
+description = "nome da estação"
+
+[[tables.estacao.raw.schema]]
+name = "rio"
+type = "string"
+description = "rio monitorado"
+
+[[tables.estacao.raw.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.estacao.raw.schema]]
+name = "latitude"
+type = "string"
+description = "latitude (texto, como aterrissa)"
+
+[[tables.estacao.raw.schema]]
+name = "longitude"
+type = "string"
+description = "longitude (texto, como aterrissa)"
+
+[[tables.estacao.raw.schema]]
+name = "tipo"
+type = "string"
+description = "tipo da estação (fluviométrica, telemétrica)"
+
+[[tables.estacao.bronze.schema]]
+name = "codigo"
+type = "string"
+description = "código da estação (chave)"
+
+[[tables.estacao.bronze.schema]]
+name = "nome"
+type = "string"
+description = "nome da estação (espaçamento padronizado)"
+
+[[tables.estacao.bronze.schema]]
+name = "rio"
+type = "string"
+description = "rio monitorado"
+
+[[tables.estacao.bronze.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.estacao.bronze.schema]]
+name = "latitude"
+type = "double"
+description = "latitude em graus decimais"
+
+[[tables.estacao.bronze.schema]]
+name = "longitude"
+type = "double"
+description = "longitude em graus decimais"
+
+[[tables.estacao.bronze.schema]]
+name = "tipo"
+type = "string"
+description = "tipo da estação"
+
+# ---------------------------------------------------------------------------
+# ana_medicao_fluvio — medições fluviométricas diárias
+# ---------------------------------------------------------------------------
+[tables.medicao_fluvio]
+name   = "ana_medicao_fluvio"
+levels = ["raw", "bronze"]
+key    = "codigo_estacao"
+
+[[tables.medicao_fluvio.raw.schema]]
+name = "codigo_estacao"
+type = "string"
+description = "código da estação (chave estrangeira)"
+
+[[tables.medicao_fluvio.raw.schema]]
+name = "data"
+type = "string"
+description = "data da medição (dd/MM/yyyy, texto)"
+
+[[tables.medicao_fluvio.raw.schema]]
+name = "nivel_cm"
+type = "string"
+description = "nível do rio em centímetros (texto)"
+
+[[tables.medicao_fluvio.raw.schema]]
+name = "vazao_m3s"
+type = "string"
+description = "vazão em m³/s (texto)"
+
+[[tables.medicao_fluvio.raw.schema]]
+name = "chuva_mm"
+type = "string"
+description = "precipitação em milímetros (texto)"
+
+[[tables.medicao_fluvio.bronze.schema]]
+name = "codigo_estacao"
+type = "string"
+description = "código da estação (chave estrangeira)"
+
+[[tables.medicao_fluvio.bronze.schema]]
+name = "data"
+type = "date"
+description = "data da medição"
+
+[[tables.medicao_fluvio.bronze.schema]]
+name = "nivel_cm"
+type = "double"
+description = "nível do rio em centímetros"
+
+[[tables.medicao_fluvio.bronze.schema]]
+name = "vazao_m3s"
+type = "double"
+description = "vazão em m³/s"
+
+[[tables.medicao_fluvio.bronze.schema]]
+name = "chuva_mm"
+type = "double"
+description = "precipitação em milímetros"
+
+# ---------------------------------------------------------------------------
+# ana_reservatorio — reservatórios monitorados
+# ---------------------------------------------------------------------------
+[tables.reservatorio]
+name   = "ana_reservatorio"
+levels = ["raw", "bronze"]
+key    = "codigo"
+
+[[tables.reservatorio.raw.schema]]
+name = "codigo"
+type = "string"
+description = "código do reservatório (chave)"
+
+[[tables.reservatorio.raw.schema]]
+name = "nome"
+type = "string"
+description = "nome do reservatório"
+
+[[tables.reservatorio.raw.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.reservatorio.raw.schema]]
+name = "capacidade_hm3"
+type = "string"
+description = "capacidade em hm³ (texto)"
+
+[[tables.reservatorio.raw.schema]]
+name = "latitude"
+type = "string"
+description = "latitude (texto, como aterrissa)"
+
+[[tables.reservatorio.raw.schema]]
+name = "longitude"
+type = "string"
+description = "longitude (texto, como aterrissa)"
+
+[[tables.reservatorio.bronze.schema]]
+name = "codigo"
+type = "string"
+description = "código do reservatório (chave)"
+
+[[tables.reservatorio.bronze.schema]]
+name = "nome"
+type = "string"
+description = "nome do reservatório (espaçamento padronizado)"
+
+[[tables.reservatorio.bronze.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.reservatorio.bronze.schema]]
+name = "capacidade_hm3"
+type = "double"
+description = "capacidade em hm³"
+
+[[tables.reservatorio.bronze.schema]]
+name = "latitude"
+type = "double"
+description = "latitude em graus decimais"
+
+[[tables.reservatorio.bronze.schema]]
+name = "longitude"
+type = "double"
+description = "longitude em graus decimais"
+
+# ---------------------------------------------------------------------------
+# ana_bacia — bacias hidrográficas (polígonos)
+# ---------------------------------------------------------------------------
+[tables.bacia]
+name   = "ana_bacia"
+levels = ["raw", "bronze"]
+key    = "codigo_bacia"
+
+[[tables.bacia.raw.schema]]
+name = "codigo_bacia"
+type = "string"
+description = "código da bacia (chave)"
+
+[[tables.bacia.raw.schema]]
+name = "nome"
+type = "string"
+description = "nome da bacia"
+
+[[tables.bacia.raw.schema]]
+name = "geom_wkt"
+type = "string"
+description = "polígono da bacia em WKT (texto)"
+
+[[tables.bacia.bronze.schema]]
+name = "codigo_bacia"
+type = "string"
+description = "código da bacia (chave)"
+
+[[tables.bacia.bronze.schema]]
+name = "nome"
+type = "string"
+description = "nome da bacia (espaçamento padronizado)"
+
+[[tables.bacia.bronze.schema]]
+name = "geom_wkt"
+type = "string"
+description = "polígono da bacia em WKT (texto, ainda não convertido)"
+
+# ---------------------------------------------------------------------------
+# ana_estacao_geo — estações georreferenciadas (silver)
+# ---------------------------------------------------------------------------
+[tables.estacao_geo]
+name   = "ana_estacao_geo"
+levels = ["silver"]
+key    = "codigo"
+
+[[tables.estacao_geo.silver.schema]]
+name = "codigo"
+type = "string"
+description = "código da estação (chave)"
+
+[[tables.estacao_geo.silver.schema]]
+name = "nome"
+type = "string"
+description = "nome da estação"
+
+[[tables.estacao_geo.silver.schema]]
+name = "rio"
+type = "string"
+description = "rio monitorado"
+
+[[tables.estacao_geo.silver.schema]]
+name = "uf"
+type = "string"
+description = "sigla da UF"
+
+[[tables.estacao_geo.silver.schema]]
+name = "tipo"
+type = "string"
+description = "tipo da estação"
+
+[[tables.estacao_geo.silver.schema]]
+name = "distance_brasilia_m"
+type = "double"
+description = "distância geodésica até Brasília, em metros"
+
+[[tables.estacao_geo.silver.schema]]
+name = "geometry"
+type = "geometry(point)"
+description = "ponto da estação (EPSG:3857)"
+
+# ---------------------------------------------------------------------------
+# ana_bacia_geo — bacias georreferenciadas com área (silver)
+# ---------------------------------------------------------------------------
+[tables.bacia_geo]
+name   = "ana_bacia_geo"
+levels = ["silver"]
+key    = "codigo_bacia"
+
+[[tables.bacia_geo.silver.schema]]
+name = "codigo_bacia"
+type = "string"
+description = "código da bacia (chave)"
+
+[[tables.bacia_geo.silver.schema]]
+name = "nome"
+type = "string"
+description = "nome da bacia"
+
+[[tables.bacia_geo.silver.schema]]
+name = "area_km2"
+type = "double"
+description = "área da bacia em km² (calculada em EPSG:3857)"
+
+[[tables.bacia_geo.silver.schema]]
+name = "geometry"
+type = "geometry(polygon)"
+description = "polígono da bacia (EPSG:3857)"
+
+# ---------------------------------------------------------------------------
+# ana_medicao_consolidada — medições com estação resolvida (silver)
+# ---------------------------------------------------------------------------
+[tables.medicao_consolidada]
+name   = "ana_medicao_consolidada"
+levels = ["silver"]
+key    = "codigo_estacao"
+
+[[tables.medicao_consolidada.silver.schema]]
+name = "codigo_estacao"
+type = "string"
+description = "código da estação (chave estrangeira)"
+
+[[tables.medicao_consolidada.silver.schema]]
+name = "data"
+type = "date"
+description = "data da medição"
+
+[[tables.medicao_consolidada.silver.schema]]
+name = "uf"
+type = "string"
+description = "UF da estação"
+
+[[tables.medicao_consolidada.silver.schema]]
+name = "rio"
+type = "string"
+description = "rio monitorado pela estação"
+
+[[tables.medicao_consolidada.silver.schema]]
+name = "nivel_cm"
+type = "double"
+description = "nível do rio em centímetros"
+
+[[tables.medicao_consolidada.silver.schema]]
+name = "vazao_m3s"
+type = "double"
+description = "vazão em m³/s"
+
+[[tables.medicao_consolidada.silver.schema]]
+name = "chuva_mm"
+type = "double"
+description = "precipitação em milímetros"
+
+[[tables.medicao_consolidada.silver.schema]]
+name = "vazao_moving_avg"
+type = "double"
+description = "média móvel de vazão (janela de 7 medições por estação)"
+
+# ---------------------------------------------------------------------------
+# ana_vazao_por_bacia — vazão agregada por UF/rio (gold)
+# ---------------------------------------------------------------------------
+[tables.vazao_por_bacia]
+name   = "ana_vazao_por_bacia"
+levels = ["gold"]
+key    = "uf"
+
+[[tables.vazao_por_bacia.gold.schema]]
+name = "uf"
+type = "string"
+description = "UF da estação (chave)"
+
+[[tables.vazao_por_bacia.gold.schema]]
+name = "rio"
+type = "string"
+description = "rio monitorado"
+
+[[tables.vazao_por_bacia.gold.schema]]
+name = "vazao_media"
+type = "double"
+description = "vazão média do grupo (2 casas)"
+
+[[tables.vazao_por_bacia.gold.schema]]
+name = "max_flow"
+type = "double"
+description = "vazão máxima do grupo (2 casas)"
+
+[[tables.vazao_por_bacia.gold.schema]]
+name = "n_stations"
+type = "long"
+description = "número de estações distintas do grupo"
+
+# ---------------------------------------------------------------------------
+# ana_ranking_estacoes — ranking de estações por vazão média (gold)
+# ---------------------------------------------------------------------------
+[tables.ranking_estacoes]
+name   = "ana_ranking_estacoes"
+levels = ["gold"]
+key    = "codigo_estacao"
+
+[[tables.ranking_estacoes.gold.schema]]
+name = "codigo_estacao"
+type = "string"
+description = "código da estação (chave)"
+
+[[tables.ranking_estacoes.gold.schema]]
+name = "uf"
+type = "string"
+description = "UF da estação"
+
+[[tables.ranking_estacoes.gold.schema]]
+name = "vazao_media"
+type = "double"
+description = "vazão média da estação (2 casas)"
+
+[[tables.ranking_estacoes.gold.schema]]
+name = "rank"
+type = "int"
+description = "posição por vazão média na UF (1 = maior)"
+
+# ---------------------------------------------------------------------------
+# ana_estacoes_hexbin — densidade de estações por célula H3 (gold)
+# ---------------------------------------------------------------------------
+[tables.estacoes_hexbin]
+name   = "ana_estacoes_hexbin"
+levels = ["gold"]
+key    = "h3_cell"
+
+[[tables.estacoes_hexbin.gold.schema]]
+name = "h3_cell"
+type = "long"
+description = "id da célula H3 nível 6 (chave)"
+
+[[tables.estacoes_hexbin.gold.schema]]
+name = "estacoes"
+type = "long"
+description = "estações na célula"
+
+[[tables.estacoes_hexbin.gold.schema]]
+name = "distance_media_m"
+type = "double"
+description = "distância média das estações da célula até Brasília"
+
+[[tables.estacoes_hexbin.gold.schema]]
+name = "geometry"
+type = "geometry(polygon)"
+description = "polígono da célula H3 (EPSG:3857)"

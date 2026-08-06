@@ -1,0 +1,17 @@
+I've created `CLAUDE.md` at the project root. Here's what I found and captured:
+
+**What the repo is:** a PySpark + Apache Sedona + GDAL geospatial pipeline scaffold over a **medallion data lake** (raw → bronze → silver → gold) for Brazilian public-data sources (12 apps: ana, anac, bcb, caged, cvm, datasus, dnit, educacao, ibge, inmet, snis, tse). Notably, it's a **validation environment** — all `apps/*/jobs/__init__.py` are empty, so the actual work is implementing the jobs.
+
+**Key architecture that spans files:**
+- `apps/<app>/metadata.toml` is the source of truth — declares tables, keys, the layers each table exposes, and schema per layer. `utils/metadata.py` resolves S3A paths (`s3a://{bucket}/{app}/{table}/{level}`) and fails fast on undeclared tables/levels.
+- `utils/` holds two generic transform libraries (`column_transforms.py` = `Column→Column`, `dataframe_transforms.py` = `DataFrame→DataFrame`) plus per-app domain transforms in `apps/<app>/utils/`.
+- Data lands on S3A/MinIO; config in `conf/spark-defaults.conf`.
+
+**Things I flagged because they'd trip up a future instance:**
+- `CODING_STANDARDS.md` is binding, and its most surprising rules: the **English-code / Portuguese-docstrings** split, no UDFs/no-`F.expr`, `F.lit(None)` for absence, and the geodesic-distance-before-projection rule.
+- Everything runs in Docker; the compose file needs an **external `external-net` network** created first.
+- `validate_setup.py` and `exploration/` are named in the container banner but **don't exist yet** — part of the pending validation work — and there's no configured test runner.
+
+I kept it to commands, the non-discoverable architecture, and the non-obvious conventions, and avoided restating the standards doc verbatim or inventing sections.
+
+One note: the org instructions about loading `tom-e-regras`/`humanizer` skills apply to outward-facing prose (articles, posts, emails), not to a repo config file like this, so they don't apply here.

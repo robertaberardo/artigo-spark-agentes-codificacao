@@ -1,0 +1,26 @@
+The pipeline is built and runs end-to-end successfully against the lake. Here's what I did.
+
+## Resultado
+
+A tabela **`educacao_escola_matricula_h3_grid`** foi gerada com sucesso: **555 células H3 (resolução 5)**, cobrindo as **660 escolas federais em atividade** com coordenadas válidas (de 716 federais ativas no total; 56 sem coordenada foram descartadas por não serem georreferenciáveis).
+
+Colunas finais, exatamente como pedido: `h3_cell, n_schools, total_enrollment, avg_enrollment, n_federal_neighbors, avg_dist_neighbors_km, avg_dist_nearest_km, geometry` (polígono da célula em EPSG:3857).
+
+## Pipeline criado (medalhão completo, pois a app só tinha `raw`)
+
+- **bronze** — `educacao_escola.py` e `educacao_matricula.py`: leem o CSV raw (`;`, header), padronizam nomes para snake_case/inglês e tipam as colunas (a coluna extra `ano` do arquivo é ignorada pelo schema explícito).
+- **silver** — `educacao_escola_matricula.py`: filtra rede **federal** (`SETOR=1`) **em atividade** (`SITUACAO=1`) com coordenadas válidas, anexa matrículas (`MAT_BASICA`, join sem fan-out) e indexa cada escola na célula H3 nível 5, preservando lat/long WGS84.
+- **gold** — `educacao_escola_matricula_h3_grid.py`: agregação por célula.
+
+Também declarei todas as novas tabelas/camadas em `apps/educacao/metadata.toml` e adicionei os predicados de domínio `is_federal`/`is_in_activity` em `apps/educacao/utils/column_transforms.py`.
+
+## Como a vizinhança foi modelada
+
+- **Vizinhas** = outras federais ativas na própria célula ou nas 6 células adjacentes — computadas via `ST_H3KRing(cell, 1, exact_ring=False)` (disco k=1, inclui o centro) + `array_contains`.
+- `n_federal_neighbors` = N−1 (N = federais no disco). Como todas as escolas da célula compartilham o mesmo disco, esse valor é **idêntico para toda a célula** — verifiquei que 0 células violam essa invariância.
+- `avg_dist_neighbors_km` e `avg_dist_nearest_km`: distância **geodésica** (`ST_DistanceSpheroid` sobre os pontos WGS84 originais), calculadas por escola e depois promediadas na célula. A "federal mais próxima" usa o mínimo sobre **todas** as demais federais, sem restrição de célula.
+- Distâncias respeitam o padrão do repositório (geodésica em WGS84, geometria persistida em 3857). Células sem vizinha recebem `n_federal_neighbors=0` e `avg_dist_neighbors_km=NULL` (ausência como `None`, nunca 0).
+
+Verificações confirmaram `sum(n_schools)=660`, SRID 3857, e sem nulos indevidos nas métricas de contagem/matrícula.
+
+Uma nota sobre execução: o container `place-etl-spark-1` em execução monta outro repositório, então rodei os jobs em containers efêmeros a partir da imagem já construída do próprio projeto (`spark-pipelines:local`), ligados à `external-net` com o `conf/` e as credenciais do projeto — equivalente a `docker compose exec spark spark-submit ...`.

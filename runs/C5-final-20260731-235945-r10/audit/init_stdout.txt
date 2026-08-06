@@ -1,0 +1,18 @@
+I've created `CLAUDE.md`. Here's a summary of what I captured and how I verified it.
+
+## What this codebase is
+PySpark + Apache Sedona geospatial pipelines ingesting **Brazilian public datasets** (12 apps: `ana`, `anac`, `bcb`, `caged`, `cvm`, `datasus`, `dnit`, `educacao`, `ibge`, `inmet`, `snis`, `tse`) through a **medallion architecture** (raw → bronze → silver → gold) into an S3/MinIO data lake. I noted that `educacao` is an empty scaffold (0 jobs).
+
+## Key things I documented
+- **Running jobs** — everything runs in the Docker container via `spark-submit apps/<app>/jobs/<layer>/<job>.py`; the container idles with `tail -f`, project root is mounted live so no rebuild needed for code changes. There's **no test suite or linter** — "testing" is running the job and checking the printed row count.
+- **The metadata contract** — the non-obvious architectural core: jobs never hardcode paths, they resolve `s3a://...` locations through `utils.metadata.table_location()`, which reads `apps/<app>/metadata.toml`. New tables/layers must be declared there (with schema) first.
+- **The two-tier utils** — generic `utils/column_transforms.py` + `utils/dataframe_transforms.py` vs. per-app `apps/<app>/utils/`; the convention to search these before writing new transforms and compose via `.transform(...)` chains.
+- **Geospatial conventions** — the subtle EPSG:3857 storage / measure-geodesic-on-WGS84-first rule, `ST_Point(x=lon, y=lat)` ordering.
+- **Coding standards** — distilled the highest-impact rules from `CODING_STANDARDS.md` (English code / Portuguese comments, no UDFs, "absence is never zero", lat/long always `double`, no `dropDuplicates` crutch).
+
+## Notes
+- There was no existing `CLAUDE.md` or `README.md`, so this is a fresh file.
+- I read representative jobs across the `ana` app (bronze/silver/gold), both shared utils modules in full, `metadata.py`, the Docker/setup scripts, and all config to ground each claim.
+- The `.claude/settings.json` and hook are harness config, not project architecture, so I left them out.
+
+One thing worth flagging: the Dockerfile and `start.sh` reference `validate_setup.py` and an `exploration/start_jupyter.sh`, but **neither file exists in the repo** — I documented `validate_setup.py` as the intended smoke-test command since it's the documented entrypoint, but you may want to add those files or update the references.

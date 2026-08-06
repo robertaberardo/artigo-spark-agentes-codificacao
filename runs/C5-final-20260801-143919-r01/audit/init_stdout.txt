@@ -1,0 +1,18 @@
+I've created `CLAUDE.md`. There was no existing one to improve. Here's what I captured from analyzing the codebase:
+
+**Big-picture architecture** (the parts that need reading multiple files to grasp):
+- It's a **medallion lake** (raw → bronze → silver → gold) of PySpark + Sedona pipelines over Brazilian public-data sources, one app per source under `apps/`.
+- The **metadata-driven path model**: jobs never build S3A paths by hand — `table_location(app, table, level)` reads each app's `metadata.toml`, which declares every table/layer/schema and fails early if undeclared.
+- The **shared vs. domain-specific `utils/` split** (`ct` column-level, `dt` DataFrame-level in the root `utils/`; per-app `utils/column_transforms.py` for source-specific logic).
+- The **standard job shape** per layer and what each layer reads/writes (parquet vs. geoparquet).
+
+**Key conventions a new instance would otherwise miss:**
+- The strict **English code / Portuguese docstrings** rule.
+- The **Sedona geodesic-distance-before-projection** rule (a subtle correctness trap called out in `CODING_STANDARDS.md`).
+- `CODING_STANDARDS.md` is authoritative — I summarized its key rules rather than duplicating it.
+
+**Commands:** Docker build/run and the `external-net` prerequisite, plus the `spark-submit` pattern for a single job.
+
+I also verified and reflected real state honestly: **no test suite exists** (despite the standards mentioning testing), and I noted that a minority of older gold jobs still hardcode `s3a://` paths against the `table_location` convention (15 files hardcode vs. 79 using `table_location`).
+
+One note: `docker/resources/start.sh` references `validate_setup.py` and an `exploration/` directory that aren't present in the repo, so I deliberately left those out of the run instructions rather than document commands that would fail.

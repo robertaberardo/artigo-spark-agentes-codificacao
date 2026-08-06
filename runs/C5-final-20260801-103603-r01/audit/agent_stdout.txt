@@ -1,0 +1,29 @@
+Pronto. A tabela `educacao_escola_matricula_h3_grid` foi produzida e o job rodou com sucesso.
+
+## O que foi feito
+
+Como o app `educacao` só tinha os dados brutos declarados, montei o pipeline completo na arquitetura medalhão:
+
+**Metadados** (`apps/educacao/metadata.toml`) — declarei as camadas e schemas novos: `bronze` de `escola`/`matricula`, e as tabelas `escola_geo` (silver) e `escola_matricula_h3_grid` (gold).
+
+**bronze** — `educacao_escola` (214.192 registros) e `educacao_matricula` (178.766): leem o raw CSV `;`-separado com `StructType` explícito, padronizam para `snake_case`, tipam e filtram chave inválida.
+
+**silver** — `educacao_escola_geo` (660 escolas): filtra **federais** (`setor=1`) **em atividade** (`situacao=1`) com coordenadas válidas, faz `left join` das matrículas (preservando escola sem registro), indexa em **H3 nível 5** e guarda o ponto em EPSG:3857 + lat/long originais.
+
+**gold** — `educacao_escola_matricula_h3_grid` (555 células): calcula, por escola, a distância à federal mais próxima (qualquer célula) e as estatísticas de vizinhança (própria célula + adjacentes, anel H3 = 1), depois agrega por célula. Distâncias são **geodésicas** (`ST_DistanceSpheroid`), medidas sobre lat/long antes de projetar; geometria da célula em EPSG:3857.
+
+Adicionei dois transforms genéricos reutilizáveis em `utils/dataframe_transforms.py`: `add_nearest_other_distance_km` e `add_h3_ring_neighbor_stats`.
+
+## Colunas finais
+`h3_cell, n_schools, total_enrollment, avg_enrollment, n_federal_neighbors, avg_dist_neighbors_km, avg_dist_nearest_km, geometry` (mais o `geometry_bbox` que o GeoParquet anexa automaticamente, como nas demais tabelas hexbin).
+
+## Validações executadas
+- `sum(n_schools)` = 660 = total do silver ✓
+- `n_federal_neighbors` **constante dentro de cada célula** (spread máx = 0), confirmando "a mesma para toda a célula" ✓
+- distância à mais próxima conferida contra cálculo manual (52,60 km manual vs 52,59 km do job — diferença esfera×elipsoide esperada) ✓
+- geometria = polígono H3 ✓; `avg_dist_neighbors_km` fica nulo nas 381 células isoladas (escola sem vizinha), como esperado ✓
+
+## Uma decisão que vale registrar
+Interpretei `n_federal_neighbors` como o número de escolas **vizinhas de cada escola** (as *outras* no anel), que por construção é idêntico para toda a célula — daí o valor único por célula. Se a sua intenção fosse contar o *pool* total de escolas no anel (incluindo as da própria célula, sem descontar a própria), seria esse valor + 1; me avise que ajusto num instante.
+
+Observação: os connectors MCP do claude.ai aparecem como não autenticados nesta sessão, mas não foram necessários para esta tarefa.

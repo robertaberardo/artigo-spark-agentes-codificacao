@@ -1,0 +1,17 @@
+I've created `CLAUDE.md`. Here's what it captures for future Claude Code instances:
+
+**Big-picture architecture** (the parts requiring multiple files to grasp):
+- A medallion data lake (`raw → bronze → silver → gold`) of Brazilian public-sector datasets on MinIO/S3A, with PySpark + Sedona + GDAL.
+- The uniform per-app shape (`metadata.toml` + `jobs/{bronze,silver,gold}/` + app-local `utils/`), and what each layer's jobs do — including that geospatial jobs use `SedonaContext` rather than a plain `SparkSession`.
+- **`metadata.toml` as the source of truth** for paths and schemas via `table_location()` — the key architectural convention that isn't obvious from any single file.
+- Shared vs. app-local transform modules, with the "check `utils/` before writing a generic transform" rule.
+
+**Commands** — the real dev loop: `docker network create external-net`, `docker compose up -d --build`, and `docker compose exec spark spark-submit apps/<app>/jobs/<layer>/<job>.py`. There's no test suite, so I documented that running = submitting + inspecting output.
+
+**Pointers to authoritative docs** — a condensed version of the load-bearing rules from `CODING_STANDARDS.md` (no UDFs, absence≠zero, `select` as schema contract, geodesic-before-projection), with a pointer to the full file rather than duplicating it.
+
+A few things I discovered and flagged as caveats rather than hiding:
+- `start.sh` references `validate_setup.py` and `exploration/start_jupyter.sh`, which **don't exist** in the repo.
+- Some jobs (e.g. `anac_voo_consolidado.py`) hardcode `s3a://` paths instead of using `table_location` — I noted `table_location` is preferred for new code.
+
+I left out easily-discoverable detail (per-file listings, the full column-helper catalog, every app name's meaning) to keep it focused.

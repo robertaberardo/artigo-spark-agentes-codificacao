@@ -1,0 +1,42 @@
+Pronto. A tabela `educacao_escola_matricula_h3_grid` foi produzida e o pipeline roda de ponta a ponta com sucesso.
+
+## O que foi construído
+
+A app `educacao` não tinha jobs — montei o pipeline completo seguindo a arquitetura medalhão e o `CODING_STANDARDS.md`:
+
+| Camada | Job / tabela | Resultado |
+|---|---|---|
+| bronze | `educacao_escola` | 214.192 registros |
+| bronze | `educacao_matricula` | 178.766 registros |
+| silver | `educacao_escola_geo` (federais em atividade, georreferenciadas + matrículas) | 660 escolas |
+| gold | **`educacao_escola_matricula_h3_grid`** | **555 células** |
+
+Também declarei tudo no `metadata.toml` (níveis/schemas novos) e adicionei um helper genérico `add_h3_kring` em `utils/dataframe_transforms.py` (vizinhança H3 via `ST_H3KRing`).
+
+## Como cada coluna foi calculada
+
+- **h3_cell** — célula H3 nível 5 do ponto WGS84 da escola.
+- **n_schools / total_enrollment / avg_enrollment** — contagem, soma e média de `mat_basica` por célula (ausência de matrícula fica `NULL`, nunca 0).
+- **n_federal_neighbors** — escolas federais em atividade na própria célula + adjacentes (k-ring 1, que inclui a central). É de nível de célula, igual para toda a célula.
+- **avg_dist_neighbors_km** — média por célula da distância média de cada escola às suas vizinhas (k-ring 1, excluindo ela mesma).
+- **avg_dist_nearest_km** — média por célula da distância de cada escola à federal mais próxima (qualquer, sem restrição de célula).
+- **geometry** — polígono da célula H3 em EPSG:3857.
+
+Todas as distâncias são **geodésicas** (`ST_DistanceSpheroid`, WGS84) medidas sobre a lat/long **original** — por isso preservei essas colunas no silver em vez de fazer round-trip pela projeção 3857.
+
+## Validação
+
+- `SETOR=1 & SITUACAO=1` → filtro para federais em atividade.
+- Σ`n_schools` = 660 (bate com o silver); nenhuma célula com `n_federal_neighbors < n_schools`; sem nulos indevidos nas contagens.
+- As 381 células com `avg_dist_neighbors_km` = `NULL` são escolas isoladas (única na célula, sem federal adjacente) — comportamento correto.
+- **Recálculo independente** de uma célula (k-ring reconstruído do zero): `n_federal_neighbors`=31 e `avg_dist_neighbors_km`=8.95 — batem exatamente com o gold.
+
+Um detalhe do spec era ambíguo — "quantidade de escolas vizinhas (a mesma para toda a célula)" combinado com "outras escolas". Interpretei como uma métrica **de nível de célula** que conta todas as federais na vizinhança (própria + adjacentes), sem subtrair "a própria", já que subtrair tornaria o valor diferente por escola. Deixei isso documentado nas descrições do `metadata.toml` e nos comentários do job.
+
+Ordem de execução (a partir do raw já ingerido), tudo dentro do container:
+```bash
+docker compose exec spark spark-submit apps/educacao/jobs/bronze/educacao_escola.py
+docker compose exec spark spark-submit apps/educacao/jobs/bronze/educacao_matricula.py
+docker compose exec spark spark-submit apps/educacao/jobs/silver/educacao_escola_geo.py
+docker compose exec spark spark-submit apps/educacao/jobs/gold/educacao_escola_matricula_h3_grid.py
+```

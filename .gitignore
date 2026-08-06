@@ -1,0 +1,26 @@
+# Caches
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Exceção: `runs/` é evidência preservada e entra INTEGRAL, inclusive o bytecode que
+# ficou no workdir de cada execução. Sem isto, o manifesto de integridade hasheia
+# arquivos que um clone não recebe, e a conferência falharia.
+!runs/**/__pycache__/
+!runs/**/*.pyc
+
+# Recursos baixados do Spark em build local.
+spark-resources/
+
+# Log local de hooks, acumulado pela máquina do pesquisador.
+.audit_logs/
+
+
+runs/**/audit/transcripts/
+runs/**/audit/hooks.jsonl
+runs/**/claude-home/
+runs/**/isolation.txt
+evaluation/**/conversas/
+

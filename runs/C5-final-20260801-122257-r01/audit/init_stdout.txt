@@ -1,0 +1,16 @@
+I've created `CLAUDE.md`. There was no existing one to improve, so this is the initial version.
+
+## What it captures
+
+**Commands** — the project runs entirely in Docker with no local entrypoint or test runner. I documented the real workflow: `docker compose build`/`up`, the required `external-net` network, and running individual jobs via `docker compose exec spark spark-submit apps/<app>/jobs/<layer>/<job>.py`. I did *not* invent a test-running section, since there's no test framework and `CODING_STANDARDS.md` explicitly says validation is done by running jobs and checking output.
+
+**Architecture** — the parts that require reading multiple files to grasp:
+- The **medallion flow** (raw→bronze→silver→gold) and the uniform per-app shape (`jobs/{bronze,silver,gold}`, `utils/column_transforms.py`, `metadata.toml`), across all 12 apps.
+- The **`metadata.toml` + `table_location`** indirection for table paths — including the real inconsistency that several jobs hardcode `s3a://` strings instead, with a note to prefer the resolver.
+- The **shared `utils/` vs app-local utils** split, and the "check before writing a new generic transform" rule.
+- **Sedona** jobs needing `SedonaContext` instead of `SparkSession`.
+- The **Docker/infra rationale** (Java 11, Python 3.11 pin, GDAL layer ordering, pre-downloaded jars, S3A config in `spark-defaults.conf`).
+
+**Conventions** — a condensed pointer to `CODING_STANDARDS.md` (Portuguese docstrings / English code, no UDFs, absence-is-never-zero, etc.), flagged as the source of truth rather than duplicated in full.
+
+A couple of things worth noting: `docker/resources/start.sh` references a `validate_setup.py` and an `exploration/start_jupyter.sh` that don't exist in the repo — I deliberately left those out rather than document phantom commands. There's also no `README.md`, `.cursor/rules`, or Copilot instructions to fold in.

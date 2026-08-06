@@ -1,0 +1,24 @@
+Pronto. A tabela `educacao_escola_matricula_h3_grid` foi produzida e gravada com sucesso em `s3a://datalake/educacao/educacao_escola_matricula_h3_grid/gold`.
+
+## O que foi construído
+
+A app `educacao` não tinha nenhum job — só o `metadata.toml` com as camadas raw. Montei o pipeline medallion completo, declarando primeiro cada tabela/camada nova no `metadata.toml` (contrato de schema) e depois os jobs:
+
+- **bronze** — `educacao_escola.py` e `educacao_matricula.py`: leem o raw CSV (`;`, header) com schema explícito, renomeiam para `snake_case`, tipam (lat/long como `double`, contagens como `int`) e gravam parquet. → 214.192 escolas, 178.766 matrículas.
+- **silver** — `educacao_escola_geo.py`: filtra coordenadas válidas (dentro do Brasil), junta as matrículas com `join_no_fanout` (`left`, sem explosão), cria o ponto **WGS84** e grava geoparquet. → 156.814 escolas georreferenciadas.
+- **gold** — `educacao_escola_matricula_h3_grid.py`: filtra **federais em atividade** (`setor=1`, `situacao=1`), indexa em **H3 nível 5** e agrega. → **555 células**.
+
+## Decisões-chave
+
+- **Vizinhas** = disco `ST_H3KRing(célula, k=1)` (a própria célula + as 6 adjacentes), excluindo a própria escola. Como todas as escolas de uma célula partilham o mesmo disco, `n_federal_neighbors` é naturalmente **igual para toda a célula** (= nº de federais no disco − 1), como pedido.
+- **Federal mais próxima** = cross join par a par de todas as federais em atividade (660 pontos → trivial), `min` por escola, média por célula — sem restrição de célula.
+- **Distâncias geodésicas** com `ST_DistanceSpheroid` sobre as **coordenadas WGS84 originais** (sem round-trip por 3857), conforme o `CODING_STANDARDS.md`. Geometria final = polígono da célula H3 em EPSG:4326.
+- Nulos preservados (`F.avg`/`F.sum` ignoram ausência; nada virou zero).
+
+## Validação
+
+- Colunas finais exatamente as pedidas: `h3_cell, n_schools, total_enrollment, avg_enrollment, n_federal_neighbors, avg_dist_neighbors_km, avg_dist_nearest_km, geometry` (o geoparquet acrescenta um `geometry_bbox` automático).
+- `sum(n_schools) = 660` = exatamente as federais em atividade **com coordenadas**; 555 células, todas com `h3_cell` único, sem nulos em `h3_cell`/`geometry`.
+- `n_federal_neighbors ≥ n_schools−1` em 100% das linhas; células isoladas (381, uma federal só, sem federal adjacente) têm `avg_dist_neighbors_km` nulo de forma consistente; `avg_dist_nearest_km` nunca nulo.
+
+Todos os jobs rodaram com sucesso na ordem das camadas, sem erros a corrigir.

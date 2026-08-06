@@ -1,0 +1,30 @@
+Pipeline completo e rodando com sucesso de ponta a ponta. Validação confirma que tudo está correto.
+
+## O que foi feito
+
+Como a app `educacao` só tinha as tabelas `raw` declaradas, construí o medalhão completo `raw → bronze → silver → gold`, seguindo a arquitetura e o `CODING_STANDARDS.md`.
+
+**`metadata.toml`** — declarei antes de escrever os jobs: nível `bronze` (com schema tipado) para `escola` e `matricula`, e as duas tabelas novas `escola_matricula_geo` (silver) e `escola_matricula_h3_grid` (gold).
+
+**Jobs criados:**
+- `bronze/educacao_escola.py` — 214.192 registros (tipos reais: lat/long `double`, indicadores/contagens `int`).
+- `bronze/educacao_matricula.py` — 178.766 registros (matrículas como `int`, ausência preservada como `null`).
+- `silver/educacao_escola_matricula_geo.py` — 156.814 escolas com coordenadas válidas, matrícula da educação básica anexada (`join_no_fanout`, chave única confirmada), geometria em EPSG:3857 **mais** lat/long WGS84 preservados.
+- `gold/educacao_escola_matricula_h3_grid.py` — **555 células** H3 nível 5.
+
+## Decisões-chave
+
+- **Distância geodésica sobre o ponto WGS84 original** (`ST_DistanceSpheroid`), reconstruído de lat/long no gold — sem round-trip 4326→3857→4326. A geometria só vira 3857 na saída (polígono da célula).
+- **Vizinhas** = federais em atividade na célula + adjacentes (`ST_H3KRing`, k=1). `n_federal_neighbors = (escolas na célula + adjacentes) − 1` — por construção **idêntico para toda a célula**, como pedido.
+- **Distâncias** via um cross join (só ~660 federais em atividade → N² trivial): por escola, a média até as vizinhas e o mínimo até qualquer federal; ambos promediados sobre as escolas da célula.
+- `avg_enrollment` usa `F.avg` (ignora ausência, não trata como zero).
+
+## Validação
+
+- Schema bate exatamente com o `metadata.toml` (as 8 colunas pedidas; `geometry_bbox` é metadado automático do GeoParquet, igual às demais tabelas geo do repo).
+- `sum(n_schools) = 660` = federais em atividade com coordenada válida. ✔
+- Todas as geometrias são polígonos H3. ✔
+- Invariante `n_federal_neighbors ≥ n_schools − 1`: **0 violações**. ✔
+- 381 células isoladas (1 escola, sem federal vizinha no k-ring) → `n_federal_neighbors = 0` e `avg_dist_neighbors_km = null` (ausência ≠ zero); mas `avg_dist_nearest_km` sempre preenchido (federal mais próxima é global). ✔
+
+Para reproduzir: rode na ordem `bronze/educacao_escola` → `bronze/educacao_matricula` → `silver/educacao_escola_matricula_geo` → `gold/educacao_escola_matricula_h3_grid` via `docker compose exec spark spark-submit <job>`.
